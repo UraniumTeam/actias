@@ -24,14 +24,14 @@ void* pFunction = ActiasGetEntryPointAddress(handle, "AddNumbers");
 
 ## Table of Contents
 
-* [ACBX File Sections]
-  * [File Signature]
-  * [Headers]
-    * [Machine Types]
-    * [Attribute Flags]
-  * [Section Headers]
-    * [Section Flags]
-  * [Export Table]
+* [ACBX File Sections](#acbx-file-sections)
+  * [File Signature](#file-signature)
+  * [Headers](#headers)
+    * [Machine Types](#machine-types)
+    * [Attribute Flags](#attribute-flags)
+  * [Section Headers](#section-headers)
+    * [Section Flags](#section-flags)
+  * [Export Table](#export-table)
   * [Relocations Table]
 
 ## ACBX File Sections
@@ -47,13 +47,13 @@ The next 2 bytes are zeros.
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
-| 0 | UInt16 | Machine | Target machine type, see [Machine Types]. |
+| 0 | UInt16 | Machine | Target machine type, see [Machine Types](#machine-types). |
 | 2 | UInt16 | SectionCount | The number of sections in the file. |
-| 4 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags]. |
+| 4 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags](#attribute-flags). |
 | 8 | UInt32 | SDKVersion | The version of the Actias SDK that built this file. |
 | 12 | UInt64 | EntryPointAddress | Address of the entry point. |
-| 20 | ACBXSpan | ExportTable | [Export Table] address and size. |
-| 20 | ACBXSpan | RelocTable | [Relocations Table] address and size. |
+| 20 | ACBXSpan | ExportTable | [Export Table](#export-table) address and size. |
+| 20 | ACBXSpan | RelocTable | [Relocations Table](#relocations-table) address and size. |
 
 `ACBXSpan` definition:
 
@@ -82,7 +82,7 @@ typedef struct {
 ### Section Headers
 
 The section headers describe every code and data section. There must be exactly SectionCount (see
-[Headers]) section headers (40 bytes each).
+[Headers](#headers)) section headers (40 bytes each).
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
@@ -91,7 +91,7 @@ The section headers describe every code and data section. There must be exactly 
 | 16 | UInt64 | Size | Size of the section when loaded. |
 | 24 | UInt64 | RelocationsAddress | Address of the relocation table. |
 | 32 | UInt32 | RelocationCount | The number of relocations. |
-| 36 | UInt32 | Flags | The section flags, see [Section Flags]. |
+| 36 | UInt32 | Flags | The section flags, see [Section Flags](#section-flags). |
 
 #### Section Flags
 
