@@ -1,51 +1,5 @@
 set(SRC
-    ActiasRuntime/Base/Base.h
-    ActiasRuntime/Base/CompilerTraits.h
-    ActiasRuntime/Base/Platform.h
-    ActiasRuntime/Base/PlatformTraits.h
-    ActiasRuntime/Base/Byte.h
-    ActiasRuntime/Base/Flags.h
-
-    ActiasRuntime/Buffers/Internal/PoolBucket.h
-    ActiasRuntime/Buffers/ArrayPool.h
-
-    ActiasRuntime/Containers/HeapArray.h
-    ActiasRuntime/Containers/List.h
-    ActiasRuntime/Containers/ArraySlice.h
-
-    ActiasRuntime/IO/BaseIO.h
-    ActiasRuntime/IO/BaseIO.cpp
-    ActiasRuntime/IO/FileHandle.h
-    ActiasRuntime/IO/FileHandle.cpp
-    ActiasRuntime/IO/IStream.h
-    ActiasRuntime/IO/FileStream.h
-    ActiasRuntime/IO/FileStream.cpp
-    ActiasRuntime/IO/StdoutStream.h
-    ActiasRuntime/IO/StdoutStream.cpp
-    ActiasRuntime/IO/StreamBase.h
-
-    ActiasRuntime/Memory/IAllocator.h
-    ActiasRuntime/Memory/Memory.h
-    ActiasRuntime/Memory/Object.h
-    ActiasRuntime/Memory/Ptr.h
-    ActiasRuntime/Memory/ReferenceCounter.h
-    ActiasRuntime/Memory/SystemAllocator.h
-
-    ActiasRuntime/RTTI/RTTI.h
-
-    ActiasRuntime/Strings/String.h
-    ActiasRuntime/Strings/StringSlice.h
-    ActiasRuntime/Strings/StringSlice.cpp
-    ActiasRuntime/Strings/Unicode.h
-
-    ActiasRuntime/Time/DateTime.h
-    ActiasRuntime/Time/DateTime.cpp
-    ActiasRuntime/Time/TimeSpan.h
-
-    ActiasRuntime/Utils/UUID.h
-    ActiasRuntime/Utils/Result.h
-    ActiasRuntime/Utils/BitUtils.h
-    ActiasRuntime/Utils/UUID.cpp
+    ActiasRuntime/Temp.cpp
 )
 
 add_library(ActiasRuntime STATIC ${SRC})
