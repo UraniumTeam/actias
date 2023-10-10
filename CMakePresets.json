@@ -45,7 +45,9 @@
         "CMAKE_MAKE_PROGRAM": "ninja",
         "ACTIAS_USE_SSE41": "ON",
         "ACTIAS_USE_SSE3": "ON",
-        "ACTIAS_USE_AVX2": "ON"
+        "ACTIAS_USE_AVX2": "ON",
+        "ACTIAS_BUILD_SAMPLES": "ON",
+        "ACTIAS_BUILD_TESTS": "ON"
       }
     }
   ],
