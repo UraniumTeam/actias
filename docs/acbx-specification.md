@@ -32,7 +32,7 @@ void* pFunction = ActiasGetEntryPointAddress(handle, "AddNumbers");
   * [Section Headers](#section-headers)
     * [Section Flags](#section-flags)
   * [Export Table](#export-table)
-  * [Relocations Table]
+  * [Relocations Table](#relocations-table)
 
 ## ACBX File Sections
 
