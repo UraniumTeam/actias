@@ -32,6 +32,8 @@ void* pFunction = ActiasGetEntryPointAddress(handle, "AddNumbers");
   * [Section Headers](#section-headers)
     * [Section Flags](#section-flags)
   * [Export Table](#export-table)
+    * [Export Table Headers](#export-table-headers)
+    * [Export Table Entry](#export-table-entry)
   * [Relocations Table](#relocations-table)
 
 ## ACBX File Sections
@@ -47,13 +49,13 @@ The next 2 bytes are zeros.
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
-| 0 | UInt16 | Machine | Target machine type, see [Machine Types](#machine-types). |
+| 0 | UInt16 | TargetArch | The target arch type, see [Architecture Types](#architecture-types). |
 | 2 | UInt16 | SectionCount | The number of sections in the file. |
 | 4 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags](#attribute-flags). |
 | 8 | UInt32 | SDKVersion | The version of the Actias SDK that built this file. |
 | 12 | UInt64 | EntryPointAddress | Address of the entry point. |
 | 20 | ACBXSpan | ExportTable | [Export Table](#export-table) address and size. |
-| 20 | ACBXSpan | RelocTable | [Relocations Table](#relocations-table) address and size. |
+| 36 | ACBXSpan | RelocTable | [Relocations Table](#relocations-table) address and size. |
 
 `ACBXSpan` definition:
 
@@ -64,13 +66,13 @@ typedef struct {
 } ACBXSpan;
 ```
 
-#### Machine Types
+#### Architecture Types
 
 | Enum value | Hexadecimal value | Description |
 |:-----------|------------------:|:------------|
-| `ACBX_MACHINE_TYPE_NONE` | `00 00` | Unknown or unsupported |
-| `ACBX_MACHINE_TYPE_I386` | `00 01` | x86 |
-| `ACBX_MACHINE_TYPE_AMD64` | `00 02` | x64 |
+| `ACBX_ARCH_TYPE_NONE` | `00 00` | Unknown or unsupported |
+| `ACBX_ARCH_TYPE_x86` | `00 01` | x86 |
+| `ACBX_ARCH_TYPE_x86_64` | `00 02` | x64 |
 
 #### Attribute Flags
 
@@ -89,8 +91,8 @@ The section headers describe every code and data section. There must be exactly 
 | 0 | UInt64 | Address | Address of the section. |
 | 8 | UInt64 | RawSize | Size of raw section data. |
 | 16 | UInt64 | Size | Size of the section when loaded. |
-| 24 | UInt64 | RelocationsAddress | Address of the relocation table. |
-| 32 | UInt32 | RelocationCount | The number of relocations. |
+| 24 | UInt64 | RelocationsAddress | Address of the [Relocations Table](#relocations-table). |
+| 32 | UInt32 | RelocationCount | The number of relocation blocks. |
 | 36 | UInt32 | Flags | The section flags, see [Section Flags](#section-flags). |
 
 #### Section Flags
@@ -103,8 +105,32 @@ The section headers describe every code and data section. There must be exactly 
 
 ### Export Table
 
-TODO
+#### Export Table Headers
+
+| Offset | Type | Field | Description|
+|-------:|-----:|:------|:-----------|
+| 0 | UInt64 | EntryCount | The number of export table entries. |
+| 8 | UInt64 | Address | The address of export table. |
+
+#### Export Table Entry
+
+| Offset | Type | Field | Description|
+|-------:|-----:|:------|:-----------|
+| 0 | UInt64 | SymbolAddress | The exported symbol address. |
+| 8 | UInt64 | NameAddress | The exported symbol name. |
 
 ### Relocations Table
 
-TODO
+Each relocation table block starts with a header:
+
+| Offset | Type | Field | Description|
+|-------:|-----:|:------|:-----------|
+| 0 | UInt64 | EntryCount | The number of relocation entries in the block. |
+| 8 | UInt64 | BaseAddress | Base address for relocations in the block. |
+
+A relocation entry is stored in a UInt16, offset is specified in bits.
+
+| Offset (bits) | Length | Field | Description|
+|--------------:|-------:|:------|:-----------|
+| 0 | 4 | Flags | The relocation flags (reserved, must be 0). |
+| 4 | 12 | Offset | The offset of the relocation, an address relative to the base address. |
