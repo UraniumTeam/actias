@@ -20,7 +20,7 @@ ActiasLibHandle handle = ActiasLoadLibrary("./library.acbl");
 void* pFunction = ActiasGetEntryPointAddress(handle, "AddNumbers");
 ```
 
-> ⚠️ Warning: the format specification and the APIs are yet unstable and are subject to change.
+> :warning: Warning: the format specification and the APIs are yet unstable and are subject to change.
 
 ## Table of Contents
 

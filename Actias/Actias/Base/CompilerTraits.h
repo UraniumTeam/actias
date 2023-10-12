@@ -26,8 +26,8 @@
 
 #    define ACTIAS_PRETTY_FUNCTION __PRETTY_FUNCTION__
 
-#    ifndef ACTIAS_FINLINE
-#        define ACTIAS_FINLINE inline
+#    ifndef ACTIAS_FORCE_INLINE
+#        define ACTIAS_FORCE_INLINE inline
 #    endif
 #elif defined _MSC_VER
 #    define ACTIAS_COMPILER_MSVC 1
@@ -40,8 +40,8 @@
 
 #    define ACTIAS_PRETTY_FUNCTION __FUNCSIG__
 
-#    ifndef ACTIAS_FINLINE
-#        define ACTIAS_FINLINE __forceinline
+#    ifndef ACTIAS_FORCE_INLINE
+#        define ACTIAS_FORCE_INLINE __forceinline
 #    endif
 #endif
 

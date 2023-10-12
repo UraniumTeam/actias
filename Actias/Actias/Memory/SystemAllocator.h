@@ -1,6 +1,7 @@
 #pragma once
 #include <Actias/Memory/IAllocator.h>
 #include <Actias/RTTI/RTTI.h>
+#include <Actias/System/Memory.h>
 #include <atomic>
 
 namespace Actias
@@ -10,16 +11,12 @@ namespace Actias
     {
         static SystemAllocator m_Instance;
 
-        std::atomic<Int64> m_Count;
-
     public:
         ACTIAS_RTTI_Class(SystemAllocator, "6C2B53D6-3A9A-447F-A127-1052253189C4");
 
         void* Allocate(USize size, USize alignment) override;
         void Deallocate(void* pointer) override;
         [[nodiscard]] const char* GetName() const override;
-
-        [[nodiscard]] Int64 AllocationCount() const;
 
         //! \brief Get global static instance of the system allocator.
         inline static SystemAllocator* Get()
@@ -32,23 +29,16 @@ namespace Actias
 
     inline void* SystemAllocator::Allocate(USize size, USize alignment)
     {
-        m_Count.fetch_add(1, std::memory_order_relaxed);
-        return ACTIAS_AlignedMalloc(size, alignment);
+        return ActiasAlignedAlloc(alignment, size);
     }
 
     inline void SystemAllocator::Deallocate(void* pointer)
     {
-        m_Count.fetch_sub(1, std::memory_order_relaxed);
-        return ACTIAS_AlignedFree(pointer);
+        return ActiasAlignedFree(pointer);
     }
 
     inline const char* SystemAllocator::GetName() const
     {
         return "System allocator";
-    }
-
-    inline Int64 SystemAllocator::AllocationCount() const
-    {
-        return m_Count.load(std::memory_order_acquire);
     }
 } // namespace Actias

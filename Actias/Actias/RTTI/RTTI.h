@@ -15,20 +15,20 @@ namespace Actias
     //! Use this whenever possible, because ACTIAS_RTTI_Class implements virtual functions.
     //!
     //! \see ACTIAS_RTTI_Class
-#define ACTIAS_RTTI_Struct(name, uuid)                                                                                               \
-    inline void UnRTTI_Checks()                                                                                                  \
+#define ACTIAS_RTTI_Struct(name, uuid)                                                                                           \
+    inline void ActiasRTTI_Checks()                                                                                              \
     {                                                                                                                            \
         using ThisType = std::remove_reference_t<decltype(*this)>;                                                               \
         static_assert(std::is_same_v<name, ThisType>);                                                                           \
     }                                                                                                                            \
                                                                                                                                  \
-    inline static const ::Actias::TypeID& UnRTTI_GetSID()                                                                        \
+    inline static const ::Actias::TypeID& ActiasRTTI_GetSID()                                                                    \
     {                                                                                                                            \
         static ::Actias::TypeID id = ::Actias::TypeID(uuid);                                                                     \
         return id;                                                                                                               \
     }                                                                                                                            \
                                                                                                                                  \
-    inline static std::string_view UnRTTI_GetSName()                                                                             \
+    inline static std::string_view ActiasRTTI_GetSName()                                                                         \
     {                                                                                                                            \
         return ::Actias::TypeName<name>();                                                                                       \
     }
@@ -49,23 +49,23 @@ namespace Actias
     //! \endcode
     //!
     //! \note Use ACTIAS_RTTI_Struct for `final` structs that don't inherit from any other class.
-#define ACTIAS_RTTI_Class(name, uuid)                                                                                                \
-    ACTIAS_RTTI_Struct(name, uuid);                                                                                                  \
-    ACTIAS_PUSH_CLANG_WARNING("-Winconsistent-missing-override")                                                                     \
-    inline virtual std::string_view UnRTTI_GetName() const                                                                       \
+#define ACTIAS_RTTI_Class(name, uuid)                                                                                            \
+    ACTIAS_RTTI_Struct(name, uuid);                                                                                              \
+    ACTIAS_PUSH_CLANG_WARNING("-Winconsistent-missing-override")                                                                 \
+    inline virtual std::string_view ActiasRTTI_GetName() const                                                                   \
     {                                                                                                                            \
         return ::Actias::TypeName<name>();                                                                                       \
     }                                                                                                                            \
                                                                                                                                  \
-    inline virtual const ::Actias::TypeID& UnRTTI_GetID() const                                                                  \
+    inline virtual const ::Actias::TypeID& ActiasRTTI_GetID() const                                                              \
     {                                                                                                                            \
-        return name ::UnRTTI_GetSID();                                                                                           \
+        return name ::ActiasRTTI_GetSID();                                                                                       \
     }                                                                                                                            \
                                                                                                                                  \
-    template<class UnRTTI_IS_TYPE>                                                                                               \
-    inline bool UnRTTI_Is() const                                                                                                \
+    template<class ActiasRTTI_IS_TYPE>                                                                                           \
+    inline bool ActiasRTTI_Is() const                                                                                            \
     {                                                                                                                            \
-        return UnRTTI_IS_TYPE::UnRTTI_GetSID() == UnRTTI_GetID();                                                                \
+        return ActiasRTTI_IS_TYPE::ActiasRTTI_GetSID() == ActiasRTTI_GetID();                                                    \
     }                                                                                                                            \
     ACTIAS_POP_CLANG_WARNING
 
@@ -80,9 +80,9 @@ namespace Actias
     //!
     //! \return The result pointer if destination type was derived from source type, `nullptr` otherwise.
     template<class TDstPtr, class TSrc, std::enable_if_t<std::is_base_of_v<TSrc, std::remove_pointer_t<TDstPtr>>, bool> = true>
-    inline TDstPtr un_dynamic_cast(TSrc* src)
+    inline TDstPtr ac_dynamic_cast(TSrc* src)
     {
-        if (src->template UnRTTI_Is<std::remove_pointer_t<TDstPtr>>())
+        if (src->template ActiasRTTI_Is<std::remove_pointer_t<TDstPtr>>())
             return static_cast<TDstPtr>(src);
 
         return nullptr;
@@ -90,9 +90,9 @@ namespace Actias
 
     //! \brief Assert that a variable can be dynamically casted to another type.
     //!
-    //! Works just like un_dynamic_cast<T*>, except it will assert that a type can be casted and won't return
+    //! Works just like ac_dynamic_cast<T*>, except it will assert that a type can be casted and won't return
     //! a `nullptr`. Use this when you're certainly sure that you can use `static_cast` here, but want to check it
-    //! in debug builds. In release builds, when assertions are disabled, this can lead to undefined behaviour.
+    //! in debug builds. In release builds, when assertions are disabled, this can lead to undefined behavior.
     //!
     //! \note The function only works with the classes that provide RTTI through ACTIAS_RTTI_Class.
     //!
@@ -102,9 +102,9 @@ namespace Actias
     //!
     //! \return The result pointer if destination type was derived from source type.
     template<class TDstPtr, class TSrc, std::enable_if_t<std::is_base_of_v<TSrc, std::remove_pointer_t<TDstPtr>>, bool> = true>
-    inline TDstPtr un_assert_cast(TSrc* src)
+    inline TDstPtr ac_assert_cast(TSrc* src)
     {
-        assert(src->template UnRTTI_Is<std::remove_pointer_t<TDstPtr>>() && "Assert cast failed");
+        assert(src->template ActiasRTTI_Is<std::remove_pointer_t<TDstPtr>>() && "Assert cast failed");
         return static_cast<TDstPtr>(src);
     }
 
@@ -120,7 +120,7 @@ namespace Actias
     //!         // members...
     //!     };
     //!
-    //!     auto fooName = un_nameof<Foo<int>>(); // "Foo" - not "Foo<int>"!
+    //!     auto fooName = ac_nameof<Foo<int>>(); // "Foo" - not "Foo<int>"!
     //! \endcode
     //!
     //! \note The provided type must implement RTTI through ACTIAS_RTTI_Class or ACTIAS_RTTI_Struct.
@@ -129,14 +129,14 @@ namespace Actias
     //!
     //! \return Short name of type T.
     template<class T>
-    inline std::string_view un_nameof() noexcept
+    inline std::string_view ac_nameof() noexcept
     {
-        return T::UnRTTI_GetSName();
+        return T::ActiasRTTI_GetSName();
     }
 
     //! \brief Get name of a type.
     //!
-    //! This functions is same as un_nameof(), but can return name of derived class if called from a base class.\n
+    //! This functions is same as ac_nameof(), but can return name of derived class if called from a base class.\n
     //! Returns a short name provided in ACTIAS_RTTI_Class or ACTIAS_RTTI_Struct.\n
     //! Example:
     //! \code{.cpp}
@@ -151,10 +151,10 @@ namespace Actias
     //!         ACTIAS_RTTI_Class(Derived, "68CCD7DF-507F-4F3B-9EC3-001EEB33EB55");
     //!     };
     //!
-    //!     auto derivedName = un_nameof(*static_cast<Base*>(new Derived)); // "Derived"
+    //!     auto derivedName = ac_nameof(*static_cast<Base*>(new Derived)); // "Derived"
     //! \endcode
     //!
-    //! For additional information see overload of un_nameof() without parameters.
+    //! For additional information see overload of ac_nameof() without parameters.
     //!
     //! \note The provided type must implement RTTI through ACTIAS_RTTI_Class or ACTIAS_RTTI_Struct.
     //!
@@ -162,22 +162,22 @@ namespace Actias
     //!
     //! \return Short name of type T.
     //!
-    //! \see un_nameof()
+    //! \see ac_nameof()
     template<class T>
-    inline std::string_view un_nameof(const T& object)
+    inline std::string_view ac_nameof(const T& object)
     {
-        return object.UnRTTI_GetName();
+        return object.ActiasRTTI_GetName();
     }
 
     template<class T>
-    inline const UUID& un_typeid() noexcept
+    inline const UUID& ac_typeid() noexcept
     {
-        return T::UnRTTI_GetSID();
+        return T::ActiasRTTI_GetSID();
     }
 
     template<class T>
-    inline const UUID& un_typeid(const T& object)
+    inline const UUID& ac_typeid(const T& object)
     {
-        return object.UnRTTI_GetID();
+        return object.ActiasRTTI_GetID();
     }
 } // namespace Actias

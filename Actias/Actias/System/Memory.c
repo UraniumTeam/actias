@@ -14,9 +14,9 @@ void* ActiasRealloc(void* pointer, size_t newByteSize)
 void* ActiasAlignedAlloc(size_t byteAlignment, size_t byteSize)
 {
 #if ACTIAS_COMPILER_MSVC
-    return _aligned_malloc(byteAlignment, byteSize);
+    return _aligned_malloc(byteSize, byteAlignment);
 #else
-    return aligned_alloc(byteAlignment, byteSize);
+    return ::memalign(byteAlignment, byteSize);
 #endif
 }
 
