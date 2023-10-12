@@ -1,10 +1,10 @@
 set(SRC
     Actias/Base/Base.h
-    
-    
-    
     Actias/Base/Byte.h
+    Actias/Base/CompilerTraits.h
     Actias/Base/Flags.h
+    Actias/Base/Platform.h
+    Actias/Base/PlatformTraits.h
 
     Actias/Buffers/Internal/PoolBucket.h
     Actias/Buffers/ArrayPool.h
@@ -37,10 +37,9 @@ set(SRC
     Actias/Strings/StringSlice.h
     Actias/Strings/StringSlice.cpp
     Actias/Strings/Unicode.h
-	
-	Actias/System/Core.h
-	Actias/System/Memory.h
-	Actias/System/Memory.c
+
+    Actias/System/Memory.h
+    Actias/System/Memory.c
 
     Actias/Time/DateTime.h
     Actias/Time/DateTime.cpp
@@ -60,7 +59,6 @@ actias_enable_simd_for_target(Actias)
 target_include_directories(Actias PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set_target_properties(Actias PROPERTIES FOLDER "Runtime")
-target_link_libraries(Actias ActiasCore)
 
 get_property("TARGET_SOURCE_FILES" TARGET Actias PROPERTY SOURCES)
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${TARGET_SOURCE_FILES})

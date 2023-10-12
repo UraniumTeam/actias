@@ -26,7 +26,7 @@ namespace Actias::IO
         ReadNotAllowed,  //!< Read operation is not allowed.
         WriteNotAllowed, //!< Write operation is not allowed.
         NotSupported,    //!< Operation is not supported.
-        NotOpen          //!< File ot stream is not open.
+        NotOpen          //!< File or stream is not open.
     };
 
     //! \brief Get result code description.

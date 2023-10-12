@@ -41,6 +41,6 @@ TEST(RTTI, DynamicCast)
 {
     Bar bar;
     Base* base = &bar;
-    ASSERT_EQ(&bar, un_dynamic_cast<Bar*>(base));
-    ASSERT_EQ(nullptr, un_dynamic_cast<Foo*>(base));
+    ASSERT_EQ(&bar, ac_dynamic_cast<Bar*>(base));
+    ASSERT_EQ(nullptr, ac_dynamic_cast<Foo*>(base));
 }

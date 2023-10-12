@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include <Actias/System/Core.h>
+#include <Actias/Base/CompilerTraits.h>
 
 ACTIAS_BEGIN_C
 
@@ -21,12 +21,12 @@ ACTIAS_BEGIN_C
 void* ActiasAlloc(size_t byteSize);
 
 //! \brief Reallocate the given block of memory.
-//! 
+//!
 //! It is a replacement for standard C realloc() function in the Actias SDK.
-//! 
+//!
 //! \param pointer - Pointer to the memory to be reallocated.
 //! \param newByteSize - New size of the storage in bytes.
-//! 
+//!
 //! \return A pointer to the reallocated storage if the allocation succeeds, NULL otherwise.
 void* ActiasRealloc(void* pointer, size_t newByteSize);
 
