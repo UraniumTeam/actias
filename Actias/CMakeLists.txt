@@ -6,9 +6,6 @@ set(SRC
     Actias/Base/Platform.h
     Actias/Base/PlatformTraits.h
 
-    Actias/Buffers/Internal/PoolBucket.h
-    Actias/Buffers/ArrayPool.h
-
     Actias/Containers/HeapArray.h
     Actias/Containers/List.h
     Actias/Containers/ArraySlice.h
