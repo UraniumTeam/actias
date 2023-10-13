@@ -13,7 +13,7 @@ If an Actias binary executable file has a `main()` function it can be executed a
 actias ./program.acbx
 ```
 
-Otherwise it can be used as a shared (dynamic-linked) library:
+Otherwise it can be used as a shared (dynamic-link) library:
 ```cpp
 // TODO: write actual example when the loader is functional
 ActiasLibHandle handle = ActiasLoadLibrary("./library.acbl");
@@ -26,7 +26,7 @@ void* pFunction = ActiasGetEntryPointAddress(handle, "AddNumbers");
 
 * [ACBX File Sections](#acbx-file-sections)
   * [File Signature](#file-signature)
-  * [Headers](#headers)
+  * [Information Headers](#information-headers)
     * [Machine Types](#machine-types)
     * [Attribute Flags](#attribute-flags)
   * [Section Headers](#section-headers)
@@ -45,7 +45,7 @@ converted to ASCII: `%ACBX-`.
 
 The next 2 bytes are zeros.
 
-### Headers
+### Information Headers
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
@@ -54,17 +54,6 @@ The next 2 bytes are zeros.
 | 4 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags](#attribute-flags). |
 | 8 | UInt32 | SDKVersion | The version of the Actias SDK that built this file. |
 | 12 | UInt64 | EntryPointAddress | Address of the entry point. |
-| 20 | ACBXSpan | ExportTable | [Export Table](#export-table) address and size. |
-| 36 | ACBXSpan | RelocTable | [Relocations Table](#relocations-table) address and size. |
-
-`ACBXSpan` definition:
-
-```cpp
-typedef struct {
-	UInt64 Address;
-	UInt64 Size;
-} ACBXSpan;
-```
 
 #### Architecture Types
 
@@ -84,16 +73,15 @@ typedef struct {
 ### Section Headers
 
 The section headers describe every code and data section. There must be exactly SectionCount (see
-[Headers](#headers)) section headers (40 bytes each).
+[Headers](#headers)) section headers (36 bytes each).
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
 | 0 | UInt64 | Address | Address of the section. |
 | 8 | UInt64 | RawSize | Size of raw section data. |
 | 16 | UInt64 | Size | Size of the section when loaded. |
-| 24 | UInt64 | RelocationsAddress | Address of the [Relocations Table](#relocations-table). |
-| 32 | UInt32 | RelocationCount | The number of relocation blocks. |
-| 36 | UInt32 | Flags | The section flags, see [Section Flags](#section-flags). |
+| 24 | UInt64 | RelocationsAddress | Address of the relocations block, see [Relocations Table](#relocations-table). |
+| 32 | UInt32 | Flags | The section flags, see [Section Flags](#section-flags). |
 
 #### Section Flags
 
@@ -125,8 +113,7 @@ Each relocation table block starts with a header:
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
-| 0 | UInt64 | EntryCount | The number of relocation entries in the block. |
-| 8 | UInt64 | BaseAddress | Base address for relocations in the block. |
+| 0 | UInt64 | BaseAddress | Base address for relocations in the block. |
 
 A relocation entry is stored in a UInt16, offset is specified in bits.
 
