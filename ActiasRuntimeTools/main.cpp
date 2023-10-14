@@ -18,12 +18,12 @@ int main(int argc, char** argv)
     parser.Prog(argv[0]);
 
     args::Group arguments("Arguments");
-    args::HelpFlag help(arguments, "help", "Display this help message", { 'h', "help" });
-    args::Flag versionFlag(
+    const args::HelpFlag help(arguments, "help", "Display this help message", { 'h', "help" });
+    const args::Flag versionFlag(
         arguments, "version", "Show the version of Actias runtime and SDK", { 'v', "version" }, args::Options::KickOut);
 
-    args::Group commands(parser, "SDK Commands", args::Group::Validators::Xor);
-    args::Command build(commands, "build", "Build an Actias project", [](args::Subparser& p) {
+    args::Group commands(parser, "SDK Commands");
+    const args::Command build(commands, "build", "Build an Actias project", [](args::Subparser& p) {
         args::Positional<std::string> executable(
             p, "executable", "The native OS executable to build (dll, exe, so, etc.)", args::Options::Required);
         p.Parse();
@@ -31,32 +31,34 @@ int main(int argc, char** argv)
         std::cout << "Building: " << executable.Get() << std::endl;
     });
 
-    args::Command run(commands, "run", "Run an ACBX executable file", [](args::Subparser& p) {
+    const args::Command run(commands, "run", "Run an ACBX executable file", [](args::Subparser& p) {
         args::Positional<std::string> executable(p, "executable", "The executable (ACBX) file to run", args::Options::Required);
         p.Parse();
 
         std::cout << "Running: " << executable.Get() << std::endl;
     });
 
-    args::GlobalOptions globals(parser, arguments);
+    const args::GlobalOptions globals(parser, arguments);
 
     try
     {
         parser.ParseCLI(args);
     }
-    catch (args::Help)
+    catch (const args::Help&)
     {
         std::cout << parser;
         return 0;
     }
-    catch (args::ParseError e)
+    catch (const args::ParseError& e)
     {
+        std::cerr << "Command line parse error:\n";
         std::cerr << e.what() << std::endl;
         std::cerr << parser;
         return 1;
     }
-    catch (args::ValidationError e)
+    catch (const args::ValidationError& e)
     {
+        std::cerr << "Command line validation error:\n";
         std::cerr << e.what() << std::endl;
         std::cerr << parser;
         return 1;
