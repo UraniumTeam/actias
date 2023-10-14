@@ -37,8 +37,10 @@ set(SRC
     Actias/Strings/StringSlice.cpp
     Actias/Strings/Unicode.h
 
+    Actias/System/Core.h
     Actias/System/Memory.h
-    Actias/System/Memory.c
+    Actias/System/Streams.h
+	Actias/System/Platform/Common/Memory.c
 
     Actias/Time/DateTime.h
     Actias/Time/DateTime.cpp
@@ -49,6 +51,21 @@ set(SRC
     Actias/Utils/BitUtils.h
     Actias/Utils/UUID.cpp
 )
+
+if (ACTIAS_WINDOWS)
+	set(SRC
+		${SRC}
+		Actias/System/Platform/Windows/Memory.c
+		Actias/System/Platform/Windows/Streams.c
+		Actias/System/Platform/Windows/WinHeaders.h
+	)
+else ()
+	set(SRC
+		${SRC}
+		Actias/System/Platform/Unix/Memory.c
+		Actias/System/Platform/Unix/Streams.c
+	)
+endif ()
 
 add_library(Actias STATIC ${SRC})
 

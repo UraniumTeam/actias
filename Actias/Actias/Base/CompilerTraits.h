@@ -9,10 +9,14 @@
         {
 #    define ACTIAS_END_C }
 
+#    define ACTIAS_CONST const
+
 #else
 
 #    define ACTIAS_BEGIN_C
 #    define ACTIAS_END_C
+
+#    define ACTIAS_CONST
 
 #endif
 

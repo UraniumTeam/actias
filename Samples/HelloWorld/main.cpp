@@ -1,11 +1,11 @@
-#include <Actias/System/Memory.h>
-#include <iostream>
+#include <Actias/System/Streams.h>
 
 int main()
 {
-    void* memory = ActiasAlignedAlloc(16, 1024);
-    ActiasAlignedFree(memory);
+    char message[] = "Hello, World!";
 
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    ActiasHandle handle;
+    ActiasGetStdFileHandle(ACTIAS_STDOUT, &handle);
+
+    ActiasWrite(handle, message, sizeof(message), nullptr);
 }
