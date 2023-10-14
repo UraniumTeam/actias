@@ -27,7 +27,7 @@ void* pFunction = ActiasGetEntryPointAddress(handle, "AddNumbers");
 * [ACBX File Sections](#acbx-file-sections)
   * [File Signature](#file-signature)
   * [Information Headers](#information-headers)
-    * [Machine Types](#machine-types)
+    * [Architecture Types](#architecture-types)
     * [Attribute Flags](#attribute-flags)
   * [Section Headers](#section-headers)
     * [Section Flags](#section-flags)
