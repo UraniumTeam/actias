@@ -11,11 +11,7 @@ set(ACTIAS_PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 list(PREPEND CMAKE_MODULE_PATH "${ACTIAS_PROJECT_ROOT}/cmake")
 
 include(Config)
-include(ThirdParty/get_cpm)
-
-if (ACTIAS_BUILD_TESTS)
-    include(ThirdParty/gtest)
-endif ()
+include(deps)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
