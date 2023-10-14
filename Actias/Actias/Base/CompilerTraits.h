@@ -2,6 +2,45 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#if defined __cplusplus
+
+#    define ACTIAS_BEGIN_C                                                                                                       \
+        extern "C"                                                                                                               \
+        {
+#    define ACTIAS_END_C }
+
+#else
+
+#    define ACTIAS_BEGIN_C
+#    define ACTIAS_END_C
+
+#endif
+
+ACTIAS_BEGIN_C
+
+typedef int8_t Int8;
+typedef int16_t Int16;
+typedef int32_t Int32;
+typedef int64_t Int64;
+
+typedef uint8_t UInt8;
+typedef uint16_t UInt16;
+typedef uint32_t UInt32;
+typedef uint64_t UInt64;
+
+typedef float Float32;
+typedef double Float64;
+
+#if ACTIAS_ARCH_64_BIT
+typedef UInt64 USize;
+typedef Int64 SSize;
+#else
+typedef UInt32 USize;
+typedef Int32 SSize;
+#endif
+
+ACTIAS_END_C
+
 #if defined NDEBUG
 #    define ACTIAS_RELEASE 1
 #else
@@ -49,18 +88,4 @@
 #    define ACTIAS_DEBUG_BREAK __debugbreak()
 #else
 #    define ACTIAS_DEBUG_BREAK raise(SIGTRAP)
-#endif
-
-#if defined __cplusplus
-
-#    define ACTIAS_BEGIN_C                                                                                                       \
-        extern "C"                                                                                                               \
-        {
-#    define ACTIAS_END_C }
-
-#else
-
-#    define ACTIAS_BEGIN_C
-#    define ACTIAS_END_C
-
 #endif
