@@ -49,11 +49,11 @@ The next 2 bytes are zeros.
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
-| 0 | UInt16 | TargetArch | The target arch type, see [Architecture Types](#architecture-types). |
-| 2 | UInt16 | SectionCount | The number of sections in the file. |
-| 4 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags](#attribute-flags). |
-| 8 | UInt32 | SDKVersion | The version of the Actias SDK that built this file. |
-| 12 | UInt64 | EntryPointAddress | Address of the entry point. |
+| 0 | UInt64 | EntryPointAddress | Address of the entry point. |
+| 8 | UInt16 | TargetArch | The target arch type, see [Architecture Types](#architecture-types). |
+| 10 | UInt16 | SectionCount | The number of sections in the file. |
+| 12 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags](#attribute-flags). |
+| 16 | UInt32 | SDKVersion | The version of the Actias SDK that built this file. |
 
 #### Architecture Types
 
@@ -68,7 +68,7 @@ The next 2 bytes are zeros.
 | Enum value | Hexadecimal value | Description |
 |:-----------|------------------:|:------------|
 | `ACBX_ATTRIBUTE_EXECUTABLE_BIT` | `00 00 00 01` | The file is executable and can be directly run. |
-| `ACBX_ATTRIBUTE_LIBRARY_BIT` | `00 00 00 02` | The file and *cannot* be directly run. |
+| `ACBX_ATTRIBUTE_LIBRARY_BIT` | `00 00 00 02` | The file is a library and *cannot* be directly run. |
 
 ### Section Headers
 
@@ -81,7 +81,7 @@ The section headers describe every code and data section. There must be exactly 
 | 8 | UInt64 | RawSize | Size of raw section data. |
 | 16 | UInt64 | Size | Size of the section when loaded. |
 | 24 | UInt64 | RelocationsAddress | Address of the relocations block, see [Relocations Table](#relocations-table). |
-| 32 | UInt32 | Flags | The section flags, see [Section Flags](#section-flags). |
+| 32 | UInt32 | SectionFlags | The section flags, see [Section Flags](#section-flags). |
 
 #### Section Flags
 
@@ -105,7 +105,7 @@ The section headers describe every code and data section. There must be exactly 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
 | 0 | UInt64 | SymbolAddress | The exported symbol address. |
-| 8 | UInt64 | NameAddress | The exported symbol name. |
+| 8 | UInt64 | NameAddress | The exported symbol name address. |
 
 ### Relocations Table
 

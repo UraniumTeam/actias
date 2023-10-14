@@ -1,17 +1,17 @@
 #include <Actias/System/Memory.h>
 #include <stdlib.h>
 
-void* ActiasAlloc(size_t byteSize)
+void* ActiasAlloc(USize byteSize)
 {
     return malloc(byteSize);
 }
 
-void* ActiasRealloc(void* pointer, size_t newByteSize)
+void* ActiasRealloc(void* pointer, USize newByteSize)
 {
     return realloc(pointer, newByteSize);
 }
 
-void* ActiasAlignedAlloc(size_t byteAlignment, size_t byteSize)
+void* ActiasAlignedAlloc(USize byteAlignment, USize byteSize)
 {
 #if ACTIAS_COMPILER_MSVC
     return _aligned_malloc(byteSize, byteAlignment);

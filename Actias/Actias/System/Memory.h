@@ -18,7 +18,7 @@ ACTIAS_BEGIN_C
 //! \param byteSize - Size of the storage to allocate in bytes.
 //!
 //! \return A pointer to the allocated storage if the allocation succeeds, NULL otherwise.
-void* ActiasAlloc(size_t byteSize);
+void* ActiasAlloc(USize byteSize);
 
 //! \brief Reallocate the given block of memory.
 //!
@@ -28,7 +28,7 @@ void* ActiasAlloc(size_t byteSize);
 //! \param newByteSize - New size of the storage in bytes.
 //!
 //! \return A pointer to the reallocated storage if the allocation succeeds, NULL otherwise.
-void* ActiasRealloc(void* pointer, size_t newByteSize);
+void* ActiasRealloc(void* pointer, USize newByteSize);
 
 //! \brief Allocate uninitialized memory with the specified alignment.
 //!
@@ -41,7 +41,7 @@ void* ActiasRealloc(void* pointer, size_t newByteSize);
 //! \note Must be deallocated only with ActiasAlignedFree().
 //!
 //! \return A pointer to the allocated storage if the allocation succeeds, NULL otherwise.
-void* ActiasAlignedAlloc(size_t byteAlignment, size_t byteSize);
+void* ActiasAlignedAlloc(USize byteAlignment, USize byteSize);
 
 //! \brief Deallocate memory.
 //!
