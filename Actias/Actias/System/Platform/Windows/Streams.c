@@ -19,14 +19,17 @@ inline DWORD ActiasConvertStandardDescriptor(ActiasStandardDescriptor descriptor
 ActiasResult ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle)
 {
     DWORD winStdHandle = ActiasConvertStandardDescriptor(descriptor);
-    *pHandle           = GetStdHandle(winStdHandle);
+
+    if (winStdHandle == 0)
+    {
+        return ACTIAS_FAIL_INVALID_STD_DESCRIPTOR;
+    }
+
+    *pHandle = GetStdHandle(winStdHandle);
 
     if (*pHandle == INVALID_HANDLE_VALUE)
     {
-        // TODO: maybe we should return our own result codes, from our own validation logic;
-        //   or we can convert native OS codes to ours (but there are a lot...);
-        //   or we can create something like ActiasGetLastError() and combine with the first approach
-        return GetLastError();
+        return ACTIAS_FAIL_UNKNOWN;
     }
 
     return ACTIAS_SUCCESS;
@@ -39,7 +42,7 @@ ActiasResult ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, US
 
     if (!result)
     {
-        return GetLastError();
+        return ACTIAS_FAIL_UNKNOWN;
     }
 
     if (pBytesWritten)
