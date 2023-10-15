@@ -1,5 +1,5 @@
 set(SRC
-	Actias/ACBX/Headers.h
+    Actias/ACBX/Headers.h
 
     Actias/Base/Base.h
     Actias/Base/Byte.h
@@ -40,7 +40,7 @@ set(SRC
     Actias/System/Core.h
     Actias/System/Memory.h
     Actias/System/Streams.h
-	Actias/System/Platform/Common/Memory.c
+    Actias/System/Platform/Common/Memory.c
 
     Actias/Time/DateTime.h
     Actias/Time/DateTime.cpp
@@ -53,18 +53,19 @@ set(SRC
 )
 
 if (ACTIAS_WINDOWS)
-	set(SRC
-		${SRC}
-		Actias/System/Platform/Windows/Memory.c
-		Actias/System/Platform/Windows/Streams.c
-		Actias/System/Platform/Windows/WinHeaders.h
-	)
+    set(SRC
+        ${SRC}
+        Actias/System/Platform/Windows/Core.c
+        Actias/System/Platform/Windows/Memory.c
+        Actias/System/Platform/Windows/Streams.c
+        Actias/System/Platform/Windows/WinHeaders.h
+    )
 else ()
-	set(SRC
-		${SRC}
-		Actias/System/Platform/Unix/Memory.c
-		Actias/System/Platform/Unix/Streams.c
-	)
+    set(SRC
+        ${SRC}
+        Actias/System/Platform/Unix/Memory.c
+        Actias/System/Platform/Unix/Streams.c
+    )
 endif ()
 
 add_library(Actias STATIC ${SRC})
