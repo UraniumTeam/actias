@@ -8,16 +8,16 @@ namespace Actias
 
     //! \brief Cast an enum to underlying type.
     template<class TEnum>
-    inline constexpr std::enable_if_t<std::is_enum_v<TEnum>, std::underlying_type_t<TEnum>> un_enum_cast(TEnum value)
+    inline constexpr std::enable_if_t<std::is_enum_v<TEnum>, std::underlying_type_t<TEnum>> ac_enum_cast(TEnum value)
     {
         return static_cast<std::underlying_type_t<TEnum>>(value);
     }
 
     //! \brief Cast an enum to flags type.
     template<class TFlagsEnum, class TEnum>
-    inline constexpr std::enable_if_t<std::is_enum_v<TEnum>, TFlagsEnum> un_flag_cast(TEnum value)
+    inline constexpr std::enable_if_t<std::is_enum_v<TEnum>, TFlagsEnum> ac_flag_cast(TEnum value)
     {
-        return static_cast<TFlagsEnum>(1 << un_enum_cast(value));
+        return static_cast<TFlagsEnum>(1 << ac_enum_cast(value));
     }
 
 //! \brief Define bitwise operations on `enum`.
@@ -26,7 +26,7 @@ namespace Actias
 #define ACTIAS_ENUM_OPERATORS(Name)                                                                                                  \
     inline constexpr Name operator|(Name a, Name b)                                                                              \
     {                                                                                                                            \
-        return static_cast<Name>(un_enum_cast(a) | un_enum_cast(b));                                                             \
+        return static_cast<Name>(ac_enum_cast(a) | ac_enum_cast(b));                                                             \
     }                                                                                                                            \
     inline constexpr Name& operator|=(Name& a, Name b)                                                                           \
     {                                                                                                                            \
@@ -34,7 +34,7 @@ namespace Actias
     }                                                                                                                            \
     inline constexpr Name operator&(Name a, Name b)                                                                              \
     {                                                                                                                            \
-        return static_cast<Name>(un_enum_cast(a) & un_enum_cast(b));                                                             \
+        return static_cast<Name>(ac_enum_cast(a) & ac_enum_cast(b));                                                             \
     }                                                                                                                            \
     inline constexpr Name& operator&=(Name& a, Name b)                                                                           \
     {                                                                                                                            \
@@ -42,7 +42,7 @@ namespace Actias
     }                                                                                                                            \
     inline constexpr Name operator^(Name a, Name b)                                                                              \
     {                                                                                                                            \
-        return static_cast<Name>(un_enum_cast(a) ^ un_enum_cast(b));                                                             \
+        return static_cast<Name>(ac_enum_cast(a) ^ ac_enum_cast(b));                                                             \
     }                                                                                                                            \
     inline constexpr Name& operator^=(Name& a, Name b)                                                                           \
     {                                                                                                                            \
@@ -50,7 +50,7 @@ namespace Actias
     }                                                                                                                            \
     inline constexpr Name operator~(Name a)                                                                                      \
     {                                                                                                                            \
-        return static_cast<Name>(~un_enum_cast(a));                                                                              \
+        return static_cast<Name>(~ac_enum_cast(a));                                                                              \
     }
 
     //! \internal

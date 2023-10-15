@@ -13,14 +13,14 @@ namespace Actias
 
     //! \brief Cast a pointer to the pointer to Byte.
     template<class T>
-    inline std::enable_if_t<std::is_integral_v<T>, Byte*> un_byte_cast(T* ptr)
+    inline std::enable_if_t<std::is_integral_v<T> || std::is_void_v<T>, Byte*> ac_byte_cast(T* ptr)
     {
         return reinterpret_cast<Byte*>(ptr);
     }
 
     //! \brief Cast a pointer to the pointer to Byte.
     template<class T>
-    inline std::enable_if_t<std::is_integral_v<T>, const Byte*> un_byte_cast(const T* ptr)
+    inline std::enable_if_t<std::is_integral_v<T> || std::is_void_v<T>, const Byte*> ac_byte_cast(const T* ptr)
     {
         return reinterpret_cast<const Byte*>(ptr);
     }

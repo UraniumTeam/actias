@@ -11,17 +11,24 @@
 
 namespace Actias
 {
-#ifdef ACTIAS_DEBUG
-    //! \brief True on debug builds.
-    inline constexpr bool IsDebugBuild = true;
-#else
-    //! \brief True on debug builds.
-    inline constexpr bool IsDebugBuild = false;
-#endif
-
     //! \brief Empty structure with no members.
     struct EmptyStruct
     {
+    };
+
+    //! \brief Indicates the size of a pointer for an architecture.
+    enum class ArchPointerSize
+    {
+        Arch32Bit = 32, //!< Indicates 32-bit pointer size.
+        Arch64Bit = 64, //!< Indicates 64-bit pointer size.
+
+#if ACTIAS_ARCH_64_BIT
+        Current = Arch64Bit, //!< Current pointer size.
+#else
+        Current = Arch32Bit, //!< Current pointer size.
+#endif
+
+        Invalid = -1, //!< Indicates an invalid value.
     };
 
     //! \internal

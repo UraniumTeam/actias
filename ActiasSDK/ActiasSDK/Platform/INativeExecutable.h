@@ -2,7 +2,7 @@
 
 namespace Actias::SDK
 {
-    class INativeLibrary
+    class INativeExecutable
     {
     public:
     };
