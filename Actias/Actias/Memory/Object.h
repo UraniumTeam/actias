@@ -1,6 +1,6 @@
 #pragma once
-#include <Actias/RTTI/RTTI.h>
 #include <Actias/Memory/ReferenceCounter.h>
+#include <Actias/RTTI/RTTI.h>
 
 namespace Actias
 {
@@ -103,4 +103,6 @@ namespace Actias
             return m_RefCounter;
         }
     };
+
+    using BasicObject = Object<IObject>;
 } // namespace Actias

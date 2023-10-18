@@ -276,11 +276,13 @@ namespace Actias
         //! \brief Copy data from this slice to another.
         //!
         //! \param destination - The destination slice.
+        //! \param byteCount - The number of bytes to copy, optional (defaults to minimum length of provided buffers).
         //!
         //! \return The number of actually copied elements.
-        inline USize CopyDataTo(ArraySlice<std::remove_const_t<T>> destination) const
+        inline USize CopyDataTo(ArraySlice<std::remove_const_t<T>> destination,
+                                USize byteCount = std::numeric_limits<USize>::max()) const
         {
-            USize size = std::min(Length(), destination.Length());
+            USize size = std::min(Length(), std::min(destination.Length(), byteCount));
 
             if constexpr (std::is_trivially_copyable_v<T>)
             {
@@ -331,9 +333,9 @@ namespace Actias
             return lhs.m_pBegin != rhs.m_pBegin || lhs.m_pEnd != rhs.m_pEnd;
         }
     };
-    
+
 #define ACTIAS_AllocateOnStack(type, size) ::Actias::ArraySlice<type>(static_cast<type*>(alloca(size)), size)
-#define ACTIAS_AllocateOnStackOrPool(type, size, threshold, pool, ownedArray)                                                        \
+#define ACTIAS_AllocateOnStackOrPool(type, size, threshold, pool, ownedArray)                                                    \
     size > threshold;                                                                                                            \
     auto ownedArray = size > threshold ? pool->Rent(size) : ACTIAS_AllocateOnStack(type, size)
 } // namespace Actias

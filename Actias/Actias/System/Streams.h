@@ -25,7 +25,7 @@ typedef enum ActiasStandardDescriptor
 //! \param pHandle - The pointer to the variable that receives the resulting handle.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ActiasResult ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle);
+ActiasResult ACTIAS_SYSTEM_API ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle);
 
 //! \brief Write to a file handle.
 //!
@@ -35,6 +35,7 @@ ActiasResult ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasH
 //! \param pBytesWritten - The pointer to the variable that receives the number of bytes written, can be NULL.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ActiasResult ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount, USize* pBytesWritten);
+ActiasResult ACTIAS_SYSTEM_API ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount,
+                                           USize* pBytesWritten);
 
 ACTIAS_END_C
