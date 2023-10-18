@@ -12,6 +12,8 @@
 #    define ACTIAS_ByteSwapUInt32(value) _byteswap_ulong(value)
 #    define ACTIAS_ByteSwapUInt64(value) _byteswap_uint64(value)
 
+#    define ACTIAS_ABI
+
 #    define ACTIAS_EXPORT __declspec(dllexport)
 #    define ACTIAS_IMPORT __declspec(dllimport)
 
@@ -27,8 +29,10 @@
 #    define ACTIAS_ByteSwapUInt32(value) __builtin_bswap32(value)
 #    define ACTIAS_ByteSwapUInt64(value) __builtin_bswap64(value)
 
-#    define ACTIAS_EXPORT __attribute__((visibility("default"))) [[gnu::ms_abi]]
-#    define ACTIAS_IMPORT __attribute__((visibility("default"))) [[gnu::ms_abi]]
+#    define ACTIAS_ABI __attribute__((__ms_abi__))
+
+#    define ACTIAS_EXPORT __attribute__((visibility("default"))) ACTIAS_ABI
+#    define ACTIAS_IMPORT __attribute__((visibility("default"))) ACTIAS_ABI
 
 #else
 #    error Unsupported platform

@@ -3,21 +3,17 @@
 #include <stdint.h>
 
 #if defined __cplusplus
-
 #    define ACTIAS_BEGIN_C                                                                                                       \
         extern "C"                                                                                                               \
         {
 #    define ACTIAS_END_C }
 
 #    define ACTIAS_CONST const
-
 #else
-
 #    define ACTIAS_BEGIN_C
 #    define ACTIAS_END_C
 
 #    define ACTIAS_CONST
-
 #endif
 
 ACTIAS_BEGIN_C
@@ -52,6 +48,8 @@ ACTIAS_END_C
 #endif
 
 #define ACTIAS_MAKE_STR(txt) #txt
+
+#define ACTIAS_UNUSED(param) (void)param
 
 #if defined __clang__
 #    define ACTIAS_COMPILER_CLANG 1

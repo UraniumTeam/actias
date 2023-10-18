@@ -37,11 +37,6 @@ set(SRC
     Actias/Strings/StringSlice.cpp
     Actias/Strings/Unicode.h
 
-    Actias/System/Core.h
-    Actias/System/Memory.h
-    Actias/System/Streams.h
-    Actias/System/Platform/Common/Memory.c
-
     Actias/Time/DateTime.h
     Actias/Time/DateTime.cpp
     Actias/Time/TimeSpan.h
@@ -52,21 +47,40 @@ set(SRC
     Actias/Utils/UUID.cpp
 )
 
+set(SRC_SYSTEM
+    Actias/System/Core.h
+    Actias/System/Memory.h
+    Actias/System/Streams.h
+    Actias/System/Platform/Common/Core.c
+    Actias/System/Platform/Common/Memory.c
+)
+
 if (ACTIAS_WINDOWS)
-    set(SRC
-        ${SRC}
+    set(SRC_SYSTEM
+        ${SRC_SYSTEM}
         Actias/System/Platform/Windows/Core.c
         Actias/System/Platform/Windows/Memory.c
         Actias/System/Platform/Windows/Streams.c
         Actias/System/Platform/Windows/WinHeaders.h
     )
 else ()
-    set(SRC
-        ${SRC}
+    set(SRC_SYSTEM
+        ${SRC_SYSTEM}
         Actias/System/Platform/Unix/Memory.c
         Actias/System/Platform/Unix/Streams.c
     )
 endif ()
+
+add_library(ActiasSystem SHARED ${SRC_SYSTEM})
+
+actias_configure_target(ActiasSystem)
+
+target_include_directories(ActiasSystem PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+
+set_target_properties(ActiasSystem PROPERTIES FOLDER "Runtime")
+
+get_property("TARGET_SOURCE_FILES" TARGET ActiasSystem PROPERTY SOURCES)
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${TARGET_SOURCE_FILES})
 
 add_library(Actias STATIC ${SRC})
 
@@ -76,6 +90,7 @@ actias_enable_simd_for_target(Actias)
 target_include_directories(Actias PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set_target_properties(Actias PROPERTIES FOLDER "Runtime")
+target_link_libraries(Actias ActiasSystem)
 
 get_property("TARGET_SOURCE_FILES" TARGET Actias PROPERTY SOURCES)
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${TARGET_SOURCE_FILES})
