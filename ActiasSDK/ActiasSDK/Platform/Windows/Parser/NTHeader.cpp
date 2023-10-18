@@ -35,8 +35,13 @@ namespace Actias::SDK::PE
             return Err(ExecutableParseError::InvalidDOSHeader(0));
         }
 
-        const auto ntOffset   = pDosHeader->Lfanew;
-        auto* ntHeaders = reinterpret_cast<NTHeaderBase*>(pBuffer + ntOffset);
+        const auto ntOffset = pDosHeader->Lfanew;
+        auto* ntHeaders     = reinterpret_cast<NTHeaderBase*>(pBuffer + ntOffset);
+
+        if (buffer.Length() < sizeof(NTHeader32) + sizeof(DOSHeader))
+        {
+            return Err(ExecutableParseError::InsufficientSize());
+        }
 
         if (!ntHeaders->IsValid())
         {
@@ -46,14 +51,9 @@ namespace Actias::SDK::PE
         switch (ntHeaders->GetArchPointerSize())
         {
         case ArchPointerSize::Arch32Bit:
-            if (buffer.Length() < sizeof(NTHeader32))
-            {
-                return Err(ExecutableParseError::InsufficientSize());
-            }
-
             break;
         case ArchPointerSize::Arch64Bit:
-            if (buffer.Length() < sizeof(NTHeader64))
+            if (buffer.Length() < sizeof(NTHeader64) + sizeof(DOSHeader))
             {
                 return Err(ExecutableParseError::InsufficientSize());
             }
@@ -64,5 +64,11 @@ namespace Actias::SDK::PE
         }
 
         return ntHeaders;
+    }
+
+    bool IsWindowsPEFile(const ArraySlice<Byte>& buffer)
+    {
+        auto result = ParseNTHeaders(buffer);
+        return result.IsOk();
     }
 } // namespace Actias::SDK::PE

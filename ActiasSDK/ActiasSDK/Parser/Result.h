@@ -7,6 +7,7 @@ namespace Actias::SDK
     {
         None,
         InsufficientSize,
+        UnknownExecutableFormat,
 
         InvalidDOSHeader,
         InvalidNTHeader,
@@ -28,6 +29,11 @@ namespace Actias::SDK
         inline static ExecutableParseError InsufficientSize(UInt64 offset = 0) noexcept
         {
             return ExecutableParseError(ExecutableParseErrorType::InsufficientSize, offset);
+        }
+
+        inline static ExecutableParseError UnknownExecutableFormat(UInt64 offset = 0) noexcept
+        {
+            return ExecutableParseError(ExecutableParseErrorType::UnknownExecutableFormat, offset);
         }
 
         inline static ExecutableParseError InvalidDOSHeader(UInt64 offset) noexcept

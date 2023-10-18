@@ -1,4 +1,5 @@
 #pragma once
+#include <Actias/Base/Byte.h>
 #include <Actias/IO/BaseIO.h>
 #include <Actias/Strings/StringSlice.h>
 #include <Actias/Time/DateTime.h>
@@ -61,14 +62,23 @@ namespace Actias::IO
         //! \param fileName - The name of the file to check.
         [[nodiscard]] static bool Exists(StringSlice fileName);
 
-        //! \brief Read all an entire text file to a string.
+        //! \brief Read an entire text file to a string.
         //!
         //! \param fileName - The name of the file to read.
         //!
-        //! \return Either string with the file contents or an error code
+        //! \return Either a string with the file contents or an error code.
         //!
         //! \see ResultCode
         [[nodiscard]] static Result<String, ResultCode> ReadAllText(StringSlice fileName);
+
+        //! \brief Read an entire binary file to a list of bytes.
+        //!
+        //! \param fileName - The name of the file to read.
+        //!
+        //! \return Either a list with the file contents or an error code.
+        //!
+        //! \see ResultCode
+        [[nodiscard]] static Result<List<Byte>, ResultCode> ReadAllBytes(StringSlice fileName);
 
         //! \brief Delete a file.
         //!
