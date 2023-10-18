@@ -251,4 +251,21 @@ namespace Actias::IO
         ACTIAS_GuardResult(read);
         return buffer;
     }
+
+    Result<List<Byte>, ResultCode> File::ReadAllBytes(StringSlice fileName)
+    {
+        FileHandle file;
+        auto open = file.Open(fileName, OpenMode::ReadOnly);
+        ACTIAS_GuardResult(open);
+
+        auto lengthRes = file.Length();
+        ACTIAS_Guard(lengthRes, lengthRes.UnwrapErr());
+
+        auto length = lengthRes.Unwrap();
+        List<Byte> buffer;
+        buffer.Resize(length);
+        auto read = file.Read(buffer.Data(), length);
+        ACTIAS_GuardResult(read);
+        return buffer;
+    }
 } // namespace Actias::IO

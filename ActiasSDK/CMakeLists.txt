@@ -2,13 +2,15 @@ set(SRC
     ActiasSDK/Parser/Result.h
 
     ActiasSDK/Platform/INativeExecutable.h
-    
+	ActiasSDK/Platform/NativeExecutableFactory.h
+	ActiasSDK/Platform/NativeExecutableFactory.cpp
+
     ActiasSDK/Platform/Windows/Parser/Exports.h
-    ActiasSDK/Platform/Windows/Parser/Loader.h
-    ActiasSDK/Platform/Windows/Parser/Loader.cpp
-    ActiasSDK/Platform/Windows/Parser/PECommon.h
     ActiasSDK/Platform/Windows/Parser/NTHeader.h
     ActiasSDK/Platform/Windows/Parser/NTHeader.cpp
+    ActiasSDK/Platform/Windows/Parser/PECommon.h
+    ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.h
+    ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.cpp
     ActiasSDK/Platform/Windows/PortableExecutable.h
     ActiasSDK/Platform/Windows/PortableExecutable.cpp
 )

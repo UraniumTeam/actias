@@ -1,5 +1,5 @@
 #include <Actias/System/Memory.h>
-#include <ActiasSDK/Platform/Windows/Parser/Loader.h>
+#include <ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.h>
 #include <ActiasSDK/Platform/Windows/Parser/NTHeader.h>
 
 namespace Actias::SDK::PE

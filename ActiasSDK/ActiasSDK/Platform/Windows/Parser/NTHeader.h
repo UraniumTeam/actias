@@ -270,4 +270,6 @@ namespace Actias::SDK::PE
 #undef ACTIAS_NT_OPTIONAL_ENTRY
 
     ExecutableParseResult<NTHeaderBase*> ParseNTHeaders(const ArraySlice<Byte>& buffer);
+
+    bool IsWindowsPEFile(const ArraySlice<Byte>& buffer);
 } // namespace Actias::SDK::PE
