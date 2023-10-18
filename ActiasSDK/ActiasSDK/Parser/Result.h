@@ -10,6 +10,8 @@ namespace Actias::SDK
 
         InvalidDOSHeader,
         InvalidNTHeader,
+
+        SectionOutOfBounds,
     };
 
     struct ExecutableParseError
@@ -36,6 +38,11 @@ namespace Actias::SDK
         inline static ExecutableParseError InvalidNTHeader(UInt64 offset) noexcept
         {
             return ExecutableParseError(ExecutableParseErrorType::InvalidNTHeader, offset);
+        }
+
+        inline static ExecutableParseError SectionOutOfBounds(UInt64 offset) noexcept
+        {
+            return ExecutableParseError(ExecutableParseErrorType::SectionOutOfBounds, offset);
         }
     };
 

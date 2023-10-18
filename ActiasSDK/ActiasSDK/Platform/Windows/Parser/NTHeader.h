@@ -2,12 +2,14 @@
 #include <Actias/Base/Base.h>
 #include <Actias/Base/Byte.h>
 #include <Actias/Containers/ArraySlice.h>
+#include <Actias/Containers/List.h>
 #include <ActiasSDK/Parser/Result.h>
-#include <ActiasSDK/Platform/Windows/Parser/Exports.h>
 #include <ActiasSDK/Platform/Windows/Parser/PECommon.h>
 
 namespace Actias::SDK::PE
 {
+    struct ExportDirectory;
+
     namespace MagicConst
     {
         inline constexpr UInt32 NT  = 0x00004550;
@@ -17,7 +19,8 @@ namespace Actias::SDK::PE
         inline constexpr UInt16 OptionalHdr64 = 0x20b;
     } // namespace MagicConst
 
-    inline constexpr UInt32 MaxPEOffset = 1024;
+    inline constexpr UInt32 MaxPEOffset          = 1024;
+    inline constexpr UInt32 SectionShortNameSize = 8;
 
     struct DOSHeader
     {
@@ -93,6 +96,26 @@ namespace Actias::SDK::PE
             const auto* pHeader = static_cast<const OptionalHeaderBase*>(pBuffer);
             return pHeader->GetArchPointerSize();
         }
+    };
+
+    struct SectionHeader
+    {
+        char Name[SectionShortNameSize];
+
+        union
+        {
+            UInt32 PhysicalAddress;
+            UInt32 VirtualSize;
+        } Misc;
+
+        PEVirtualAddress VirtualAddress;
+        UInt32 SizeOfRawData;
+        UInt32 PointerToRawData;
+        UInt32 PointerToRelocations;
+        UInt32 PointerToLinenumbers;
+        UInt16 NumberOfRelocations;
+        UInt16 NumberOfLinenumbers;
+        UInt32 Characteristics;
     };
 
     template<ArchPointerSize P>
@@ -176,7 +199,11 @@ namespace Actias::SDK::PE
 
         [[nodiscard]] inline UInt32 GetImageSize() const noexcept;
 
+        [[nodiscard]] inline UInt32 GetHeadersSize() const noexcept;
+
         [[nodiscard]] inline UInt64 GetImageBase() const noexcept;
+
+        [[nodiscard]] List<SectionHeader*> GetSectionHeaders() noexcept;
 
         [[nodiscard]] inline DataDirectory* GetDirectory() noexcept;
 
@@ -223,6 +250,11 @@ namespace Actias::SDK::PE
     inline UInt32 NTHeaderBase::GetImageSize() const noexcept
     {
         return ACTIAS_NT_OPTIONAL_ENTRY(SizeOfImage);
+    }
+
+    inline UInt32 NTHeaderBase::GetHeadersSize() const noexcept
+    {
+        return ACTIAS_NT_OPTIONAL_ENTRY(SizeOfHeaders);
     }
 
     inline UInt64 NTHeaderBase::GetImageBase() const noexcept

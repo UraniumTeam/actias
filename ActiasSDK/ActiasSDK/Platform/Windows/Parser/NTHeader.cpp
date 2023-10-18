@@ -2,6 +2,25 @@
 
 namespace Actias::SDK::PE
 {
+    List<SectionHeader*> NTHeaderBase::GetSectionHeaders() noexcept
+    {
+        const auto count = FileHeader.NumberOfSections;
+
+        List<SectionHeader*> result;
+        result.Reserve(count);
+
+        auto* sectionHeaders = Is64Bit()
+            ? reinterpret_cast<SectionHeader*>(&As<ArchPointerSize::Arch64Bit>()->OptionalHeader + 1)
+            : reinterpret_cast<SectionHeader*>(&As<ArchPointerSize::Arch32Bit>()->OptionalHeader + 1);
+
+        for (USize i = 0; i < count; ++i)
+        {
+            result.Push(sectionHeaders + i);
+        }
+
+        return result;
+    }
+
     ExecutableParseResult<NTHeaderBase*> ParseNTHeaders(const ArraySlice<Byte>& buffer)
     {
         if (buffer.Length() < sizeof(DOSHeader))
@@ -16,7 +35,7 @@ namespace Actias::SDK::PE
             return Err(ExecutableParseError::InvalidDOSHeader(0));
         }
 
-        auto ntOffset   = pDosHeader->Lfanew;
+        const auto ntOffset   = pDosHeader->Lfanew;
         auto* ntHeaders = reinterpret_cast<NTHeaderBase*>(pBuffer + ntOffset);
 
         if (!ntHeaders->IsValid())
