@@ -4,6 +4,8 @@ set(SRC
     ActiasSDK/Platform/INativeExecutable.h
     
     ActiasSDK/Platform/Windows/Parser/Exports.h
+    ActiasSDK/Platform/Windows/Parser/Loader.h
+    ActiasSDK/Platform/Windows/Parser/Loader.cpp
     ActiasSDK/Platform/Windows/Parser/PECommon.h
     ActiasSDK/Platform/Windows/Parser/NTHeader.h
     ActiasSDK/Platform/Windows/Parser/NTHeader.cpp
