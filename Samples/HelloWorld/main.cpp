@@ -3,7 +3,7 @@
 
 int main()
 {
-    char message[] = "Hello, World!";
+    const char message[] = "Hello, World!";
 
     ActiasHandle handle;
     auto fileHandleResult = ActiasGetStdFileHandle(ACTIAS_STDOUT, &handle);

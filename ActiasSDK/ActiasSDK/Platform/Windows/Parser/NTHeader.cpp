@@ -25,14 +25,14 @@ namespace Actias::SDK::PE
     {
         if (buffer.Length() < sizeof(DOSHeader))
         {
-            return Err(ExecutableParseError::InsufficientSize());
+            return Err(ExecutableParseError::InsufficientSize);
         }
 
         auto* pBuffer    = buffer.Data();
         auto* pDosHeader = reinterpret_cast<DOSHeader*>(pBuffer);
         if (!pDosHeader->IsValid())
         {
-            return Err(ExecutableParseError::InvalidDOSHeader(0));
+            return Err(ExecutableParseError::InvalidDOSHeader);
         }
 
         const auto ntOffset = pDosHeader->Lfanew;
@@ -40,12 +40,12 @@ namespace Actias::SDK::PE
 
         if (buffer.Length() < sizeof(NTHeader32) + sizeof(DOSHeader))
         {
-            return Err(ExecutableParseError::InsufficientSize());
+            return Err(ExecutableParseError::InsufficientSize);
         }
 
         if (!ntHeaders->IsValid())
         {
-            return Err(ExecutableParseError::InvalidNTHeader(ntOffset));
+            return Err(ExecutableParseError::InvalidNTHeader);
         }
 
         switch (ntHeaders->GetArchPointerSize())
@@ -55,12 +55,12 @@ namespace Actias::SDK::PE
         case ArchPointerSize::Arch64Bit:
             if (buffer.Length() < sizeof(NTHeader64) + sizeof(DOSHeader))
             {
-                return Err(ExecutableParseError::InsufficientSize());
+                return Err(ExecutableParseError::InsufficientSize);
             }
 
             break;
         default:
-            return Err(ExecutableParseError::InvalidNTHeader(ntOffset));
+            return Err(ExecutableParseError::InvalidNTHeader);
         }
 
         return ntHeaders;

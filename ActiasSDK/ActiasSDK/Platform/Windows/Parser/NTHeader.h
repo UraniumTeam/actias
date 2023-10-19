@@ -101,13 +101,7 @@ namespace Actias::SDK::PE
     struct SectionHeader
     {
         char Name[SectionShortNameSize];
-
-        union
-        {
-            UInt32 PhysicalAddress;
-            UInt32 VirtualSize;
-        } Misc;
-
+        UInt32 VirtualSize;
         PEVirtualAddress VirtualAddress;
         UInt32 SizeOfRawData;
         UInt32 PointerToRawData;
@@ -115,7 +109,7 @@ namespace Actias::SDK::PE
         UInt32 PointerToLinenumbers;
         UInt16 NumberOfRelocations;
         UInt16 NumberOfLinenumbers;
-        UInt32 Characteristics;
+        SectionFlags Characteristics;
     };
 
     template<ArchPointerSize P>
@@ -178,6 +172,9 @@ namespace Actias::SDK::PE
         DataDirectory DataDirectory[ac_enum_cast(DirectoryEntryID::Count)];
     };
 
+    template<ArchPointerSize P>
+    struct NTHeader;
+
     struct NTHeaderBase
     {
         UInt32 Signature;
@@ -194,6 +191,8 @@ namespace Actias::SDK::PE
         {
             return static_cast<const NTHeader<P>*>(this);
         }
+
+        [[nodiscard]] inline OptionalHeaderBase* GetOptionalHeader() noexcept;
 
         [[nodiscard]] inline ArchPointerSize GetArchPointerSize() const noexcept;
 
@@ -238,6 +237,11 @@ namespace Actias::SDK::PE
 
     using NTHeader32 = NTHeader<ArchPointerSize::Arch32Bit>;
     using NTHeader64 = NTHeader<ArchPointerSize::Arch64Bit>;
+
+    inline OptionalHeaderBase* NTHeaderBase::GetOptionalHeader() noexcept
+    {
+        return &As<ArchPointerSize::Arch32Bit>()->OptionalHeader;
+    }
 
     inline ArchPointerSize NTHeaderBase::GetArchPointerSize() const noexcept
     {

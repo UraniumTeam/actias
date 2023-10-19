@@ -6,6 +6,11 @@
 
 namespace Actias::SDK::PE
 {
+    struct NTHeaderBase;
+    struct SectionHeader;
+
+    void CopySectionData(const ArraySlice<Byte>& rawBuffer, const SectionHeader* pSection, Byte* pDestination);
+
     class PEModuleBuffer : public BasicObject
     {
         ArraySlice<Byte> m_Buffer;
@@ -16,7 +21,9 @@ namespace Actias::SDK::PE
         PEModuleBuffer(Byte* pBuffer, USize byteSize);
         ~PEModuleBuffer();
 
-        [[nodiscard]] static ExecutableParseResult<PEModuleBuffer*> MapToVirtual(const ArraySlice<Byte>& rawBuffer);
+        [[nodiscard]] static ExecutableParseResult<PEModuleBuffer*> MapToVirtual(const ArraySlice<Byte>& rawBuffer,
+                                                                                 NTHeaderBase* pHeaders,
+                                                                                 const ArraySlice<SectionHeader*>& sections);
 
         [[nodiscard]] inline USize ByteSize() const
         {
