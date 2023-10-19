@@ -1,5 +1,5 @@
-#include <ActiasSDK/Platform/Windows/Parser/NTHeader.h>
-#include <ActiasSDK/Platform/Windows/PortableExecutable.h>
+#include <ActiasSDK/Platform/Windows/Parser/NTHeader.hpp>
+#include <ActiasSDK/Platform/Windows/PortableExecutable.hpp>
 
 namespace Actias::SDK::PE
 {

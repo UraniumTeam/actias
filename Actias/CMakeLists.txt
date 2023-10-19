@@ -1,49 +1,49 @@
 set(SRC
     Actias/ACBX/Headers.h
 
-    Actias/Base/Base.h
-    Actias/Base/Byte.h
+    Actias/Base/Base.hpp
+    Actias/Base/Byte.hpp
     Actias/Base/CompilerTraits.h
-    Actias/Base/Flags.h
+    Actias/Base/Flags.hpp
     Actias/Base/Platform.h
     Actias/Base/PlatformTraits.h
 
-    Actias/Containers/HeapArray.h
-    Actias/Containers/List.h
-    Actias/Containers/ArraySlice.h
+    Actias/Containers/HeapArray.hpp
+    Actias/Containers/List.hpp
+    Actias/Containers/ArraySlice.hpp
 
-    Actias/IO/BaseIO.h
+    Actias/IO/BaseIO.hpp
     Actias/IO/BaseIO.cpp
-    Actias/IO/FileHandle.h
+    Actias/IO/FileHandle.hpp
     Actias/IO/FileHandle.cpp
-    Actias/IO/IStream.h
-    Actias/IO/FileStream.h
+    Actias/IO/IStream.hpp
+    Actias/IO/FileStream.hpp
     Actias/IO/FileStream.cpp
-    Actias/IO/StdoutStream.h
+    Actias/IO/StdoutStream.hpp
     Actias/IO/StdoutStream.cpp
-    Actias/IO/StreamBase.h
+    Actias/IO/StreamBase.hpp
 
-    Actias/Memory/IAllocator.h
-    Actias/Memory/Memory.h
-    Actias/Memory/Object.h
-    Actias/Memory/Ptr.h
-    Actias/Memory/ReferenceCounter.h
-    Actias/Memory/SystemAllocator.h
+    Actias/Memory/IAllocator.hpp
+    Actias/Memory/Memory.hpp
+    Actias/Memory/Object.hpp
+    Actias/Memory/Ptr.hpp
+    Actias/Memory/ReferenceCounter.hpp
+    Actias/Memory/SystemAllocator.hpp
 
-    Actias/RTTI/RTTI.h
+    Actias/RTTI/RTTI.hpp
 
-    Actias/Strings/String.h
-    Actias/Strings/StringSlice.h
+    Actias/Strings/String.hpp
+    Actias/Strings/StringSlice.hpp
     Actias/Strings/StringSlice.cpp
-    Actias/Strings/Unicode.h
+    Actias/Strings/Unicode.hpp
 
-    Actias/Time/DateTime.h
+    Actias/Time/DateTime.hpp
     Actias/Time/DateTime.cpp
-    Actias/Time/TimeSpan.h
+    Actias/Time/TimeSpan.hpp
 
-    Actias/Utils/UUID.h
-    Actias/Utils/Result.h
-    Actias/Utils/BitUtils.h
+    Actias/Utils/UUID.hpp
+    Actias/Utils/Result.hpp
+    Actias/Utils/BitUtils.hpp
     Actias/Utils/UUID.cpp
 )
 

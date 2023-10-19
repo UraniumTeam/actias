@@ -1,5 +1,5 @@
 set(SRC
-    Common/Common.h
+    Common/Common.hpp
     main.cpp
 )
 

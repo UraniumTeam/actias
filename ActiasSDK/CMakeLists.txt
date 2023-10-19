@@ -1,19 +1,19 @@
 set(SRC
-    ActiasSDK/Base/Base.h
+    "ActiasSDK/Base/Base.hpp"
 
-    ActiasSDK/Parser/Result.h
+    ActiasSDK/Parser/Result.hpp
 
-    ActiasSDK/Platform/INativeExecutable.h
-	ActiasSDK/Platform/NativeExecutableFactory.h
+    ActiasSDK/Platform/INativeExecutable.hpp
+	ActiasSDK/Platform/NativeExecutableFactory.hpp
 	ActiasSDK/Platform/NativeExecutableFactory.cpp
 
-    ActiasSDK/Platform/Windows/Parser/Exports.h
-    ActiasSDK/Platform/Windows/Parser/NTHeader.h
+    ActiasSDK/Platform/Windows/Parser/Exports.hpp
+    ActiasSDK/Platform/Windows/Parser/NTHeader.hpp
     ActiasSDK/Platform/Windows/Parser/NTHeader.cpp
-    ActiasSDK/Platform/Windows/Parser/PECommon.h
-    ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.h
+    ActiasSDK/Platform/Windows/Parser/PECommon.hpp
+    ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.hpp
     ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.cpp
-    ActiasSDK/Platform/Windows/PortableExecutable.h
+    ActiasSDK/Platform/Windows/PortableExecutable.hpp
     ActiasSDK/Platform/Windows/PortableExecutable.cpp
 )
 

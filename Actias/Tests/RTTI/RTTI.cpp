@@ -1,4 +1,4 @@
-#include <Actias/RTTI/RTTI.h>
+#include <Actias/RTTI/RTTI.hpp>
 #include <gtest/gtest.h>
 #include <string_view>
 
@@ -26,15 +26,15 @@ TEST(RTTI, TypeName)
 {
     Foo foo;
     std::string_view expectedName = "class Foo";
-    ASSERT_EQ(foo.UnRTTI_GetName(), expectedName);
-    ASSERT_EQ(Foo::UnRTTI_GetSName(), expectedName);
+    ASSERT_EQ(foo.ActiasRTTI_GetName(), expectedName);
+    ASSERT_EQ(Foo::ActiasRTTI_GetSName(), expectedName);
 }
 
 TEST(RTTI, DerivedTypeID)
 {
     Foo foo;
     Base* base = &foo;
-    ASSERT_EQ(base->UnRTTI_GetID(), foo.UnRTTI_GetID());
+    ASSERT_EQ(base->ActiasRTTI_GetID(), foo.ActiasRTTI_GetID());
 }
 
 TEST(RTTI, DynamicCast)

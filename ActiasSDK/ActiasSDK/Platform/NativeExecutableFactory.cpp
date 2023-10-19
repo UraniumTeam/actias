@@ -1,7 +1,7 @@
-#include <Actias/IO/FileHandle.h>
-#include <ActiasSDK/Platform/NativeExecutableFactory.h>
-#include <ActiasSDK/Platform/Windows/Parser/NTHeader.h>
-#include <ActiasSDK/Platform/Windows/PortableExecutable.h>
+#include <Actias/Utils/Result.hpp>
+#include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
+#include <ActiasSDK/Platform/Windows/Parser/NTHeader.hpp>
+#include <ActiasSDK/Platform/Windows/PortableExecutable.hpp>
 
 namespace Actias::SDK
 {
