@@ -210,7 +210,7 @@ namespace Actias
 
         //! \brief Forget object and don't free it automatically.
         //!
-        //! Can be useful to send an object to managed program.
+        //! Can be useful to send an object through a raw pointer, e.g. in C APIs.
         inline T* Detach()
         {
             T* ptr    = m_pObject;

@@ -8,10 +8,14 @@ inline DWORD ActiasConvertMemoryProtection(ActiasFlags protection)
     if (protection & ACTIAS_MEMORY_PROTECTION_WRITE_BIT)
     {
         result = PAGE_READWRITE;
+        if (protection & ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT)
+        {
+            result = PAGE_EXECUTE_READWRITE;
+        }
     }
-    if (protection & ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT)
+    else if (protection & ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT)
     {
-        result = PAGE_EXECUTE_READWRITE;
+        result = PAGE_EXECUTE_READ;
     }
 
     return result;

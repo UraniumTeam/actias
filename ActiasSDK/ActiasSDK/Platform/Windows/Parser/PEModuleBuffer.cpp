@@ -1,6 +1,6 @@
 #include <Actias/System/Memory.h>
-#include <ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.h>
 #include <ActiasSDK/Platform/Windows/Parser/NTHeader.h>
+#include <ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.h>
 
 namespace Actias::SDK::PE
 {
@@ -14,11 +14,18 @@ namespace Actias::SDK::PE
         ActiasVirtualFree(m_Buffer.Data(), m_Buffer.Length());
     }
 
+    void CopySectionData(const ArraySlice<Byte>& rawBuffer, const SectionHeader* pSection, Byte* pDestination)
+    {
+        auto size        = pSection->SizeOfRawData;
+        const auto* pRaw = &rawBuffer[pSection->PointerToRawData];
+        ActiasCopyMemory(pDestination, pRaw, size);
+    }
+
     static VoidResult<ExecutableParseError> MapSections(const ArraySlice<Byte>& rawBuffer,
-                                                        const ArraySlice<Byte>& destinationBuffer, NTHeaderBase* pHeaders)
+                                                        const ArraySlice<Byte>& destinationBuffer, NTHeaderBase* pHeaders,
+                                                        const ArraySlice<SectionHeader*>& sections)
     {
         auto headersSize = pHeaders->GetHeadersSize();
-        auto sections    = pHeaders->GetSectionHeaders();
 
         UInt32 firstRawSection = std::numeric_limits<UInt32>::max();
 
@@ -34,12 +41,12 @@ namespace Actias::SDK::PE
             if ((section->VirtualAddress.Value + static_cast<USize>(size)) > destinationBuffer.Length()
                 || (section->VirtualAddress.Value >= destinationBuffer.Length() && size != 0))
             {
-                return Err(ExecutableParseError::SectionOutOfBounds(reinterpret_cast<const Byte*>(section) - rawBuffer.Data()));
+                return Err(ExecutableParseError::SectionOutOfBounds);
             }
 
-            auto* pMapped    = &destinationBuffer[section->VirtualAddress.Value];
-            const auto* pRaw = &rawBuffer[section->PointerToRawData];
-            ActiasCopyMemory(pMapped, pRaw, size);
+            auto* pMapped = &destinationBuffer[section->VirtualAddress.Value];
+            CopySectionData(rawBuffer, section, pMapped);
+
             if (section->PointerToRawData < firstRawSection)
             {
                 firstRawSection = section->PointerToRawData;
@@ -55,22 +62,19 @@ namespace Actias::SDK::PE
         return OK{};
     }
 
-    ExecutableParseResult<PEModuleBuffer*> PEModuleBuffer::MapToVirtual(const ArraySlice<Byte>& rawBuffer)
+    ExecutableParseResult<PEModuleBuffer*> PEModuleBuffer::MapToVirtual(const ArraySlice<Byte>& rawBuffer, NTHeaderBase* pHeaders,
+                                                                        const ArraySlice<SectionHeader*>& sections)
     {
-        const auto headerResult = ParseNTHeaders(rawBuffer);
-        ACTIAS_GuardResult(headerResult);
-
         ActiasSystemProperties systemProps;
         ActiasGetSystemProperties(&systemProps);
         USize pageSize = systemProps.PageSize;
 
-        auto* pHeaders       = headerResult.Unwrap();
-        const auto imageSize = AlignUp(pHeaders->GetImageSize(), pageSize);
+        const auto imageSize = AlignUp(static_cast<USize>(pHeaders->GetImageSize()), pageSize);
 
-        auto* pLocalCopy = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE_EXECUTE_BIT);
+        auto* pLocalCopy = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE_BIT);
 
-        auto* pResult  = AllocateObject<PEModuleBuffer>(pLocalCopy, imageSize);
-        auto mapResult = MapSections(rawBuffer, pResult->m_Buffer, pHeaders);
+        auto* pResult  = AllocateObject<PEModuleBuffer>(static_cast<Byte*>(pLocalCopy), imageSize);
+        auto mapResult = MapSections(rawBuffer, pResult->m_Buffer, pHeaders, sections);
         ACTIAS_GuardResult(mapResult);
 
         return pResult;

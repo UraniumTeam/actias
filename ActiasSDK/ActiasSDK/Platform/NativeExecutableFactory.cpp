@@ -12,6 +12,20 @@ namespace Actias::SDK
             return PE::PortableExecutable::Load(rawBuffer);
         }
 
-        return Err(ExecutableParseError::UnknownExecutableFormat());
+        return Err(ExecutableParseError::UnknownExecutableFormat);
     }
 } // namespace Actias::SDK
+
+Actias::SDK::ExecutableParseError ActiasLoadNativeExecutable(Actias::SDK::INativeExecutable** ppExecutable,
+                                                             ActiasNativeExecutableLoadInfo* pLoadInfo)
+{
+    Actias::ArraySlice rawBuffer(static_cast<Actias::Byte*>(pLoadInfo->pRawData), pLoadInfo->RawDataByteSize);
+    auto result = Actias::SDK::LoadNativeExecutable(rawBuffer);
+    if (result)
+    {
+        *ppExecutable = result.Unwrap();
+        return Actias::SDK::ExecutableParseError::None;
+    }
+
+    return result.UnwrapErr();
+}

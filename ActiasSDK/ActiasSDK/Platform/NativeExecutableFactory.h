@@ -1,12 +1,22 @@
 #pragma once
-#include <Actias/Base/Byte.h>
-#include <Actias/Containers/ArraySlice.h>
-#include <Actias/Strings/StringSlice.h>
+#include <Actias/System/Core.h>
+#include <ActiasSDK/Base/Base.h>
 #include <ActiasSDK/Parser/Result.h>
 
 namespace Actias::SDK
 {
     class INativeExecutable;
-
-    ExecutableParseResult<INativeExecutable*> LoadNativeExecutable(const ArraySlice<Byte>& rawBuffer);
 } // namespace Actias::SDK
+
+ACTIAS_BEGIN_C
+
+typedef struct ActiasNativeExecutableLoadInfo
+{
+    void* pRawData;
+    UInt64 RawDataByteSize;
+} ActiasNativeExecutableLoadInfo;
+
+ACTIAS_SDK_API Actias::SDK::ExecutableParseError ActiasLoadNativeExecutable(Actias::SDK::INativeExecutable** ppExecutable,
+                                                                            ActiasNativeExecutableLoadInfo* pLoadInfo);
+
+ACTIAS_END_C

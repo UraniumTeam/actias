@@ -3,54 +3,36 @@
 
 namespace Actias::SDK
 {
-    enum class ExecutableParseErrorType
+    enum class ExecutableParseError : Int32
     {
         None,
-        InsufficientSize,
-        UnknownExecutableFormat,
+        InsufficientSize        = -1,
+        UnknownExecutableFormat = -2,
 
-        InvalidDOSHeader,
-        InvalidNTHeader,
+        InvalidDOSHeader = -3,
+        InvalidNTHeader  = -4,
 
-        SectionOutOfBounds,
+        SectionOutOfBounds = -5,
     };
 
-    struct ExecutableParseError
+    inline const char* ExecutableParseErrorTypeToString(ExecutableParseError type)
     {
-        ExecutableParseErrorType Type;
-        UInt64 Offset;
-
-        inline ExecutableParseError(ExecutableParseErrorType type, UInt64 offset)
-            : Type(type)
-            , Offset(offset)
+#define ACTIAS_ENUM_STRING_ENTRY(name)                                                                                           \
+    case ExecutableParseError::name:                                                                                             \
+        return #name
+        switch (type)
         {
+            ACTIAS_ENUM_STRING_ENTRY(None);
+            ACTIAS_ENUM_STRING_ENTRY(InsufficientSize);
+            ACTIAS_ENUM_STRING_ENTRY(UnknownExecutableFormat);
+            ACTIAS_ENUM_STRING_ENTRY(InvalidDOSHeader);
+            ACTIAS_ENUM_STRING_ENTRY(InvalidNTHeader);
+            ACTIAS_ENUM_STRING_ENTRY(SectionOutOfBounds);
+        default:
+            return "<Unknown>";
         }
-
-        inline static ExecutableParseError InsufficientSize(UInt64 offset = 0) noexcept
-        {
-            return ExecutableParseError(ExecutableParseErrorType::InsufficientSize, offset);
-        }
-
-        inline static ExecutableParseError UnknownExecutableFormat(UInt64 offset = 0) noexcept
-        {
-            return ExecutableParseError(ExecutableParseErrorType::UnknownExecutableFormat, offset);
-        }
-
-        inline static ExecutableParseError InvalidDOSHeader(UInt64 offset) noexcept
-        {
-            return ExecutableParseError(ExecutableParseErrorType::InvalidDOSHeader, offset);
-        }
-
-        inline static ExecutableParseError InvalidNTHeader(UInt64 offset) noexcept
-        {
-            return ExecutableParseError(ExecutableParseErrorType::InvalidNTHeader, offset);
-        }
-
-        inline static ExecutableParseError SectionOutOfBounds(UInt64 offset) noexcept
-        {
-            return ExecutableParseError(ExecutableParseErrorType::SectionOutOfBounds, offset);
-        }
-    };
+#undef ACTIAS_ENUM_STRING_ENTRY
+    }
 
     template<class T>
     using ExecutableParseResult = Result<T, ExecutableParseError>;

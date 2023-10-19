@@ -20,8 +20,10 @@ typedef enum ActiasMemoryProtectionFlagBits
 
     ACTIAS_MEMORY_PROTECTION_READ_WRITE_BIT =
         ACTIAS_MEMORY_PROTECTION_READ_BIT | ACTIAS_MEMORY_PROTECTION_WRITE_BIT, //!< Memory can be read and written to.
-    ACTIAS_MEMORY_PROTECTION_READ_WRITE_EXECUTE_BIT =
-        ACTIAS_MEMORY_PROTECTION_READ_WRITE_BIT | ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT, //!< Memory can be read and written to.
+    ACTIAS_MEMORY_PROTECTION_READ_EXECUTE_BIT =
+        ACTIAS_MEMORY_PROTECTION_READ_BIT | ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT, //!< Memory can be read and executed as code.
+    ACTIAS_MEMORY_PROTECTION_READ_WRITE_EXECUTE_BIT = ACTIAS_MEMORY_PROTECTION_READ_WRITE_BIT
+        | ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT, //!< Memory can be read, written to and executed as code.
 } ActiasMemoryProtectionFlagBits;
 
 //! \brief Allocate uninitialized memory.

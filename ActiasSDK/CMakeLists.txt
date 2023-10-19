@@ -1,4 +1,6 @@
 set(SRC
+    ActiasSDK/Base/Base.h
+
     ActiasSDK/Parser/Result.h
 
     ActiasSDK/Platform/INativeExecutable.h
@@ -15,7 +17,7 @@ set(SRC
     ActiasSDK/Platform/Windows/PortableExecutable.cpp
 )
 
-add_library(ActiasSDK STATIC ${SRC})
+add_library(ActiasSDK SHARED ${SRC})
 
 actias_configure_target(ActiasSDK)
 actias_enable_simd_for_target(ActiasSDK)
