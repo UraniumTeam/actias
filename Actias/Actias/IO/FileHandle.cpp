@@ -1,4 +1,4 @@
-#include <Actias/IO/FileHandle.h>
+#include <Actias/IO/FileHandle.hpp>
 
 #if ACTIAS_WINDOWS
 #    include <direct.h>

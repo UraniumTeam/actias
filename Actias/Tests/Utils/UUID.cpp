@@ -1,5 +1,5 @@
-#include <Actias/Strings/StringSlice.h>
-#include <Actias/Utils/UUID.h>
+#include <Actias/Strings/StringSlice.hpp>
+#include <Actias/Utils/UUID.hpp>
 #include <gtest/gtest.h>
 
 TEST(UUID, Parse)

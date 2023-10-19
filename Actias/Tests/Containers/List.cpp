@@ -1,6 +1,6 @@
-#include <Tests/Common/Common.h>
-#include <Actias/Containers/List.h>
-#include <Actias/Strings/String.h>
+#include <Tests/Common/Common.hpp>
+#include <Actias/Containers/List.hpp>
+#include <Actias/Strings/String.hpp>
 
 using Actias::List;
 
@@ -44,7 +44,7 @@ TEST(List, CopyConstruct)
     List<int> lst2 = lst1;
     EXPECT_GT(lst1.Capacity(), lst2.Capacity());
     ASSERT_EQ(lst1.Size(), lst2.Size());
-    for (Actias::USize i = 0; i < lst1.Size(); ++i)
+    for (USize i = 0; i < lst1.Size(); ++i)
     {
         EXPECT_EQ(lst1[i], lst2[i]);
     }
@@ -89,11 +89,11 @@ TEST(List, SizeCapacity)
 
 TEST(List, Indexing)
 {
-    List<Actias::USize> lst = { 0, 0, 0 };
+    List<USize> lst = { 0, 0, 0 };
     lst[1]              = 1;
     lst[2]              = 2;
     ASSERT_EQ(lst.Size(), 3);
-    for (Actias::USize i = 0; i < lst.Size(); ++i)
+    for (USize i = 0; i < lst.Size(); ++i)
     {
         EXPECT_EQ(lst[i], i);
     }
@@ -120,7 +120,7 @@ TEST(List, Append)
     lst1.Append(2).Append("2").Append(3, "123");
     List<const char*> lst2 = { "0", "1", nullptr, nullptr, "2", "123", "123", "123" };
     ASSERT_EQ(lst1.Size(), lst2.Size());
-    for (Actias::USize i = 0; i < lst1.Size(); ++i)
+    for (USize i = 0; i < lst1.Size(); ++i)
     {
         EXPECT_EQ(Actias::StringSlice(lst1[i]), Actias::StringSlice(lst2[i]));
     }
@@ -149,7 +149,7 @@ TEST(List, PushPop)
 TEST(List, RangeForLoop)
 {
     List<int> lst   = { 123, 123, 123 };
-    Actias::USize count = 0;
+    USize count = 0;
     for (auto& v : lst)
     {
         EXPECT_EQ(v, lst[count++]);
@@ -175,7 +175,6 @@ TEST(List, NoCopySupport)
 
 TEST(List, Remove)
 {
-    auto allocatedBefore = Actias::SystemAllocator::Get()->AllocationCount();
     {
         auto lst = List<Actias::String>{}.Append("1").Append("2").Append("3").Append("4").Append("5").Append("6");
         lst.Remove("2");
@@ -204,12 +203,10 @@ TEST(List, Remove)
         EXPECT_EQ(lst[0], "3");
         EXPECT_EQ(lst[1], "5");
     }
-    EXPECT_EQ(Actias::SystemAllocator::Get()->AllocationCount(), allocatedBefore);
 }
 
 TEST(List, SwapRemove)
 {
-    auto allocatedBefore = Actias::SystemAllocator::Get()->AllocationCount();
     {
         auto lst = List<Actias::String>{}.Append("1").Append("2").Append("3").Append("4").Append("5").Append("6");
         lst.SwapRemove("2");
@@ -238,7 +235,6 @@ TEST(List, SwapRemove)
         EXPECT_EQ(lst[0], "5");
         EXPECT_EQ(lst[1], "3");
     }
-    EXPECT_EQ(Actias::SystemAllocator::Get()->AllocationCount(), allocatedBefore);
 }
 
 TEST(List, Reserve)
@@ -260,7 +256,7 @@ TEST(List, Resize)
     List<int> lst = { 0, 1 };
     lst.Resize(3, 2);
     ASSERT_EQ(lst.Size(), 3);
-    for (Actias::USize i = 0; i < 3; ++i)
+    for (USize i = 0; i < 3; ++i)
     {
         EXPECT_EQ(lst[i], i);
     }

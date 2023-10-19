@@ -1,4 +1,4 @@
-#include <Actias/Strings/StringSlice.h>
+#include <Actias/Strings/StringSlice.hpp>
 
 namespace Actias
 {

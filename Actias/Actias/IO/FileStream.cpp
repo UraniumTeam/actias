@@ -1,4 +1,4 @@
-#include <Actias/IO/FileStream.h>
+#include <Actias/IO/FileStream.hpp>
 
 namespace Actias::IO
 {

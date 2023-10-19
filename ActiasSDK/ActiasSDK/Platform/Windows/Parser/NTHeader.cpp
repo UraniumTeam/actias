@@ -1,4 +1,4 @@
-#include <ActiasSDK/Platform/Windows/Parser/NTHeader.h>
+#include <ActiasSDK/Platform/Windows/Parser/NTHeader.hpp>
 
 namespace Actias::SDK::PE
 {

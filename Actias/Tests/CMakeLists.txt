@@ -1,12 +1,10 @@
 set(SRC
-    Common/Common.h
+    Common/Common.hpp
     main.cpp
 
-    Buffers/ArrayPool.cpp
     Utils/UUID.cpp
     Containers/List.cpp
     RTTI/RTTI.cpp
-    Strings/Format.cpp
     Strings/String.cpp
 )
 

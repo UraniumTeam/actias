@@ -1,4 +1,4 @@
-#include <Actias/IO/StdoutStream.h>
+#include <Actias/IO/StdoutStream.hpp>
 #include <iostream>
 
 namespace Actias::IO

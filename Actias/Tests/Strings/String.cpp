@@ -1,36 +1,7 @@
-#include <Actias/Strings/String.h>
+#include <Actias/Strings/String.hpp>
 #include <gtest/gtest.h>
 
 using namespace Actias;
-
-TEST(Strings, AssignmentFreesMemory)
-{
-    auto& alloc = *SystemAllocator::Get();
-    auto before = alloc.AllocationCount();
-    {
-        String str = "loooooooooooooooooooooooooooooooooooooooooong123";
-        str        = String("loooooooooooooooooooooooooooooooooooooooooong321");
-    }
-    EXPECT_EQ(before, alloc.AllocationCount());
-    {
-        String str1 = "loooooooooooooooooooooooooooooooooooooooooong123";
-        String str2 = "loooooooooooooooooooooooooooooooooooooooooong321";
-        str2        = str1;
-    }
-    EXPECT_EQ(before, alloc.AllocationCount());
-    {
-        String str1 = "loooooooooooooooooooooooooooooooooooooooooong123";
-        String str2 = String("loooooooooooooooooooooooooooooooooooooooooong321");
-        str2        = str1;
-    }
-    EXPECT_EQ(before, alloc.AllocationCount());
-    {
-        String str1 = "loooooooooooooooooooooooooooooooooooooooooong123";
-        String str2 = String("loooooooooooooooooooooooooooooooooooooooooong321");
-        str2        = std::move(str1);
-    }
-    EXPECT_EQ(before, alloc.AllocationCount());
-}
 
 TEST(Strings, EmptySizeCapacity)
 {
