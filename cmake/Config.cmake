@@ -37,6 +37,20 @@ if (ACTIAS_USE_SSE41)
     endif ()
 endif ()
 
+if (ACTIAS_COMPILER_MSVC)
+    string(APPEND CMAKE_CXX_FLAGS " /W4 /WX")
+else ()
+    string(APPEND CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -fPIC")
+endif ()
+
+set(CMAKE_C_FLAGS ${CMAKE_CXX_FLAGS})
+
+if (WIN32)
+	set(CMAKE_ASM_NASM_FLAGS "-DACTIAS_WINDOWS=1")
+else ()
+	set(CMAKE_ASM_NASM_FLAGS "-DACTIAS_LINUX=1")
+endif ()
+
 function(actias_enable_simd_for_target SIMD_TARGET)
     if (ACTIAS_USE_SSE3)
         target_compile_definitions(${SIMD_TARGET} PUBLIC ACTIAS_SSE3_SUPPORTED=1)
@@ -61,12 +75,6 @@ function(actias_configure_target TARGET)
         target_compile_definitions(${TARGET} PUBLIC ACTIAS_ARCH_64_BIT=1)
     elseif (ACTIAS_32_BIT)
         target_compile_definitions(${TARGET} PUBLIC ACTIAS_ARCH_32_BIT=1)
-    endif ()
-
-    if (ACTIAS_COMPILER_MSVC)
-        target_compile_options(${TARGET} PRIVATE /W4 /WX)
-    else ()
-        target_compile_options(${TARGET} PRIVATE -Wall -Wextra -Werror -fPIC)
     endif ()
 endfunction()
 

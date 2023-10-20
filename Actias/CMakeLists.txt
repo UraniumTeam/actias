@@ -48,9 +48,11 @@ set(SRC
 )
 
 set(SRC_SYSTEM
+    Actias/System/Atomic.h
     Actias/System/Core.h
     Actias/System/Memory.h
     Actias/System/Streams.h
+    Actias/System/Platform/Common/Atomic.asm
     Actias/System/Platform/Common/Core.c
     Actias/System/Platform/Common/Memory.c
 )

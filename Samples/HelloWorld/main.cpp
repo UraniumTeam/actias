@@ -1,5 +1,7 @@
+#include <Actias/System/Atomic.h>
 #include <Actias/System/Streams.h>
 #include <cassert>
+#include <limits>
 
 int main()
 {

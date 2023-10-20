@@ -1,7 +1,12 @@
 cmake_minimum_required(VERSION 3.22)
 project(Actias VERSION 0.1.0
-    LANGUAGES CXX C
+    LANGUAGES CXX C ASM_NASM
 )
+
+enable_language(ASM_NASM)
+if(APPLE)
+    string(APPEND CMAKE_ASM_NASM_FLAGS "--prefix _")
+endif(APPLE)
 
 option(ACTIAS_BUILD_SAMPLES OFF)
 option(ACTIAS_BUILD_TESTS OFF)
@@ -13,8 +18,6 @@ list(PREPEND CMAKE_MODULE_PATH "${ACTIAS_PROJECT_ROOT}/cmake")
 include(Config)
 include(deps)
 
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 set(CMAKE_CXX_STANDARD 17)
