@@ -73,15 +73,16 @@ The next 2 bytes are zeros.
 ### Section Headers
 
 The section headers describe every code and data section. There must be exactly SectionCount (see
-[Headers](#headers)) section headers (36 bytes each).
+[Headers](#headers)) section headers (44 bytes each).
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
-| 0 | UInt64 | Address | Address of the section. |
-| 8 | UInt64 | RawSize | Size of raw section data. |
-| 16 | UInt64 | Size | Size of the section when loaded. |
-| 24 | UInt64 | RelocationsAddress | Address of the relocations block, see [Relocations Table](#relocations-table). |
-| 32 | UInt32 | SectionFlags | The section flags, see [Section Flags](#section-flags). |
+| 0 | UInt64 | RawAddress | Address of the section in the file. |
+| 8 | UInt64 | Address | Address of the section when loaded. |
+| 16 | UInt64 | RawSize | Size of raw section data. |
+| 24 | UInt64 | Size | Size of the section when loaded. |
+| 32 | UInt64 | RelocationsAddress | Address of the relocations block, see [Relocations Table](#relocations-table). |
+| 40 | UInt32 | SectionFlags | The section flags, see [Section Flags](#section-flags). |
 
 #### Section Flags
 
