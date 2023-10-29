@@ -49,7 +49,7 @@ namespace Actias::SDK::PE
         pHeader->TargetArch        = static_cast<UInt16>(m_pNTHeaders->Is64Bit() ? ACBX_ARCH_TYPE_x86_64 : ACBX_ARCH_TYPE_x86);
         pHeader->SectionCount      = static_cast<UInt16>(m_SectionHeaders.Size());
         pHeader->AttributeFlags    = static_cast<UInt32>(ACBX_ATTRIBUTE_LIBRARY_BIT);
-        pHeader->SDKVersion        = 0;
+        pHeader->SDKVersion        = ACTIAS_VERSION_1_0;
     }
 
     void PortableExecutable::CreateSectionHeader(UInt32 sectionID, ACBXSectionHeader* pHeader)
@@ -58,6 +58,7 @@ namespace Actias::SDK::PE
 
         pHeader->RawSize            = pSection->SizeOfRawData;
         pHeader->Size               = pSection->VirtualSize;
+        pHeader->Address            = pSection->VirtualAddress.Value;
         pHeader->RelocationsAddress = pSection->PointerToRelocations;
         pHeader->SectionFlags       = ConvertSectionFlags(pSection->Characteristics);
     }

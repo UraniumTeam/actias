@@ -41,6 +41,15 @@ typedef Int32 SSize;
 
 ACTIAS_END_C
 
+#define ACTIAS_VERSION_PATCH_BIT_COUNT 12u
+#define ACTIAS_VERSION_MINOR_BIT_COUNT 10u
+
+#define ACTIAS_MAKE_VERSION(major, minor, patch)                                                                                 \
+    (((UInt32)(major)) << (ACTIAS_VERSION_PATCH_BIT_COUNT + ACTIAS_VERSION_MINOR_BIT_COUNT))                                     \
+        | (((UInt32)(minor)) << ACTIAS_VERSION_PATCH_BIT_COUNT) | ((UInt32)(patch))
+
+#define ACTIAS_VERSION_1_0 ACTIAS_MAKE_VERSION(1, 0, 0)
+
 #if defined NDEBUG
 #    define ACTIAS_RELEASE 1
 #else
