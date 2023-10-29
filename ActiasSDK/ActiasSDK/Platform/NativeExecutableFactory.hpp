@@ -16,7 +16,7 @@ typedef struct ActiasNativeExecutableLoadInfo
     UInt64 RawDataByteSize;
 } ActiasNativeExecutableLoadInfo;
 
-ACTIAS_SDK_API Actias::SDK::ExecutableParseError ActiasLoadNativeExecutable(Actias::SDK::INativeExecutable** ppExecutable,
-                                                                            ActiasNativeExecutableLoadInfo* pLoadInfo);
+ACTIAS_SDK_API Actias::SDK::ExecutableParseError ACTIAS_ABI
+ActiasLoadNativeExecutable(Actias::SDK::INativeExecutable** ppExecutable, const ActiasNativeExecutableLoadInfo* pLoadInfo);
 
 ACTIAS_END_C

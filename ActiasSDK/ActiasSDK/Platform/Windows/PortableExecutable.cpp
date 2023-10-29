@@ -54,7 +54,7 @@ namespace Actias::SDK::PE
 
     void PortableExecutable::CreateSectionHeader(UInt32 sectionID, ACBXSectionHeader* pHeader)
     {
-        auto* pSection = m_SectionHeaders[sectionID];
+        const auto* pSection = m_SectionHeaders[sectionID];
 
         pHeader->RawSize            = pSection->SizeOfRawData;
         pHeader->Size               = pSection->VirtualSize;
