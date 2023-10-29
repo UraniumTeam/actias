@@ -4,9 +4,9 @@ project(Actias VERSION 0.1.0
 )
 
 enable_language(ASM_NASM)
-if(APPLE)
+if (APPLE)
     string(APPEND CMAKE_ASM_NASM_FLAGS "--prefix _")
-endif(APPLE)
+endif ()
 
 option(ACTIAS_BUILD_SAMPLES OFF)
 option(ACTIAS_BUILD_TESTS OFF)

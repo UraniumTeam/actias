@@ -72,7 +72,8 @@ typedef enum ACBXSectionFlagBits
 //! \see ACBXSectionFlagBits
 typedef struct ACBXSectionHeader
 {
-    UInt64 Address;            //!< Address of the section.
+    UInt64 RawAddress;         //!< Address of the section in the file.
+    UInt64 Address;            //!< Address of the section when loaded.
     UInt64 RawSize;            //!<	Size of raw section data.
     UInt64 Size;               //!<	Size of the section when loaded.
     UInt64 RelocationsAddress; //!<	Address of the relocations block, see Relocations Table.
