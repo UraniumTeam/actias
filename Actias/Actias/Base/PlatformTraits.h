@@ -1,5 +1,7 @@
 #pragma once
 
+#define ACTIAS_ABI __vectorcall
+
 #if defined _WIN32 || defined _WIN64 || defined _WINDOWS
 #    define ACTIAS_WINDOWS 1
 
@@ -11,8 +13,6 @@
 #    define ACTIAS_ByteSwapUInt16(value) _byteswap_ushort(value)
 #    define ACTIAS_ByteSwapUInt32(value) _byteswap_ulong(value)
 #    define ACTIAS_ByteSwapUInt64(value) _byteswap_uint64(value)
-
-#    define ACTIAS_ABI
 
 #    define ACTIAS_EXPORT __declspec(dllexport)
 #    define ACTIAS_IMPORT __declspec(dllimport)
@@ -29,10 +29,8 @@
 #    define ACTIAS_ByteSwapUInt32(value) __builtin_bswap32(value)
 #    define ACTIAS_ByteSwapUInt64(value) __builtin_bswap64(value)
 
-#    define ACTIAS_ABI __attribute__((__ms_abi__))
-
-#    define ACTIAS_EXPORT __attribute__((visibility("default"))) ACTIAS_ABI
-#    define ACTIAS_IMPORT __attribute__((visibility("default"))) ACTIAS_ABI
+#    define ACTIAS_EXPORT __attribute__((visibility("default")))
+#    define ACTIAS_IMPORT __attribute__((visibility("default")))
 
 #else
 #    error Unsupported platform

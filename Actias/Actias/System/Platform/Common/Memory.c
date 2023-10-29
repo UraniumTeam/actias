@@ -1,17 +1,17 @@
 #include <Actias/System/Memory.h>
 #include <stdlib.h>
 
-void* ActiasAlloc(USize byteSize)
+void* ACTIAS_ABI ActiasAlloc(USize byteSize)
 {
     return malloc(byteSize);
 }
 
-void* ActiasRealloc(void* pointer, USize newByteSize)
+void* ACTIAS_ABI ActiasRealloc(void* pointer, USize newByteSize)
 {
     return realloc(pointer, newByteSize);
 }
 
-void ActiasFree(void* pointer)
+void ACTIAS_ABI ActiasFree(void* pointer)
 {
     free(pointer);
 }

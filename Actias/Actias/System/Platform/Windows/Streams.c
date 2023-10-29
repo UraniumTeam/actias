@@ -1,7 +1,7 @@
 #include <Actias/System/Platform/Windows/WinHeaders.h>
 #include <Actias/System/Streams.h>
 
-inline DWORD ActiasConvertStandardDescriptor(ActiasStandardDescriptor descriptor)
+inline DWORD ACTIAS_ABI ActiasConvertStandardDescriptor(ActiasStandardDescriptor descriptor)
 {
     switch (descriptor)
     {
@@ -16,7 +16,7 @@ inline DWORD ActiasConvertStandardDescriptor(ActiasStandardDescriptor descriptor
     }
 }
 
-ActiasResult ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle)
+ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle)
 {
     DWORD winStdHandle = ActiasConvertStandardDescriptor(descriptor);
 
@@ -35,7 +35,7 @@ ActiasResult ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasH
     return ACTIAS_SUCCESS;
 }
 
-ActiasResult ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount, USize* pBytesWritten)
+ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
     DWORD bytesWritten;
     BOOL result = WriteFile(fileHandle, pBuffer, (DWORD)byteCount, &bytesWritten, NULL);
