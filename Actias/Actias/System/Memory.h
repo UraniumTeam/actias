@@ -33,7 +33,7 @@ typedef enum ActiasMemoryProtectionFlagBits
 //! \param byteSize - Size of the storage to allocate in bytes.
 //!
 //! \return A pointer to the allocated storage if the allocation succeeds, NULL otherwise.
-ACTIAS_SYSTEM_API void* ActiasAlloc(USize byteSize);
+ACTIAS_SYSTEM_API void* ACTIAS_ABI ActiasAlloc(USize byteSize);
 
 //! \brief Reallocate the given block of memory.
 //!
@@ -43,7 +43,7 @@ ACTIAS_SYSTEM_API void* ActiasAlloc(USize byteSize);
 //! \param newByteSize - New size of the storage in bytes.
 //!
 //! \return A pointer to the reallocated storage if the allocation succeeds, NULL otherwise.
-ACTIAS_SYSTEM_API void* ActiasRealloc(void* pointer, USize newByteSize);
+ACTIAS_SYSTEM_API void* ACTIAS_ABI ActiasRealloc(void* pointer, USize newByteSize);
 
 //! \brief Allocate uninitialized memory with the specified alignment.
 //!
@@ -56,7 +56,7 @@ ACTIAS_SYSTEM_API void* ActiasRealloc(void* pointer, USize newByteSize);
 //! \note Must be deallocated only with ActiasAlignedFree().
 //!
 //! \return A pointer to the allocated storage if the allocation succeeds, NULL otherwise.
-ACTIAS_SYSTEM_API void* ActiasAlignedAlloc(USize byteAlignment, USize byteSize);
+ACTIAS_SYSTEM_API void* ACTIAS_ABI ActiasAlignedAlloc(USize byteAlignment, USize byteSize);
 
 //! \brief Deallocate memory.
 //!
@@ -65,7 +65,7 @@ ACTIAS_SYSTEM_API void* ActiasAlignedAlloc(USize byteAlignment, USize byteSize);
 //! (but not for the aligned version).
 //!
 //! \param pointer - Pointer to the memory to deallocate.
-ACTIAS_SYSTEM_API void ActiasFree(void* pointer);
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasFree(void* pointer);
 
 //! \brief Deallocate memory.
 //!
@@ -74,7 +74,7 @@ ACTIAS_SYSTEM_API void ActiasFree(void* pointer);
 //! (but only for the aligned version).
 //!
 //! \param pointer - Pointer to the memory to deallocate.
-ACTIAS_SYSTEM_API void ActiasAlignedFree(void* pointer);
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasAlignedFree(void* pointer);
 
 //! \brief Allocate pages in the virtual address space of the process.
 //!
@@ -83,7 +83,7 @@ ACTIAS_SYSTEM_API void ActiasAlignedFree(void* pointer);
 //! \param protection - The desired memory protection.
 //!
 //! \return A pointer to the allocated storage if the allocation succeeds, NULL otherwise.
-ACTIAS_SYSTEM_API void* ActiasVirtualAlloc(void* pointer, USize byteSize, ActiasFlags protection);
+ACTIAS_SYSTEM_API void* ACTIAS_ABI ActiasVirtualAlloc(void* pointer, USize byteSize, ActiasFlags protection);
 
 //! \brief Deallocate memory previously allocated with ActiasVirtualAlloc.
 //!
@@ -95,6 +95,6 @@ ACTIAS_SYSTEM_API void* ActiasVirtualAlloc(void* pointer, USize byteSize, Actias
 //!       mmap() used on Unix systems.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ACTIAS_SYSTEM_API ActiasResult ActiasVirtualFree(void* pointer, USize byteSize);
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pointer, USize byteSize);
 
 ACTIAS_END_C

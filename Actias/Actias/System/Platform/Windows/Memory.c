@@ -2,7 +2,7 @@
 #include <Actias/System/Platform/Windows/WinHeaders.h>
 #include <stdlib.h>
 
-inline DWORD ActiasConvertMemoryProtection(ActiasFlags protection)
+inline DWORD ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
 {
     DWORD result = PAGE_READONLY;
     if (protection & ACTIAS_MEMORY_PROTECTION_WRITE_BIT)
@@ -21,22 +21,22 @@ inline DWORD ActiasConvertMemoryProtection(ActiasFlags protection)
     return result;
 }
 
-void* ActiasAlignedAlloc(USize byteAlignment, USize byteSize)
+void* ACTIAS_ABI ActiasAlignedAlloc(USize byteAlignment, USize byteSize)
 {
     return _aligned_malloc(byteSize, byteAlignment);
 }
 
-void ActiasAlignedFree(void* pointer)
+void ACTIAS_ABI ActiasAlignedFree(void* pointer)
 {
     _aligned_free(pointer);
 }
 
-void* ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags protection)
+void* ACTIAS_ABI ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags protection)
 {
     return VirtualAlloc(pAddress, byteSize, MEM_COMMIT | MEM_RESERVE, ActiasConvertMemoryProtection(protection));
 }
 
-ActiasResult ActiasVirtualFree(void* pointer, USize byteSize)
+ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pointer, USize byteSize)
 {
     ACTIAS_UNUSED(byteSize);
 
