@@ -1,3 +1,4 @@
+#include <Actias/Containers/IBlob.hpp>
 #include <Actias/IO/FileHandle.hpp>
 
 #if ACTIAS_WINDOWS
@@ -224,6 +225,15 @@ namespace Actias::IO
     {
         struct stat buffer; // NOLINT
         return stat(fileName.Data(), &buffer) == 0;
+    }
+
+    Result<USize, ResultCode> File::WriteBlob(StringSlice fileName, IBlob* pBlob, OpenMode openMode)
+    {
+        FileHandle file;
+        auto open = file.Open(fileName, openMode);
+        ACTIAS_GuardResult(open);
+
+        return file.Write(pBlob->Data(), pBlob->ByteSize());
     }
 
     VoidResult<ResultCode> File::Delete(StringSlice fileName)

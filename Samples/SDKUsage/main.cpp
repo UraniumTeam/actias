@@ -1,4 +1,5 @@
 #include <Actias/IO/FileHandle.hpp>
+#include <ActiasSDK/Driver/ExecutableBuilder.hpp>
 #include <ActiasSDK/Platform/INativeExecutable.hpp>
 #include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
 #include <iostream>
@@ -26,18 +27,17 @@ int main()
             std::cout << "Error loading a PE: " << ExecutableParseErrorTypeToString(result) << std::endl;
         }
 
-        std::cout << "Loaded a DLL" << std::endl;
+        ActiasExecutableBuildInfo buildInfo{};
+        buildInfo.pNativeExecutable = executable.Get();
 
-        ACBXFileInformationHeader fileInfo{};
-        ActiasCopyMemory(&fileInfo.Signature, ACBXSignature, ACBX_SIGNATURE_SIZE);
+        Ptr<IBlob> pExecutableData;
+        ActiasBuildExecutable(&pExecutableData, &buildInfo);
 
-        executable->CreateInformationHeader(&fileInfo);
-
-        ACBXSectionHeader textSectionHeader{};
-        textSectionHeader.Address = 0x1000;
-        executable->CreateSectionHeader(0, &textSectionHeader);
-
-        std::cout << "Completed retrieving headers" << std::endl;
+        auto writeResult = File::WriteBlob("TestLibrary.acbx", pExecutableData.Get(), OpenMode::Create);
+        if (writeResult.IsErr())
+        {
+            std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
+        }
     }
     else
     {

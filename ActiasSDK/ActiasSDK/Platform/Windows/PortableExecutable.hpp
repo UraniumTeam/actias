@@ -18,8 +18,8 @@ namespace Actias::SDK::PE
 
         static ExecutableParseResult<INativeExecutable*> Load(const ArraySlice<Byte>& rawBuffer);
 
-        void CreateInformationHeader(ACBXFileInformationHeader* pHeader) override;
-        void CreateSectionHeader(UInt32 sectionID, ACBXSectionHeader* pHeader) override;
-        void CopySection(UInt32 sectionID, Byte* pDestination) override;
+        void ACTIAS_ABI CreateInformationHeader(ACBXFileInformationHeader* pHeader) override;
+        void ACTIAS_ABI CreateSectionHeader(UInt32 sectionID, ACBXSectionHeader* pHeader) override;
+        void ACTIAS_ABI CopySection(UInt32 sectionID, Byte* pDestination) override;
     };
 } // namespace Actias::SDK::PE

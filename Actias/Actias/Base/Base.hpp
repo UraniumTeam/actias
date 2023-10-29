@@ -90,7 +90,8 @@ namespace Actias
     template<class T, class U = T>
     inline T AlignUp(T x, U align)
     {
-        return (x + (align - 1u)) & ~(align - 1u);
+        auto alignT = static_cast<T>(align);
+        return (x + (alignT - 1u)) & ~(alignT - 1u);
     }
 
     //! \brief Align up a pointer.
