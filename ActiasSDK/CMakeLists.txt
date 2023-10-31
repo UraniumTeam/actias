@@ -1,5 +1,9 @@
 set(SRC
-    "ActiasSDK/Base/Base.hpp"
+    ActiasSDK/Base/Base.hpp
+    ActiasSDK/Base/ISymbolNameAllocator.hpp
+
+	ActiasSDK/Driver/ExecutableBuilder.hpp
+	ActiasSDK/Driver/ExecutableBuilder.cpp
 
     ActiasSDK/Parser/Result.hpp
 

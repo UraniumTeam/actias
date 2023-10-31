@@ -8,9 +8,10 @@ set(SRC
     Actias/Base/Platform.h
     Actias/Base/PlatformTraits.h
 
-    Actias/Containers/HeapArray.hpp
-    Actias/Containers/List.hpp
     Actias/Containers/ArraySlice.hpp
+    Actias/Containers/HeapArray.hpp
+    Actias/Containers/IBlob.hpp
+    Actias/Containers/List.hpp
 
     Actias/IO/BaseIO.hpp
     Actias/IO/BaseIO.cpp

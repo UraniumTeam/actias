@@ -4,6 +4,11 @@
 #include <Actias/Strings/StringSlice.hpp>
 #include <Actias/Time/DateTime.hpp>
 
+namespace Actias
+{
+    class IBlob;
+}
+
 namespace Actias::IO
 {
     namespace Internal
@@ -79,6 +84,18 @@ namespace Actias::IO
         //!
         //! \see ResultCode
         [[nodiscard]] static Result<List<Byte>, ResultCode> ReadAllBytes(StringSlice fileName);
+
+        //! \brief Write an entire blob to a file.
+        //!
+        //! \param fileName - The name of the file to write to.
+        //! \param pBlob - The blob containing the data to write.
+        //! \param openMode - The OpenMode to use to open the file.
+        //!
+        //! \return Either a list with the file contents or an error code.
+        //!
+        //! \see ResultCode
+        [[nodiscard]] static Result<USize, ResultCode> WriteBlob(StringSlice fileName, IBlob* pBlob,
+                                                                 OpenMode openMode = OpenMode::CreateNew);
 
         //! \brief Delete a file.
         //!

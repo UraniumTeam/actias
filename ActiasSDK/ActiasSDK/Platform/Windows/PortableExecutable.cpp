@@ -1,3 +1,4 @@
+#include <ActiasSDK/Platform/Windows/Parser/Exports.hpp>
 #include <ActiasSDK/Platform/Windows/Parser/NTHeader.hpp>
 #include <ActiasSDK/Platform/Windows/PortableExecutable.hpp>
 
@@ -37,9 +38,14 @@ namespace Actias::SDK::PE
         auto mapResult = PEModuleBuffer::MapToVirtual(pResult->m_RawBuffer, pHeaders, sections);
         ACTIAS_GuardResult(mapResult);
 
-        pResult->m_pVirtualBuffer = mapResult.Unwrap();
-        pResult->m_SectionHeaders = sections;
-        pResult->m_pNTHeaders     = pHeaders;
+        auto* pMapped = mapResult.Unwrap();
+
+        pResult->m_pVirtualBuffer   = pMapped;
+        pResult->m_SectionHeaders   = sections;
+        pResult->m_pNTHeaders       = pHeaders;
+        pResult->m_pExportDirectory = pHeaders->GetExportDirectoryEntry(pMapped->GetImageHandle());
+        pResult->m_pMappedBase      = ac_byte_cast(pMapped->GetImageHandle());
+
         return pResult.Detach();
     }
 
@@ -54,13 +60,36 @@ namespace Actias::SDK::PE
 
     void PortableExecutable::CreateSectionHeader(UInt32 sectionID, ACBXSectionHeader* pHeader)
     {
-        auto* pSection = m_SectionHeaders[sectionID];
+        const auto* pSection = m_SectionHeaders[sectionID];
 
         pHeader->RawSize            = pSection->SizeOfRawData;
         pHeader->Size               = pSection->VirtualSize;
         pHeader->Address            = pSection->VirtualAddress.Value;
         pHeader->RelocationsAddress = pSection->PointerToRelocations;
         pHeader->SectionFlags       = ConvertSectionFlags(pSection->Characteristics);
+    }
+
+    void ACTIAS_ABI PortableExecutable::CreateExportTableHeader(ACBXExportTableHeader* pHeader)
+    {
+        pHeader->EntryCount = m_pExportDirectory->NumberOfNames;
+    }
+
+    void ACTIAS_ABI PortableExecutable::CreateExportTableEntry(UInt64 entryID, ACBXExportTableEntry* pEntry,
+                                                               ISymbolNameAllocator* pNameAllocator)
+    {
+        const auto* pExportDirectory = m_pExportDirectory;
+        const auto* pAddressTable    = reinterpret_cast<UInt32*>(m_pMappedBase + pExportDirectory->AddressOfFunctions);
+        const auto* pNameTable       = reinterpret_cast<UInt32*>(m_pMappedBase + pExportDirectory->AddressOfNames);
+        const auto* pNameOrdinals    = reinterpret_cast<UInt16*>(m_pMappedBase + pExportDirectory->AddressOfNameOrdinals);
+
+        const auto* pName       = m_pMappedBase + pNameTable[entryID];
+        const auto nameByteSize = strlen(reinterpret_cast<const char*>(pName));
+
+        const auto ordinal    = pNameOrdinals[entryID];
+        pEntry->SymbolAddress = pAddressTable[ordinal];
+
+        auto* pAllocatedName = pNameAllocator->Allocate(nameByteSize, pEntry->NameAddress);
+        ActiasCopyMemory(pAllocatedName, pName, nameByteSize);
     }
 
     void PortableExecutable::CopySection(UInt32 sectionID, Byte* pDestination)
