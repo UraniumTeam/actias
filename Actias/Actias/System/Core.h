@@ -5,29 +5,17 @@
  */
 
 #pragma once
-#include <Actias/Base/Platform.h>
+#include <Actias/System/Result.h>
 
 #if ActiasSystem_EXPORTS
 #    define ACTIAS_SYSTEM_API ACTIAS_EXPORT
 #else
-#    define ACTIAS_SYSTEM_API
+#    define ACTIAS_SYSTEM_API ACTIAS_IMPORT
 #endif
 
 ACTIAS_BEGIN_C
 
 typedef void* ActiasHandle;
-
-typedef enum ActiasResultValues
-{
-    ACTIAS_SUCCESS                     = 0,  //!< Operation completed successfully
-    ACTIAS_FAIL_UNKNOWN                = -1, //!< Operation failed with an unexpected error, try ActiasGetNativeErrorCode
-    ACTIAS_FAIL_INVALID_STD_DESCRIPTOR = -2, //!< Provided standard file descriptor was not valid.
-} ActiasResultValues;
-
-//! \brief Indicates operation status.
-//!
-//! Success codes are always non-negative.
-typedef Int32 ActiasResult;
 
 typedef enum ActiasFlagValues
 {

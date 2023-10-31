@@ -1,5 +1,6 @@
 set(SRC
     Actias/ACBX/Headers.h
+    Actias/ACBX/Loader.h
 
     Actias/Base/Base.hpp
     Actias/Base/Byte.hpp
@@ -52,6 +53,8 @@ set(SRC_SYSTEM
     Actias/System/Atomic.h
     Actias/System/Core.h
     Actias/System/Memory.h
+    Actias/System/Result.h
+    Actias/System/Runtime.h
     Actias/System/Streams.h
     Actias/System/Platform/Common/Atomic.asm
     Actias/System/Platform/Common/Core.c
@@ -63,6 +66,7 @@ if (ACTIAS_WINDOWS)
         ${SRC_SYSTEM}
         Actias/System/Platform/Windows/Core.c
         Actias/System/Platform/Windows/Memory.c
+        Actias/System/Platform/Windows/Runtime.c
         Actias/System/Platform/Windows/Streams.c
         Actias/System/Platform/Windows/WinHeaders.h
     )
