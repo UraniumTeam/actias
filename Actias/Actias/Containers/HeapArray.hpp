@@ -1,5 +1,6 @@
 #pragma once
 #include <Actias/Containers/ArraySlice.hpp>
+#include <Actias/Containers/IBlob.hpp>
 #include <Actias/Memory/IAllocator.hpp>
 #include <Actias/Memory/SystemAllocator.hpp>
 
@@ -297,6 +298,27 @@ namespace Actias
         inline operator ArraySlice<T>() // NOLINT(google-explicit-constructor)
         {
             return m_Storage;
+        }
+    };
+
+    class HeapArrayBlob : public Object<IBlob>
+    {
+        HeapArray<Byte> m_Data;
+
+    public:
+        inline HeapArrayBlob(HeapArray<Byte>&& data)
+            : m_Data(std::move(data))
+        {
+        }
+
+        [[nodiscard]] inline virtual Byte* ACTIAS_ABI Data()
+        {
+            return m_Data.Data();
+        }
+
+        [[nodiscard]] inline virtual USize ACTIAS_ABI ByteSize() const
+        {
+            return m_Data.Length();
         }
     };
 } // namespace Actias

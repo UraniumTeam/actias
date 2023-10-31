@@ -16,15 +16,18 @@ namespace Actias::SDK
     }
 } // namespace Actias::SDK
 
-Actias::SDK::ExecutableParseError ActiasLoadNativeExecutable(Actias::SDK::INativeExecutable** ppExecutable,
-                                                             ActiasNativeExecutableLoadInfo* pLoadInfo)
+using namespace Actias;
+using namespace Actias::SDK;
+
+extern "C" ExecutableParseError ACTIAS_ABI ActiasLoadNativeExecutable(INativeExecutable** ppExecutable,
+                                                                      const ActiasNativeExecutableLoadInfo* pLoadInfo)
 {
-    Actias::ArraySlice rawBuffer(static_cast<Actias::Byte*>(pLoadInfo->pRawData), pLoadInfo->RawDataByteSize);
-    auto result = Actias::SDK::LoadNativeExecutable(rawBuffer);
+    ArraySlice rawBuffer(static_cast<Byte*>(pLoadInfo->pRawData), pLoadInfo->RawDataByteSize);
+    auto result = LoadNativeExecutable(rawBuffer);
     if (result)
     {
         *ppExecutable = result.Unwrap();
-        return Actias::SDK::ExecutableParseError::None;
+        return ExecutableParseError::None;
     }
 
     return result.UnwrapErr();
