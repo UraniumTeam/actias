@@ -4,5 +4,5 @@
 #if ActiasSDK_EXPORTS
 #    define ACTIAS_SDK_API ACTIAS_EXPORT
 #else
-#    define ACTIAS_SDK_API
+#    define ACTIAS_SDK_API ACTIAS_IMPORT
 #endif

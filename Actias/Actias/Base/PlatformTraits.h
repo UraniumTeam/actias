@@ -15,7 +15,8 @@
 #    define ACTIAS_ByteSwapUInt64(value) _byteswap_uint64(value)
 
 #    define ACTIAS_EXPORT __declspec(dllexport)
-#    define ACTIAS_IMPORT __declspec(dllimport)
+#    define ACTIAS_IMPORT
+// #    define ACTIAS_IMPORT __declspec(dllimport)
 
 #elif defined __linux__
 #    define ACTIAS_LINUX 1

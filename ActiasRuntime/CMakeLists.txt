@@ -1,13 +1,22 @@
 set(SRC
+    ActiasRuntime/Base/Base.hpp
+
+    ActiasRuntime/Builder/ModuleBuilder.hpp
+    ActiasRuntime/Builder/ModuleBuilder.cpp
+
+    ActiasRuntime/Loader/Loader.hpp
+    ActiasRuntime/Loader/Loader.cpp
+
     ActiasRuntime/Temp.cpp
 )
 
-add_library(ActiasRuntime STATIC ${SRC})
+add_library(ActiasRuntime SHARED ${SRC})
 
 actias_configure_target(ActiasRuntime)
 actias_enable_simd_for_target(ActiasRuntime)
 
 target_include_directories(ActiasRuntime PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+target_link_libraries(ActiasRuntime Actias)
 
 set_target_properties(ActiasRuntime PROPERTIES FOLDER "Runtime")
 
