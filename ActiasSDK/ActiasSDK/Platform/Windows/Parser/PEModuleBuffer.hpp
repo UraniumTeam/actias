@@ -25,6 +25,11 @@ namespace Actias::SDK::PE
                                                                                  NTHeaderBase* pHeaders,
                                                                                  const ArraySlice<SectionHeader*>& sections);
 
+        [[nodiscard]] inline ActiasHandle GetImageHandle()
+        {
+            return m_Buffer.Data();
+        }
+
         [[nodiscard]] inline USize ByteSize() const
         {
             return m_Buffer.Length();

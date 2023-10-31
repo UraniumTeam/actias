@@ -57,6 +57,25 @@ namespace Actias::SDK
             return AllocateObject<HeapArrayBlob>(std::move(result));
         }
     };
+
+    class SymbolNameAllocator : public ISymbolNameAllocator
+    {
+        // TODO: optimize this by allocating larger blocks of memory from the blob builder
+        //   to group multiple name allocations
+        BlobBuilder* m_pBlobBuilder;
+
+    public:
+        inline SymbolNameAllocator(BlobBuilder* pBlobBuilder)
+            : m_pBlobBuilder(pBlobBuilder)
+        {
+        }
+
+        inline void* Allocate(USize byteSize, UInt64& address) override
+        {
+            address = m_pBlobBuilder->NextAddress();
+            return m_pBlobBuilder->Allocate<Byte>(byteSize);
+        }
+    };
 } // namespace Actias::SDK
 
 using namespace Actias;
@@ -77,6 +96,18 @@ extern "C" void ACTIAS_ABI ActiasBuildExecutable(IBlob** ppExecutableData, const
     {
         auto* pSectionHeader = sectionHeaders.Push(builder.Allocate<ACBXSectionHeader>());
         pNative->CreateSectionHeader(i, pSectionHeader);
+    }
+
+    auto* pExportHeader = builder.Allocate<ACBXExportTableHeader>();
+    pNative->CreateExportTableHeader(pExportHeader);
+
+    pExportHeader->Address = builder.NextAddress();
+    auto* pExportTable     = builder.Allocate<ACBXExportTableEntry>(pExportHeader->EntryCount);
+
+    SymbolNameAllocator nameAllocator(&builder);
+    for (UInt64 i = 0; i < pExportHeader->EntryCount; ++i)
+    {
+        pNative->CreateExportTableEntry(i, pExportTable + i, &nameAllocator);
     }
 
     for (UInt16 i = 0; i < pFileInfo->SectionCount; ++i)
