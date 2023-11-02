@@ -17,7 +17,7 @@ void* ActiasVirtualAlloc(void* pAddress, USize byteSize, Int32 protection)
     return mmap(pAddress, byteSize, protection, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 }
 
-Int32 ActiasVirtualFree(void* pAddress, USize byteSize)
+ActiasResult ActiasVirtualFree(void* pAddress, USize byteSize)
 {
     return munmap(pAddress, byteSize);
 }
