@@ -12,12 +12,22 @@ void ActiasAlignedFree(void* pointer)
     free(pointer);
 }
 
-void* ActiasVirtualAlloc(void* pAddress, USize byteSize, Int32 protection)
+ActiasResult ActiasVirtualAlloc(void* pAddress, USize byteSize, Int32 protection)
 {
-    return mmap(pAddress, byteSize, protection, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    mmap(pAddress, byteSize, protection, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    if (errno != 0)
+    {
+        return ACTIAS_FAIL_UNKNOWN;
+    }
+    return ACTIAS_SUCCESS;
 }
 
 ActiasResult ActiasVirtualFree(void* pAddress, USize byteSize)
 {
-    return munmap(pAddress, byteSize);
+    munmap(pAddress, byteSize);
+    if (errno != 0)
+    {
+        return ACTIAS_FAIL_UNKNOWN;
+    }
+    return ACTIAS_SUCCESS;
 }
