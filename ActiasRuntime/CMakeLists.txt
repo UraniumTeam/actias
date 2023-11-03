@@ -4,10 +4,7 @@ set(SRC
     ActiasRuntime/Builder/ModuleBuilder.hpp
     ActiasRuntime/Builder/ModuleBuilder.cpp
 
-    ActiasRuntime/Loader/Loader.hpp
     ActiasRuntime/Loader/Loader.cpp
-
-    ActiasRuntime/Temp.cpp
 )
 
 add_library(ActiasRuntime SHARED ${SRC})

@@ -1,4 +1,5 @@
 #include <Actias/IO/FileHandle.hpp>
+#include <Actias/System/Runtime.h>
 #include <ActiasSDK/Driver/ExecutableBuilder.hpp>
 #include <ActiasSDK/Platform/INativeExecutable.hpp>
 #include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
@@ -10,6 +11,8 @@ using namespace Actias::SDK;
 
 int main()
 {
+    ActiasInit();
+
     auto dllRead = File::ReadAllBytes("TestLibrary.dll");
     if (dllRead)
     {
@@ -37,6 +40,13 @@ int main()
         if (writeResult.IsErr())
         {
             std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
+        }
+
+        ActiasHandle moduleHandle = nullptr;
+        auto loadResult           = ActiasLoadModule("TestLibrary.acbx", &moduleHandle);
+        if (loadResult != ACTIAS_SUCCESS)
+        {
+            std::cout << "Error loading ACBX file: " << loadResult << std::endl;
         }
     }
     else
