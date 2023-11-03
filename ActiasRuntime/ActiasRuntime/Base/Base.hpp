@@ -1,11 +1,6 @@
 #pragma once
 #include <Actias/System/Core.h>
-
-#if ActiasRuntime_EXPORTS
-#    define ACTIAS_RUNTIME_API ACTIAS_EXPORT
-#else
-#    define ACTIAS_RUNTIME_API ACTIAS_IMPORT
-#endif
+#include <Actias/System/Platform/Common/RuntimeDef.h>
 
 namespace Actias::Runtime
 {

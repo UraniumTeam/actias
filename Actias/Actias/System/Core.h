@@ -16,6 +16,7 @@
 ACTIAS_BEGIN_C
 
 typedef void* ActiasHandle;
+typedef Int64(ACTIAS_ABI* ActiasProc)();
 
 typedef enum ActiasFlagValues
 {
@@ -46,5 +47,21 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasGetSystemProperties(ActiasSystemProperti
 //! \param pSource - A pointer to the memory to copy from.
 //! \param byteSize - The number of bytes to copy.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyMemory(void* pDestination, ACTIAS_CONST void* pSource, USize byteSize);
+
+//! \brief Copy a value to each of the first bytes of the provided memory buffer.
+//!
+//! \param pDestination - A pointer to the memory to fill.
+//! \param value - The fill byte.
+//! \param byteCount - The number of bytes to fill.
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasSetMemory(void* pDestination, Int32 value, USize byteCount);
+
+//! \brief Set each of the first bytes of the provided memory buffer to zero.
+//!
+//! \param pDestination - A pointer to the memory to fill.
+//! \param byteCount - The number of bytes to fill.
+inline void ACTIAS_ABI ActiasZeroMemory(void* pDestination, USize byteCount)
+{
+    ActiasSetMemory(pDestination, 0, byteCount);
+}
 
 ACTIAS_END_C

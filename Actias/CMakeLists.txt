@@ -59,6 +59,8 @@ set(SRC_SYSTEM
     Actias/System/Platform/Common/Atomic.asm
     Actias/System/Platform/Common/Core.c
     Actias/System/Platform/Common/Memory.c
+    Actias/System/Platform/Common/Runtime.c
+    Actias/System/Platform/Common/RuntimeDef.h
 )
 
 if (ACTIAS_WINDOWS)

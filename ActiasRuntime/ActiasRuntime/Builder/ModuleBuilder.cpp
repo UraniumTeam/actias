@@ -44,7 +44,7 @@ namespace Actias::Runtime
         auto* pointer = AlignUpPtr(pRawData + sizeof(ACBXFileInformationHeader), ACBX_FILE_ALIGNMENT);
         for (USize i = 0; i < m_pFileInfoHeader->SectionCount; ++i)
         {
-            if (pointer + sizeof(ACBXSectionHeader) - pRawData > rawSize)
+            if (pointer + sizeof(ACBXSectionHeader) - pRawData > static_cast<SSize>(rawSize))
             {
                 return Err(ResultCode::InsufficientSize);
             }
@@ -59,7 +59,7 @@ namespace Actias::Runtime
             pointer = AlignUpPtr(pointer + sizeof(ACBXSectionHeader), ACBX_FILE_ALIGNMENT);
         }
 
-        if (pointer + sizeof(ACBXExportTableHeader) - pRawData > rawSize)
+        if (pointer + sizeof(ACBXExportTableHeader) - pRawData > static_cast<SSize>(rawSize))
         {
             return Err(ResultCode::InsufficientSize);
         }
