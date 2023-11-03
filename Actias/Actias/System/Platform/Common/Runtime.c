@@ -3,6 +3,16 @@
 
 static ActiasHandle g_CurrentRuntimeModule = NULL;
 
+inline ActiasResult LoadRuntimeProc(char* procName, ActiasProc* pAddress)
+{
+    if (g_CurrentRuntimeModule == NULL)
+    {
+        return ACTIAS_FAIL_RT_NOT_INITIALIZED;
+    }
+
+    return ActiasFindNativeSymbolAddress(g_CurrentRuntimeModule, procName, pAddress);
+}
+
 ActiasResult ACTIAS_ABI ActiasInit(void)
 {
     if (g_CurrentRuntimeModule)
@@ -15,19 +25,39 @@ ActiasResult ACTIAS_ABI ActiasInit(void)
 
 ActiasResult ACTIAS_ABI ActiasLoadModuleEx(ACTIAS_CONST ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle)
 {
-    if (g_CurrentRuntimeModule == NULL)
-    {
-        return ACTIAS_FAIL_RT_NOT_INITIALIZED;
-    }
-
     ActiasProc address     = NULL;
-    ActiasResult symResult = ActiasFindNativeSymbolAddress(g_CurrentRuntimeModule, ACTIAS_RtRunLoader_ProcName, &address);
+    ActiasResult symResult = LoadRuntimeProc(ActiasRtLoadModule_ProcName, &address);
     if (symResult != ACTIAS_SUCCESS)
     {
         return symResult;
     }
 
-    ActiasRtRunLoaderProc* runLoader = (ActiasRtRunLoaderProc*)address;
+    ActiasRtLoadModuleProc* load = (ActiasRtLoadModuleProc*)address;
+    return load(pRunInfo, pModuleHandle);
+}
 
-    return runLoader(pRunInfo, pModuleHandle);
+ActiasResult ACTIAS_ABI ActiasUnloadModule(ActiasHandle moduleHandle)
+{
+    ActiasProc address     = NULL;
+    ActiasResult symResult = LoadRuntimeProc(ActiasRtUnloadModule_ProcName, &address);
+    if (symResult != ACTIAS_SUCCESS)
+    {
+        return symResult;
+    }
+
+    ActiasRtUnloadModuleProc* unload = (ActiasRtUnloadModuleProc*)address;
+    return unload(moduleHandle);
+}
+
+ActiasResult ACTIAS_ABI ActiasFindSymbolAddress(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName, ActiasProc* pAddress)
+{
+    ActiasProc address     = NULL;
+    ActiasResult symResult = LoadRuntimeProc(ActiasRtFindSymbolAddress_ProcName, &address);
+    if (symResult != ACTIAS_SUCCESS)
+    {
+        return symResult;
+    }
+
+    ActiasRtFindSymbolAddressProc* find = (ActiasRtFindSymbolAddressProc*)address;
+    return find(moduleHandle, pSymbolName, pAddress);
 }
