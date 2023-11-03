@@ -45,8 +45,9 @@ typedef enum ActiasResultValues
 
     ACTIAS_FAIL_RT_INITIALIZED             = ACTIAS_FAIL_RT_ERROR - 1, //!< Runtime was already initialized.
     ACTIAS_FAIL_RT_NOT_INITIALIZED         = ACTIAS_FAIL_RT_ERROR - 2, //!< Runtime was not initialized.
-    ACTIAS_FAIL_ACBX_INVALID_SIGNATURE     = ACTIAS_FAIL_RT_ERROR - 3, //!< ACBX file signature was not valid.
-    ACTIAS_FAIL_ACBX_SECTION_OUT_OF_BOUNDS = ACTIAS_FAIL_RT_ERROR - 4, //!< ACBX file section was out of bounds.
+    ACTIAS_FAIL_SYMBOL_NOT_FOUND           = ACTIAS_FAIL_RT_ERROR - 3, //!< Runtime was unable to find an exported symbol.
+    ACTIAS_FAIL_ACBX_INVALID_SIGNATURE     = ACTIAS_FAIL_RT_ERROR - 4, //!< ACBX file signature was not valid.
+    ACTIAS_FAIL_ACBX_SECTION_OUT_OF_BOUNDS = ACTIAS_FAIL_RT_ERROR - 5, //!< ACBX file section was out of bounds.
 } ActiasResultValues;
 
 //! \brief Indicates operation status.

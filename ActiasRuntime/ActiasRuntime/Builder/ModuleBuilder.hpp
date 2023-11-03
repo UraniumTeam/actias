@@ -19,5 +19,6 @@ namespace Actias::Runtime
     public:
         VoidResult<IO::ResultCode> LoadFromStream(IO::IStream* pStream);
         VoidResult<ResultCode> ParseHeaders();
+        Result<ActiasHandle, ResultCode> Build();
     };
 } // namespace Actias::Runtime

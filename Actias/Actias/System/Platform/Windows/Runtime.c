@@ -13,6 +13,17 @@ ActiasResult ACTIAS_ABI ActiasLoadNativeModule(ACTIAS_CONST char* pFilePath, Act
     return ACTIAS_SUCCESS;
 }
 
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadNativeModule(ActiasHandle moduleHandle)
+{
+    BOOL result = FreeLibrary(moduleHandle);
+    if (result)
+    {
+        return ACTIAS_SUCCESS;
+    }
+
+    return ACTIAS_FAIL_UNKNOWN;
+}
+
 ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName,
                                                       ActiasProc* pAddress)
 {

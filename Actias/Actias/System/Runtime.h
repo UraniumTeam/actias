@@ -28,10 +28,17 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasInit(void);
 //! \return ActiasResult that indicates the status of the operation.
 ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasLoadNativeModule(ACTIAS_CONST char* pFilePath, ActiasHandle* pHandle);
 
+//! \brief Request the runtime to unload a dynamic module (OS-native only).
+//!
+//! \param moduleHandle - Handle of the module to unload.
+//!
+//! \return ActiasResult that indicates the status of the operation.
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadNativeModule(ActiasHandle moduleHandle);
+
 //! \brief Find the address of a symbol from a dynamic module (OS-native only).
 //!
 //! \param moduleHandle - A handle returned from ActiasLoadNativeModule.
-//! \param pSymbolName - The name of the symbol to load.
+//! \param pSymbolName - The name of the symbol to find.
 //! \param pAddress - A pointer to the variable that receives the resulting symbol address.
 //!
 //! \return ActiasResult that indicates the status of the operation.
@@ -47,6 +54,13 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHa
 ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasLoadModuleEx(ACTIAS_CONST ACBXLoaderRunInfo* pRunInfo,
                                                              ActiasHandle* pModuleHandle);
 
+//! \brief Request the runtime to unload a dynamic module (ACBX only).
+//!
+//! \param moduleHandle - Handle of the module to unload.
+//!
+//! \return ActiasResult that indicates the status of the operation.
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadModule(ActiasHandle moduleHandle);
+
 //! \brief Request the runtime to load a dynamic module (ACBX only).
 //!
 //! \param pFilePath - A pointer to a null-terminated string containing the path to the module to load.
@@ -60,5 +74,15 @@ inline ActiasResult ACTIAS_ABI ActiasLoadModule(ACTIAS_CONST char* pFilePath, Ac
     runInfo.pModulePath = pFilePath;
     return ActiasLoadModuleEx(&runInfo, pHandle);
 }
+
+//! \brief Find the address of a symbol from a dynamic module (ACBX only).
+//!
+//! \param moduleHandle - A handle returned from ActiasLoadModule or ActiasLoadModuleEx.
+//! \param pSymbolName - The name of the symbol to find.
+//! \param pAddress - A pointer to the variable that receives the resulting symbol address.
+//!
+//! \return ActiasResult that indicates the status of the operation.
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasFindSymbolAddress(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName,
+                                                                  ActiasProc* pAddress);
 
 ACTIAS_END_C

@@ -48,6 +48,24 @@ int main()
         {
             std::cout << "Error loading ACBX file: " << loadResult << std::endl;
         }
+
+        typedef Int32 ACTIAS_ABI AddNumbers(Int32 a, Int32 b);
+
+        ActiasProc address;
+        auto symResult = ActiasFindSymbolAddress(moduleHandle, "AddNumbers", &address);
+        if (symResult != ACTIAS_SUCCESS)
+        {
+            std::cout << "Error finding a symbol in ACBX module: " << symResult << std::endl;
+        }
+
+        auto* add = reinterpret_cast<AddNumbers*>(address);
+        std::cout << add(2, 3) << std::endl;
+
+        auto unloadResult = ActiasUnloadModule(moduleHandle);
+        if (unloadResult != ACTIAS_SUCCESS)
+        {
+            std::cout << "Error unloading ACBX module: " << unloadResult << std::endl;
+        }
     }
     else
     {
