@@ -40,7 +40,7 @@ ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* 
     DWORD bytesWritten;
     BOOL result = WriteFile(fileHandle, pBuffer, (DWORD)byteCount, &bytesWritten, NULL);
 
-    if (!result)
+    if (result == FALSE)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }

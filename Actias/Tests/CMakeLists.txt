@@ -2,10 +2,11 @@ set(SRC
     Common/Common.hpp
     main.cpp
 
-    Utils/UUID.cpp
     Containers/List.cpp
     RTTI/RTTI.cpp
     Strings/String.cpp
+    System/Memcopy.cpp
+    Utils/UUID.cpp
 )
 
 add_executable(ActiasTests ${SRC})

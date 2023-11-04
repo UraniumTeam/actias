@@ -1,7 +1,7 @@
 #include <Actias/System/Core.h>
 #include <string.h>
 
-void ACTIAS_ABI ActiasCopyMemory(void* pDestination, ACTIAS_CONST void* pSource, USize byteSize)
+void ACTIAS_ABI ActiasSetMemory(void* pDestination, Int32 value, USize byteCount)
 {
-    memcpy(pDestination, pSource, byteSize);
+    memset(pDestination, value, byteCount);
 }

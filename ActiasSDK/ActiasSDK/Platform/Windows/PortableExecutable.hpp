@@ -18,6 +18,8 @@ namespace Actias::SDK::PE
         NTHeaderBase* m_pNTHeaders          = nullptr;
         ExportDirectory* m_pExportDirectory = nullptr;
 
+        UInt64 m_SectionBaseVA = 0;
+
     public:
         ACTIAS_RTTI_Class(PortableExecutable, "8DC33AFD-F7A2-4313-9C54-3ACD23332D05");
 
