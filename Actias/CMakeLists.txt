@@ -57,7 +57,10 @@ set(SRC_SYSTEM
     Actias/System/Runtime.h
     Actias/System/Streams.h
     Actias/System/Platform/Common/Atomic.asm
+    Actias/System/Platform/Common/CopyMemory.c
+    Actias/System/Platform/Common/CopyMemoryAVX.asm
     Actias/System/Platform/Common/Core.c
+    Actias/System/Platform/Common/InlineCopyMemory.h
     Actias/System/Platform/Common/Memory.c
     Actias/System/Platform/Common/Runtime.c
     Actias/System/Platform/Common/RuntimeDef.h
@@ -83,6 +86,7 @@ endif ()
 add_library(ActiasSystem SHARED ${SRC_SYSTEM})
 
 actias_configure_target(ActiasSystem)
+actias_enable_simd_for_target(ActiasSystem)
 
 target_include_directories(ActiasSystem PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
