@@ -5,6 +5,7 @@
  */
 
 #pragma once
+#include <Actias/System/Platform/Common/InlineCopyMemory.h>
 #include <Actias/System/Result.h>
 
 #if ActiasSystem_EXPORTS
@@ -41,12 +42,21 @@ ACTIAS_SYSTEM_API Int32 ACTIAS_ABI ActiasGetNativeErrorCode(void);
 //! \param pProperties - A pointer to the variable that receives system properties.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasGetSystemProperties(ActiasSystemProperties* pProperties);
 
+//! \brief Copy one memory buffer to another, the provided pointers and size must have 32-byte alignment.
+//!
+//! \param pDestination - A pointer to the memory to copy to.
+//! \param pSource - A pointer to the memory to copy from.
+//! \param byteSize - The number of bytes to copy.
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyAlignedMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
+                                                          USize byteSize);
+
 //! \brief Copy one memory buffer to another.
 //!
 //! \param pDestination - A pointer to the memory to copy to.
 //! \param pSource - A pointer to the memory to copy from.
 //! \param byteSize - The number of bytes to copy.
-ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyMemory(void* pDestination, ACTIAS_CONST void* pSource, USize byteSize);
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
+                                                   USize byteSize);
 
 //! \brief Copy a value to each of the first bytes of the provided memory buffer.
 //!

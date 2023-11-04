@@ -36,14 +36,14 @@ int main()
         Ptr<IBlob> pExecutableData;
         ActiasBuildExecutable(&pExecutableData, &buildInfo);
 
-        auto writeResult = File::WriteBlob("TestLibrary.acbx", pExecutableData.Get(), OpenMode::Create);
+        auto writeResult = File::WriteBlob("TestLibrary.acbl", pExecutableData.Get(), OpenMode::Create);
         if (writeResult.IsErr())
         {
             std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
         }
 
         ActiasHandle moduleHandle = nullptr;
-        auto loadResult           = ActiasLoadModule("TestLibrary.acbx", &moduleHandle);
+        auto loadResult           = ActiasLoadModule("TestLibrary.acbl", &moduleHandle);
         if (loadResult != ACTIAS_SUCCESS)
         {
             std::cout << "Error loading ACBX file: " << loadResult << std::endl;
