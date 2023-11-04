@@ -21,7 +21,7 @@ namespace Actias
     };
 
     template<class T, class TError>
-    class Result final
+    class [[nodiscard]] Result final
     {
         std::variant<T, TError> m_Data;
 
@@ -100,12 +100,22 @@ namespace Actias
             return !IsOk();
         }
 
-        inline TError UnwrapErr() const
+        [[nodiscard]] inline TError UnwrapErr() const
         {
             return ExpectErr("UnwrapErr() called on OK result");
         }
 
-        inline TError ExpectErr([[maybe_unused]] const char* msg) const
+        [[nodiscard]] inline TError UnwrapErrOrDefault() const
+        {
+            if (!IsOk())
+            {
+                return std::get<TError>(m_Data);
+            }
+
+            return {};
+        }
+
+        [[nodiscard]] inline TError ExpectErr([[maybe_unused]] const char* msg) const
         {
             ACTIAS_Assert(IsErr(), msg);
             return std::get<TError>(m_Data);
@@ -221,12 +231,12 @@ namespace Actias
     template<class TError>
     using VoidResult = Result<OK, TError>;
 
-#define ACTIAS_Guard(Value, Error)                                                                                                   \
+#define ACTIAS_Guard(Value, Error)                                                                                               \
     do                                                                                                                           \
     {                                                                                                                            \
         if (!(Value))                                                                                                            \
         {                                                                                                                        \
-            return ::Actias::Err(Error);                                                                                             \
+            return ::Actias::Err(Error);                                                                                         \
         }                                                                                                                        \
     }                                                                                                                            \
     while (false)

@@ -1,4 +1,5 @@
 #include <Actias/IO/FileHandle.hpp>
+#include <Actias/System/Runtime.h>
 #include <ActiasSDK/Driver/ExecutableBuilder.hpp>
 #include <ActiasSDK/Platform/INativeExecutable.hpp>
 #include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
@@ -10,6 +11,8 @@ using namespace Actias::SDK;
 
 int main()
 {
+    ActiasInit();
+
     auto dllRead = File::ReadAllBytes("TestLibrary.dll");
     if (dllRead)
     {
@@ -33,10 +36,35 @@ int main()
         Ptr<IBlob> pExecutableData;
         ActiasBuildExecutable(&pExecutableData, &buildInfo);
 
-        auto writeResult = File::WriteBlob("TestLibrary.acbx", pExecutableData.Get(), OpenMode::Create);
+        auto writeResult = File::WriteBlob("TestLibrary.acbl", pExecutableData.Get(), OpenMode::Create);
         if (writeResult.IsErr())
         {
             std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
+        }
+
+        ActiasHandle moduleHandle = nullptr;
+        auto loadResult           = ActiasLoadModule("TestLibrary.acbl", &moduleHandle);
+        if (loadResult != ACTIAS_SUCCESS)
+        {
+            std::cout << "Error loading ACBX file: " << loadResult << std::endl;
+        }
+
+        typedef Int32 ACTIAS_ABI AddNumbers(Int32 a, Int32 b);
+
+        ActiasProc address;
+        auto symResult = ActiasFindSymbolAddress(moduleHandle, "AddNumbers", &address);
+        if (symResult != ACTIAS_SUCCESS)
+        {
+            std::cout << "Error finding a symbol in ACBX module: " << symResult << std::endl;
+        }
+
+        auto* add = reinterpret_cast<AddNumbers*>(address);
+        std::cout << add(2, 3) << std::endl;
+
+        auto unloadResult = ActiasUnloadModule(moduleHandle);
+        if (unloadResult != ACTIAS_SUCCESS)
+        {
+            std::cout << "Error unloading ACBX module: " << unloadResult << std::endl;
         }
     }
     else

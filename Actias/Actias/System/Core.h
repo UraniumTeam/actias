@@ -5,29 +5,19 @@
  */
 
 #pragma once
-#include <Actias/Base/Platform.h>
+#include <Actias/System/Platform/Common/InlineCopyMemory.h>
+#include <Actias/System/Result.h>
 
 #if ActiasSystem_EXPORTS
 #    define ACTIAS_SYSTEM_API ACTIAS_EXPORT
 #else
-#    define ACTIAS_SYSTEM_API
+#    define ACTIAS_SYSTEM_API ACTIAS_IMPORT
 #endif
 
 ACTIAS_BEGIN_C
 
 typedef void* ActiasHandle;
-
-typedef enum ActiasResultValues
-{
-    ACTIAS_SUCCESS                     = 0,  //!< Operation completed successfully
-    ACTIAS_FAIL_UNKNOWN                = -1, //!< Operation failed with an unexpected error, try ActiasGetNativeErrorCode
-    ACTIAS_FAIL_INVALID_STD_DESCRIPTOR = -2, //!< Provided standard file descriptor was not valid.
-} ActiasResultValues;
-
-//! \brief Indicates operation status.
-//!
-//! Success codes are always non-negative.
-typedef Int32 ActiasResult;
+typedef Int64(ACTIAS_ABI* ActiasProc)();
 
 typedef enum ActiasFlagValues
 {
@@ -52,11 +42,36 @@ ACTIAS_SYSTEM_API Int32 ACTIAS_ABI ActiasGetNativeErrorCode(void);
 //! \param pProperties - A pointer to the variable that receives system properties.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasGetSystemProperties(ActiasSystemProperties* pProperties);
 
+//! \brief Copy one memory buffer to another, the provided pointers and size must have 32-byte alignment.
+//!
+//! \param pDestination - A pointer to the memory to copy to.
+//! \param pSource - A pointer to the memory to copy from.
+//! \param byteSize - The number of bytes to copy.
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyAlignedMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
+                                                          USize byteSize);
+
 //! \brief Copy one memory buffer to another.
 //!
 //! \param pDestination - A pointer to the memory to copy to.
 //! \param pSource - A pointer to the memory to copy from.
 //! \param byteSize - The number of bytes to copy.
-ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyMemory(void* pDestination, ACTIAS_CONST void* pSource, USize byteSize);
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
+                                                   USize byteSize);
+
+//! \brief Copy a value to each of the first bytes of the provided memory buffer.
+//!
+//! \param pDestination - A pointer to the memory to fill.
+//! \param value - The fill byte.
+//! \param byteCount - The number of bytes to fill.
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasSetMemory(void* pDestination, Int32 value, USize byteCount);
+
+//! \brief Set each of the first bytes of the provided memory buffer to zero.
+//!
+//! \param pDestination - A pointer to the memory to fill.
+//! \param byteCount - The number of bytes to fill.
+inline void ACTIAS_ABI ActiasZeroMemory(void* pDestination, USize byteCount)
+{
+    ActiasSetMemory(pDestination, 0, byteCount);
+}
 
 ACTIAS_END_C

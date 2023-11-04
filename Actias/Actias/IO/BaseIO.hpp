@@ -5,28 +5,28 @@
 namespace Actias::IO
 {
     //! \brief Result code of an I/O operation.
-    enum class ResultCode
+    enum class ResultCode : ActiasResult
     {
-        Success, //!< Operation succeeded.
+        Success = ACTIAS_SUCCESS, //!< Operation succeeded.
 
-        PermissionDenied,  //!< Permission denied.
-        NoFileOrDirectory, //!< No such file or directory.
-        FileExists,        //!< File already exists.
-        FileTooLarge,      //!< File is too large.
-        FilenameTooLong,   //!< Filename is too long.
-        NotDirectory,      //!< Not a directory.
-        IsDirectory,       //!< Is a directory.
-        DirectoryNotEmpty, //!< Directory is not empty.
-        TooManyOpenFiles,  //!< Too many files are open.
-        InvalidSeek,       //!< Invalid seek operation.
-        IOError,           //!< IO error.
-        DeadLock,          //!< Resource deadlock would occur.
-        UnknownError,      //!< Unknown error.
+        PermissionDenied  = ACTIAS_FAIL_PERMISSION_DENIED,    //!< Permission denied.
+        NoFileOrDirectory = ACTIAS_FAIL_NO_FILE_OR_DIRECTORY, //!< No such file or directory.
+        FileExists        = ACTIAS_FAIL_FILE_EXISTS,          //!< File already exists.
+        FileTooLarge      = ACTIAS_FAIL_FILE_TOO_LARGE,       //!< File is too large.
+        FilenameTooLong   = ACTIAS_FAIL_FILENAME_TOO_LONG,    //!< Filename is too long.
+        NotDirectory      = ACTIAS_FAIL_NOT_DIRECTORY,        //!< Not a directory.
+        IsDirectory       = ACTIAS_FAIL_IS_DIRECTORY,         //!< Is a directory.
+        DirectoryNotEmpty = ACTIAS_FAIL_DIRECTORY_NOT_EMPTY,  //!< Directory is not empty.
+        TooManyOpenFiles  = ACTIAS_FAIL_TOO_MANY_OPEN_FILES,  //!< Too many files are open.
+        InvalidSeek       = ACTIAS_FAIL_INVALID_SEEK,         //!< Invalid seek operation.
+        IOError           = ACTIAS_FAIL_IO_ERROR,             //!< IO error.
+        DeadLock          = ACTIAS_FAIL_DEAD_LOCK,            //!< Resource deadlock would occur.
+        UnknownError      = ACTIAS_FAIL_UNKNOWN,              //!< Unknown error.
 
-        ReadNotAllowed,  //!< Read operation is not allowed.
-        WriteNotAllowed, //!< Write operation is not allowed.
-        NotSupported,    //!< Operation is not supported.
-        NotOpen          //!< File or stream is not open.
+        ReadNotAllowed  = ACTIAS_FAIL_READ_NOT_ALLOWED,  //!< Read operation is not allowed.
+        WriteNotAllowed = ACTIAS_FAIL_WRITE_NOT_ALLOWED, //!< Write operation is not allowed.
+        NotSupported    = ACTIAS_FAIL_NOT_SUPPORTED,     //!< Operation is not supported.
+        NotOpen         = ACTIAS_FAIL_NOT_OPEN           //!< File or stream is not open.
     };
 
     //! \brief Get result code description.
