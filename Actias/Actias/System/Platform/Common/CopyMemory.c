@@ -2,6 +2,8 @@
 #include <Actias/System/Platform/Common/InlineCopyMemory.h>
 #include <immintrin.h>
 
+#define ACTIAS_DEFAULT_L3_CACHE_SIZE 4 * 1024 * 1024
+
 void ACTIAS_ABI ActiasCopyMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource, USize byteSize)
 #if ACTIAS_AVX2_SUPPORTED
 {
@@ -26,13 +28,25 @@ void ACTIAS_ABI ActiasCopyMemory(void* ACTIAS_RESTRICT pDestination, const void*
             byteSize -= padding;
         }
 
-        ActiasCopyAlignedMemory(dst, src, byteSize);
-
+        // The aligned copy functions require the input size to be a multiple of 256
         USize alignedCopyBytes = byteSize & ~((USize)0xFF);
+
+        if (byteSize >= ACTIAS_DEFAULT_L3_CACHE_SIZE)
+        {
+            // If the size of the copied memory buffer is greater than assumed size
+            // of the L3 CPU cache, we use non-temporal SIMD instructions
+            ActiasStreamMemory(dst, src, alignedCopyBytes);
+        }
+        else
+        {
+            ActiasCopyAlignedMemory(dst, src, alignedCopyBytes);
+        }
+
         src += alignedCopyBytes;
         dst += alignedCopyBytes;
         byteSize -= alignedCopyBytes;
 
+        // Jump to tail to copy the rest
         goto tail;
     }
 }
