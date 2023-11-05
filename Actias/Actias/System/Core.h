@@ -42,7 +42,19 @@ ACTIAS_SYSTEM_API Int32 ACTIAS_ABI ActiasGetNativeErrorCode(void);
 //! \param pProperties - A pointer to the variable that receives system properties.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasGetSystemProperties(ActiasSystemProperties* pProperties);
 
-//! \brief Copy one memory buffer to another, the provided pointers and size must have 256-byte alignment.
+//! \brief Copy one memory buffer to another (with specific alignment requirements and non-temporal instructions).
+//!
+//! The provided destination must have 32-byte alignment and the size must have 256-byte alignment.
+//!
+//! \param pDestination - A pointer to the memory to copy to.
+//! \param pSource - A pointer to the memory to copy from.
+//! \param byteSize - The number of bytes to copy.
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasStreamMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
+                                                     USize byteSize);
+
+//! \brief Copy one memory buffer to another (with specific alignment requirements).
+//!
+//! The provided destination must have 32-byte alignment and the size must have 256-byte alignment.
 //!
 //! \param pDestination - A pointer to the memory to copy to.
 //! \param pSource - A pointer to the memory to copy from.
