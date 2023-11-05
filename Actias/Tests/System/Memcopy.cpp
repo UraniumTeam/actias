@@ -1,17 +1,18 @@
 #include <Actias/System/Core.h>
 #include <Actias/Time/DateTime.hpp>
+#include <chrono>
 #include <gtest/gtest.h>
 
 inline constexpr USize OverflowCheckCount = 4;
 inline constexpr USize BufferAlignment    = 256;
-inline constexpr USize MaxMemcopyTestSize = 64 * 1024;
+inline constexpr USize MaxMemcopyTestSize = 64 * 1024 * 1024;
 
-static alignas(BufferAlignment) UInt8 g_Source[MaxMemcopyTestSize + OverflowCheckCount];
-static alignas(BufferAlignment) UInt8 g_Destination[MaxMemcopyTestSize + OverflowCheckCount];
+static UInt8 g_Source[MaxMemcopyTestSize + OverflowCheckCount];
+static alignas(32) UInt8 g_Destination[MaxMemcopyTestSize + OverflowCheckCount];
 
 using FMemcpy = decltype(ActiasCopyMemory);
 
-inline void TestMemcopy(USize bufferSize, FMemcpy* proc)
+inline void TestMemcopy(USize bufferSize, FMemcpy* proc, UInt32 count = 1)
 {
     const auto time = Actias::DateTime::UtcNow();
     srand(static_cast<unsigned int>(time.Ticks()));
@@ -27,18 +28,19 @@ inline void TestMemcopy(USize bufferSize, FMemcpy* proc)
         g_Destination[bufferSize + i] = 0;
     }
 
-    proc(g_Destination, g_Source, bufferSize);
+    for (UInt32 i = 0; i < count; ++i)
+    {
+        proc(g_Destination, g_Source, bufferSize);
+    }
 
     for (USize i = 0; i < bufferSize; ++i)
     {
-        ASSERT_EQ(g_Destination[i], g_Source[i])
-            << "Size = " << bufferSize << " bytes; i = " << i;
+        ASSERT_EQ(g_Destination[i], g_Source[i]) << "Size = " << bufferSize << " bytes; i = " << i;
     }
 
     for (USize i = 0; i < OverflowCheckCount; ++i)
     {
-        ASSERT_EQ(g_Destination[bufferSize + i], 0)
-            << "Overflow error; Size = " << bufferSize << "bytes; i = " << i;
+        ASSERT_EQ(g_Destination[bufferSize + i], 0) << "Overflow error; Size = " << bufferSize << "bytes; i = " << i;
     }
 }
 
@@ -74,6 +76,14 @@ TEST(CopyMemory, AlignedCopy)
     }
 }
 
+TEST(CopyMemory, Stream)
+{
+    for (USize i = 1024; i < 4096; i += BufferAlignment)
+    {
+        TestMemcopy(i, ActiasStreamMemory);
+    }
+}
+
 TEST(CopyMemory, InlineCopy)
 {
     for (USize i = 1024; i < 4096; ++i)
@@ -84,24 +94,20 @@ TEST(CopyMemory, InlineCopy)
 
 TEST(CopyMemory, NormalCopyLarge)
 {
-    for (USize i = 0; i < 4096; ++i)
-    {
-        TestMemcopy(MaxMemcopyTestSize, ActiasCopyMemory);
-    }
+    TestMemcopy(MaxMemcopyTestSize, ActiasCopyMemory, 128);
 }
 
 TEST(CopyMemory, AlignedCopyLarge)
 {
-    for (USize i = 0; i < 4096; ++i)
-    {
-        TestMemcopy(MaxMemcopyTestSize, ActiasCopyAlignedMemory);
-    }
+    TestMemcopy(MaxMemcopyTestSize, ActiasCopyAlignedMemory, 128);
+}
+
+TEST(CopyMemory, StreamLarge)
+{
+    TestMemcopy(MaxMemcopyTestSize, ActiasStreamMemory, 128);
 }
 
 TEST(CopyMemory, InlineCopyLarge)
 {
-    for (USize i = 0; i < 4096; ++i)
-    {
-        TestMemcopy(MaxMemcopyTestSize, ActiasInlineCopyMemory);
-    }
+    TestMemcopy(MaxMemcopyTestSize, ActiasInlineCopyMemory, 128);
 }
