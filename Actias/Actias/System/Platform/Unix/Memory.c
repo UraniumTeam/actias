@@ -1,4 +1,6 @@
 #include <Actias/System/Memory.h>
+#include <errno.h>
+#include <malloc.h>
 #include <stdlib.h>
 #include <sys/mman.h>
 
@@ -34,10 +36,10 @@ void* ACTIAS_ABI ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags 
 
 ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pAddress, USize byteSize)
 {
-    munmap(pAddress, byteSize);
-    if (errno != 0)
+    if (munmap(pAddress, byteSize) != 0)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
+
     return ACTIAS_SUCCESS;
 }

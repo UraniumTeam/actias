@@ -1,9 +1,9 @@
 #pragma once
 
-#define ACTIAS_ABI __vectorcall
-
 #if defined _WIN32 || defined _WIN64 || defined _WINDOWS
 #    define ACTIAS_WINDOWS 1
+
+#    define ACTIAS_ABI __vectorcall
 
 #    define ACTIAS_DLL_EXTENSION ".dll"
 #    define ACTIAS_EXE_EXTENSION ".exe"
@@ -20,6 +20,12 @@
 
 #elif defined __linux__
 #    define ACTIAS_LINUX 1
+
+#    if defined __INTELLISENSE__
+#        define ACTIAS_ABI __attribute__((ms_abi))
+#    else
+#        define ACTIAS_ABI __vectorcall
+#endif
 
 #    define ACTIAS_DLL_EXTENSION ".so"
 #    define ACTIAS_EXE_EXTENSION ""
