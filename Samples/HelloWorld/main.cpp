@@ -9,8 +9,10 @@ int main()
 
     ActiasHandle handle;
     auto fileHandleResult = ActiasGetStdFileHandle(ACTIAS_STDOUT, &handle);
+    ACTIAS_UNUSED(fileHandleResult);
     assert(fileHandleResult == ACTIAS_SUCCESS);
 
     auto writeResult = ActiasWrite(handle, message, sizeof(message), nullptr);
+    ACTIAS_UNUSED(writeResult);
     assert(writeResult == ACTIAS_SUCCESS);
 }
