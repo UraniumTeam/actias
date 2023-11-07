@@ -70,6 +70,8 @@ ACTIAS_END_C
 #if defined __clang__
 #    define ACTIAS_COMPILER_CLANG 1
 
+#    define ACTIAS_NO_BUILTIN(value) __attribute__((no_builtin(#value)))
+
 #    if defined _MSC_VER
 #        define ACTIAS_COMPILER_MS_CLANG 1
 #    endif
@@ -88,6 +90,8 @@ ACTIAS_END_C
 #    endif
 #elif defined _MSC_VER
 #    define ACTIAS_COMPILER_MSVC 1
+
+#    define ACTIAS_NO_BUILTIN(value)
 
 #    define ACTIAS_PUSH_MSVC_WARNING(warn) __pragma(warning(push)) __pragma(warning(disable : warn))
 #    define ACTIAS_POP_MSVC_WARNING __pragma(warning(pop))

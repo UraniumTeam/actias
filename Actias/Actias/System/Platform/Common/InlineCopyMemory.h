@@ -68,6 +68,7 @@ ACTIAS_FORCE_INLINE void ActiasCopySmallBuffer(Int8* ACTIAS_RESTRICT pDestinatio
 //! \param pDestination - A pointer to the memory to copy to.
 //! \param pSource - A pointer to the memory to copy from.
 //! \param byteSize - The number of bytes to copy.
+ACTIAS_NO_BUILTIN(memcpy)
 inline void ACTIAS_ABI ActiasInlineCopyMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
                                               USize byteSize)
 {
