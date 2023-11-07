@@ -2,27 +2,37 @@
 #include <stdlib.h>
 #include <sys/mman.h>
 
-void* ActiasAlignedAlloc(USize byteAlignment, USize byteSize)
+void* ACTIAS_ABI ActiasAlignedAlloc(USize byteAlignment, USize byteSize)
 {
     return ::memalign(byteAlignment, byteSize);
 }
 
-void ActiasAlignedFree(void* pointer)
+void ACTIAS_ABI ActiasAlignedFree(void* pointer)
 {
     free(pointer);
 }
 
-ActiasResult ActiasVirtualAlloc(void* pAddress, USize byteSize, Int32 protection)
+inline USize ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
 {
-    mmap(pAddress, byteSize, protection, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-    if (errno != 0)
+    switch (protection)
     {
-        return ACTIAS_FAIL_UNKNOWN;
+    case ACTIAS_MEMORY_PROTECTION_READ_BIT:
+        return PROT_READ;
+    case ACTIAS_MEMORY_PROTECTION_WRITE_BIT:
+        return PROT_WRITE;
+    case ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT:
+        return PROT_EXEC;
+    default:
+        return PROT_NONE;
     }
-    return ACTIAS_SUCCESS;
 }
 
-ActiasResult ActiasVirtualFree(void* pAddress, USize byteSize)
+void* ACTIAS_ABI ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags protection)
+{
+    return mmap(pAddress, byteSize, ActiasConvertMemoryProtection(protection), MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+}
+
+ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pAddress, USize byteSize)
 {
     munmap(pAddress, byteSize);
     if (errno != 0)

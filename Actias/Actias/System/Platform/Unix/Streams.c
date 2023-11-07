@@ -1,20 +1,19 @@
 #include <Actias/System/Streams.h>
-#include <stdio.h>
 
-ActiasResult ActiasWrite(ACTIAS_CONST ActiasHandle* handle, USize byteSize, USize count, FILE* stream)
-{
-    auto result = fwrite(handle, byteSize, count, stream);
-    if (result == 0)
+ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle)
+{ 
+    *pHandle = (void*)&descriptor;
+    if (*pHandle == null)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
     return ACTIAS_SUCCESS;
 }
 
-ActiasResult ActiasRead(ActiasHandle handle, USize byteSize, USize count, FILE* stream)
+ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
-    auto result = fread(handle, byteSize, count, stream);
-    if (result == 0)
+    write((int)((USize)fileHandle), *pBuffer, byteCount);
+    if (errno != 0)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
