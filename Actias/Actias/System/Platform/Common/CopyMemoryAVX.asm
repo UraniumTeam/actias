@@ -1,11 +1,10 @@
+%include "Actias/System/Platform/Common/ActiasMacros.mac"
 section .text
 bits 64
 
 %define YWORD_AT(i) (i * 32)
 
-global ActiasCopyAlignedMemory@@24, ActiasStreamMemory@@24
-
-export ActiasCopyAlignedMemory@@24
+ACTIAS_DLL_EXPORT(ActiasCopyAlignedMemory@@24)
 ActiasCopyAlignedMemory@@24:
     cmp     r8, 256
     jb      .end
@@ -40,7 +39,7 @@ ActiasCopyAlignedMemory@@24:
 .end:
     ret
 
-export ActiasStreamMemory@@24
+ACTIAS_DLL_EXPORT(ActiasStreamMemory@@24)
 ActiasStreamMemory@@24:
     cmp     r8, 256
     jb      .end

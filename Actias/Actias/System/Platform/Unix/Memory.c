@@ -4,7 +4,7 @@
 
 void* ACTIAS_ABI ActiasAlignedAlloc(USize byteAlignment, USize byteSize)
 {
-    return ::memalign(byteAlignment, byteSize);
+    return memalign(byteAlignment, byteSize);
 }
 
 void ACTIAS_ABI ActiasAlignedFree(void* pointer)
