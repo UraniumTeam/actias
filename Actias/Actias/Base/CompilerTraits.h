@@ -9,11 +9,18 @@
 #    define ACTIAS_END_C }
 
 #    define ACTIAS_CONST const
+#    define ACTIAS_RESTRICT __restrict
 #else
 #    define ACTIAS_BEGIN_C
 #    define ACTIAS_END_C
 
 #    define ACTIAS_CONST
+
+#    if defined _MSC_VER
+#        define ACTIAS_RESTRICT __restrict
+#    else
+#        define ACTIAS_RESTRICT restrict
+#    endif
 #endif
 
 ACTIAS_BEGIN_C

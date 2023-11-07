@@ -90,6 +90,9 @@ extern "C" void ACTIAS_ABI ActiasBuildExecutable(IBlob** ppExecutableData, const
     ActiasCopyMemory(&pFileInfo->Signature, ACBXSignature, ACBX_SIGNATURE_SIZE);
     pNative->CreateInformationHeader(pFileInfo);
 
+    auto* pExportHeader = builder.Allocate<ACBXExportTableHeader>();
+    pNative->CreateExportTableHeader(pExportHeader);
+
     List<ACBXSectionHeader*> sectionHeaders;
     sectionHeaders.Reserve(pFileInfo->SectionCount);
     for (UInt16 i = 0; i < pFileInfo->SectionCount; ++i)
@@ -97,9 +100,6 @@ extern "C" void ACTIAS_ABI ActiasBuildExecutable(IBlob** ppExecutableData, const
         auto* pSectionHeader = sectionHeaders.Push(builder.Allocate<ACBXSectionHeader>());
         pNative->CreateSectionHeader(i, pSectionHeader);
     }
-
-    auto* pExportHeader = builder.Allocate<ACBXExportTableHeader>();
-    pNative->CreateExportTableHeader(pExportHeader);
 
     pExportHeader->Address = builder.NextAddress();
     auto* pExportTable     = builder.Allocate<ACBXExportTableEntry>(pExportHeader->EntryCount);
