@@ -41,7 +41,7 @@ ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pointer, USize byteSize)
     ACTIAS_UNUSED(byteSize);
 
     BOOL result = VirtualFree(pointer, 0, MEM_RELEASE);
-    if (result == TRUE)
+    if (result)
     {
         return ACTIAS_SUCCESS;
     }

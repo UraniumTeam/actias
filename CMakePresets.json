@@ -34,6 +34,33 @@
       }
     },
     {
+      "name": "windows-release-sse",
+      "displayName": "Windows x64 Release with SSE4.1 and AVX2",
+      "description": "Sets Ninja generator, compilers, x64 architecture, build and install directory, release build type",
+      "generator": "Ninja",
+      "binaryDir": "cmake-build-release",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "ACTIAS_USE_SSE41": "ON",
+        "ACTIAS_USE_SSE3": "ON",
+        "ACTIAS_USE_AVX2": "ON",
+        "ACTIAS_BUILD_SAMPLES": "ON",
+        "ACTIAS_BUILD_TESTS": "ON"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ]
+        }
+      }
+    },
+    {
       "name": "linux-default-sse",
       "displayName": "Linux x64 Debug with SSE4.1 and AVX2",
       "description": "Sets Ninja generator, compilers, build and install directory, debug build type",

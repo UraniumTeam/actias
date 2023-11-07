@@ -24,6 +24,11 @@ namespace Actias
     public:
         ACTIAS_RTTI_Class(DateTime, "9927EE14-F009-464A-A067-4E4CB7AFE56C");
 
+        inline time_t Ticks() const
+        {
+            return MakeTime();
+        }
+
         inline Int32 Year() const
         {
             return m_Data.tm_year + 1900;
