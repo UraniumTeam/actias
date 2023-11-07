@@ -69,6 +69,8 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_ASM_NASM_COMPILER": "nasm",
         "CMAKE_MAKE_PROGRAM": "ninja",
         "ACTIAS_USE_SSE41": "ON",
         "ACTIAS_USE_SSE3": "ON",
