@@ -6,6 +6,7 @@
 
 #pragma once
 #include <Actias/System/Platform/Common/InlineCopyMemory.h>
+#include <Actias/System/Platform/Common/InlineSetMemory.h>
 #include <Actias/System/Result.h>
 
 #if ActiasSystem_EXPORTS
@@ -75,7 +76,16 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasCopyMemory(void* ACTIAS_RESTRICT pDestin
 //! \param pDestination - A pointer to the memory to fill.
 //! \param value - The fill byte.
 //! \param byteCount - The number of bytes to fill.
-ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasSetMemory(void* pDestination, Int32 value, USize byteCount);
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasSetMemory(void* pDestination, UInt8 value, USize byteCount);
+
+//! \brief Inline function to set each of the first bytes of the provided memory buffer to zero.
+//!
+//! \param pDestination - A pointer to the memory to fill.
+//! \param byteCount - The number of bytes to fill.
+inline void ACTIAS_ABI ActiasInlineZeroMemory(void* pDestination, USize byteCount)
+{
+    ActiasInlineSetMemory(pDestination, 0, byteCount);
+}
 
 //! \brief Set each of the first bytes of the provided memory buffer to zero.
 //!
