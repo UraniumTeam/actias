@@ -4,12 +4,10 @@
 #include <Actias/Containers/ArraySlice.hpp>
 #include <Actias/Containers/List.hpp>
 #include <ActiasSDK/Parser/Result.hpp>
-#include <ActiasSDK/Platform/Windows/Parser/PECommon.hpp>
+#include <ActiasSDK/Platform/Windows/Parser/PEDataDirectory.hpp>
 
 namespace Actias::SDK::PE
 {
-    struct ExportDirectory;
-
     namespace MagicConst
     {
         inline constexpr UInt32 NT  = 0x00004550;
@@ -59,12 +57,6 @@ namespace Actias::SDK::PE
         UInt32 NumberOfSymbols;
         UInt16 SizeOfOptionalHeader;
         UInt16 Characteristics;
-    };
-
-    struct DataDirectory
-    {
-        PEVirtualAddress VirtualAddress;
-        UInt32 Size;
     };
 
     struct OptionalHeaderBase
@@ -216,6 +208,12 @@ namespace Actias::SDK::PE
         {
             auto va = GetDirectoryEntry(DirectoryEntryID::Export);
             return va.ToPointer<ExportDirectory>(imageHandle);
+        }
+
+        [[nodiscard]] inline ImportDescriptor* GetImportDescriptors(ActiasHandle imageHandle) noexcept
+        {
+            auto va = GetDirectoryEntry(DirectoryEntryID::Import);
+            return va.ToPointer<ImportDescriptor>(imageHandle);
         }
 
         [[nodiscard]] inline bool Is64Bit() const noexcept
