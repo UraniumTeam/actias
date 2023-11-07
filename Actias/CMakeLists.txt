@@ -61,9 +61,11 @@ set(SRC_SYSTEM
     Actias/System/Platform/Common/CopyMemoryAVX.asm
     Actias/System/Platform/Common/Core.c
     Actias/System/Platform/Common/InlineCopyMemory.h
+    Actias/System/Platform/Common/InlineSetMemory.h
     Actias/System/Platform/Common/Memory.c
     Actias/System/Platform/Common/Runtime.c
     Actias/System/Platform/Common/RuntimeDef.h
+    Actias/System/Platform/Common/SetMemory.c
 )
 
 if (ACTIAS_WINDOWS)

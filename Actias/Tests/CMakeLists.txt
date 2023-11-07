@@ -6,6 +6,7 @@ set(SRC
     RTTI/RTTI.cpp
     Strings/String.cpp
     System/Memcopy.cpp
+    System/Memset.cpp
     Utils/UUID.cpp
 )
 
