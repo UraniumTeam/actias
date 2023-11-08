@@ -17,9 +17,9 @@
 
 ACTIAS_BEGIN_C
 
-typedef ActiasResult ACTIAS_ABI ActiasRtLoadModuleProc(ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle);
+typedef ActiasResult ACTIAS_ABI ActiasRtLoadModuleProc(const ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle);
 typedef ActiasResult ACTIAS_ABI ActiasRtUnloadModuleProc(ActiasHandle moduleHandle);
-typedef ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddressProc(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName,
+typedef ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddressProc(ActiasHandle moduleHandle, const char* pSymbolName,
                                                               ActiasProc* pAddress);
 
 ACTIAS_RUNTIME_API ActiasRtLoadModuleProc ActiasRtLoadModule;

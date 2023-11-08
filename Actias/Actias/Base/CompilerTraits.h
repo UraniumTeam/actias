@@ -8,19 +8,22 @@
         {
 #    define ACTIAS_END_C }
 
-#    define ACTIAS_CONST const
 #    define ACTIAS_RESTRICT __restrict
+
+#    define ACTIAS_FALSE false
+#    define ACTIAS_TRUE true
 #else
 #    define ACTIAS_BEGIN_C
 #    define ACTIAS_END_C
-
-#    define ACTIAS_CONST
 
 #    if defined _MSC_VER
 #        define ACTIAS_RESTRICT __restrict
 #    else
 #        define ACTIAS_RESTRICT restrict
 #    endif
+
+#    define ACTIAS_FALSE 0
+#    define ACTIAS_TRUE 1
 #endif
 
 ACTIAS_BEGIN_C
@@ -65,7 +68,7 @@ ACTIAS_END_C
 
 #define ACTIAS_MAKE_STR(txt) #txt
 
-#define ACTIAS_UNUSED(param) (void)param
+#define ACTIAS_UNUSED(param) (void)(param)
 
 #if defined __clang__
 #    define ACTIAS_COMPILER_CLANG 1
@@ -104,10 +107,4 @@ ACTIAS_END_C
 #    ifndef ACTIAS_FORCE_INLINE
 #        define ACTIAS_FORCE_INLINE __forceinline
 #    endif
-#endif
-
-#if ACTIAS_COMPILER_MSVC || ACTIAS_COMPILER_MS_CLANG
-#    define ACTIAS_DEBUG_BREAK __debugbreak()
-#else
-#    define ACTIAS_DEBUG_BREAK raise(SIGTRAP)
 #endif

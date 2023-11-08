@@ -14,7 +14,7 @@ ACTIAS_BEGIN_C
 //! \brief Represents a set of parameters used by ACBX runtime loader.
 typedef struct ACBXLoaderRunInfo
 {
-    ACTIAS_CONST char* pModulePath; //!< A path to the module to load.
+    const char* pModulePath; //!< A path to the module to load.
 } ACBXLoaderRunInfo;
 
 ACTIAS_END_C

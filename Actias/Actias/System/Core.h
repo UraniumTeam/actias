@@ -5,25 +5,31 @@
  */
 
 #pragma once
+#include <Actias/System/Base.h>
 #include <Actias/System/Platform/Common/InlineCopyMemory.h>
 #include <Actias/System/Platform/Common/InlineSetMemory.h>
 #include <Actias/System/Result.h>
-
-#if ActiasSystem_EXPORTS
-#    define ACTIAS_SYSTEM_API ACTIAS_EXPORT
-#else
-#    define ACTIAS_SYSTEM_API ACTIAS_IMPORT
-#endif
 
 ACTIAS_BEGIN_C
 
 typedef void* ActiasHandle;
 typedef Int64(ACTIAS_ABI* ActiasProc)();
 
-typedef enum ActiasFlagValues
+enum ActiasFlagValues
 {
     ACTIAS_FLAGS_NONE = 0 //!< No flags, zero.
-} ActiasFlagValues;
+};
+
+enum ActiasSignalValues
+{
+    ACTIAS_SIGABRT = 1, //!< Abnormal termination.
+    ACTIAS_SIGFPE  = 2, //!< Erroneous arithmetic operation.
+    ACTIAS_SIGILL  = 3, //!< Invalid program image.
+    ACTIAS_SIGINT  = 4, //!< External interrupt.
+    ACTIAS_SIGSEGV = 5, //!< Segmentation fault.
+    ACTIAS_SIGTERM = 6, //!< Termination request.
+    ACTIAS_SIGTRAP = 7, //!< Breakpoint trap.
+};
 
 //! \brief Basic flags type.
 typedef UInt32 ActiasFlags;
@@ -37,6 +43,8 @@ typedef struct ActiasSystemProperties
 
 //! \brief Get last OS native error code.
 ACTIAS_SYSTEM_API Int32 ACTIAS_ABI ActiasGetNativeErrorCode(void);
+
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasRaiseSignal(Int32 signal);
 
 //! \brief Get system properties.
 //!
