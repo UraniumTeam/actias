@@ -12,7 +12,8 @@ inline ACBXExportTableHeader* LocateExportTable(ActiasHandle moduleHandle)
     return reinterpret_cast<ACBXExportTableHeader*>(ptr);
 }
 
-extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle)
+extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(const ACBXLoaderRunInfo* pRunInfo,
+                                                                         ActiasHandle* pModuleHandle)
 {
     Ptr pFile   = AllocateObject<IO::FileHandle>();
     Ptr pStream = AllocateObject<IO::FileStream>(pFile.Get());
@@ -53,8 +54,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(Actia
 }
 
 extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddress(ActiasHandle moduleHandle,
-                                                                                ACTIAS_CONST char* pSymbolName,
-                                                                                ActiasProc* pAddress)
+                                                                                const char* pSymbolName, ActiasProc* pAddress)
 {
     const auto* pExportHeader = LocateExportTable(moduleHandle);
     const auto* pExportTable  = reinterpret_cast<ACBXExportTableEntry*>(ac_byte_cast(moduleHandle) + pExportHeader->Address);

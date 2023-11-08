@@ -1,7 +1,7 @@
 #include <Actias/System/Platform/Windows/WinHeaders.h>
 #include <Actias/System/Runtime.h>
 
-ActiasResult ACTIAS_ABI ActiasLoadNativeModule(ACTIAS_CONST char* pFilePath, ActiasHandle* pHandle)
+ActiasResult ACTIAS_ABI ActiasLoadNativeModule(const char* pFilePath, ActiasHandle* pHandle)
 {
     HMODULE handle = LoadLibraryA(pFilePath);
     if (handle == NULL)
@@ -24,8 +24,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadNativeModule(ActiasHandle 
     return ACTIAS_FAIL_UNKNOWN;
 }
 
-ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName,
-                                                      ActiasProc* pAddress)
+ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHandle moduleHandle, const char* pSymbolName, ActiasProc* pAddress)
 {
     FARPROC address = GetProcAddress(moduleHandle, pSymbolName);
     if (address == NULL)

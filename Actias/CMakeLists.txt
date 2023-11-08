@@ -50,7 +50,9 @@ set(SRC
 )
 
 set(SRC_SYSTEM
+    Actias/System/Assert.h
     Actias/System/Atomic.h
+    Actias/System/Base.h
     Actias/System/Core.h
     Actias/System/Memory.h
     Actias/System/Result.h
