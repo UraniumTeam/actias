@@ -101,8 +101,7 @@ namespace Actias::Runtime
         auto lastSection = m_Sections.Back();
         auto imageSize   = AlignUp(sectionBaseAddress + lastSection->Address + lastSection->Size, systemProperties.PageSize);
 
-        // TODO: change protection
-        ActiasHandle handle = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE_EXECUTE_BIT);
+        ActiasHandle handle = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE);
         ActiasCopyMemory(handle, m_RawData.Data(), m_TotalHeaderSize);
 
         *reinterpret_cast<UInt64*>(handle) = static_cast<UInt64>(imageSize);
@@ -119,12 +118,20 @@ namespace Actias::Runtime
 
             if (section->Size > section->RawSize)
             {
-                auto diff = section->Size - section->RawSize;
-                ActiasZeroMemory(pImageBase + section->Address + section->RawSize, diff);
+                const auto diff = section->Size - section->RawSize;
+                ActiasInlineZeroMemory(pImageBase + section->Address + section->RawSize, diff);
             }
 
             auto* pRawSection = &m_RawData[section->RawAddress];
             ActiasCopyMemory(pImageBase + section->Address, pRawSection, section->RawSize);
+
+            const auto protResult = ActiasVirtualProtect(
+                pImageBase + section->Address, section->Size, section->SectionFlags & ACTIAS_MEMORY_PROTECTION_ALL);
+
+            if (protResult != ACTIAS_SUCCESS)
+            {
+                return Err(ResultCode::UnknownError);
+            }
         }
 
         return handle;

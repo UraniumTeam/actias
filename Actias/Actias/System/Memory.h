@@ -14,16 +14,21 @@ ACTIAS_BEGIN_C
 //! \brief Memory protection flags.
 typedef enum ActiasMemoryProtectionFlagBits
 {
+    ACTIAS_MEMORY_PROTECTION_NONE = 0x0,
+
     ACTIAS_MEMORY_PROTECTION_READ_BIT    = 0x0001, //!< Memory can be read.
     ACTIAS_MEMORY_PROTECTION_WRITE_BIT   = 0x0002, //!< Memory can be written to.
     ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT = 0x0004, //!< Memory can be executed as code.
 
-    ACTIAS_MEMORY_PROTECTION_READ_WRITE_BIT =
+    ACTIAS_MEMORY_PROTECTION_READ_WRITE =
         ACTIAS_MEMORY_PROTECTION_READ_BIT | ACTIAS_MEMORY_PROTECTION_WRITE_BIT, //!< Memory can be read and written to.
-    ACTIAS_MEMORY_PROTECTION_READ_EXECUTE_BIT =
+    ACTIAS_MEMORY_PROTECTION_READ_EXECUTE =
         ACTIAS_MEMORY_PROTECTION_READ_BIT | ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT, //!< Memory can be read and executed as code.
-    ACTIAS_MEMORY_PROTECTION_READ_WRITE_EXECUTE_BIT = ACTIAS_MEMORY_PROTECTION_READ_WRITE_BIT
+    ACTIAS_MEMORY_PROTECTION_READ_WRITE_EXECUTE = ACTIAS_MEMORY_PROTECTION_READ_WRITE
         | ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT, //!< Memory can be read, written to and executed as code.
+
+    ACTIAS_MEMORY_PROTECTION_ALL =
+        ACTIAS_MEMORY_PROTECTION_READ_WRITE_EXECUTE, //!< Memory can be read, written to and executed as code.
 } ActiasMemoryProtectionFlagBits;
 
 //! \brief Allocate uninitialized memory.
@@ -96,5 +101,20 @@ ACTIAS_SYSTEM_API void* ACTIAS_ABI ActiasVirtualAlloc(void* pointer, USize byteS
 //!
 //! \return ActiasResult that indicates the status of the operation.
 ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pointer, USize byteSize);
+
+//! \brief Change the protection on a region of pages allocated with a single call to ActiasVirtualAlloc.
+//!
+//! The function changes access protection for the memory of the calling process. All pages containing any
+//! bytes from the provided region are affected by the call.
+//!
+//! \param pointer - A pointer to the beginning of the provided region.
+//! \param byteSize - The size of the provided region in bytes.
+//! \param protection - The desired memory protection.
+//!
+//! \note On Windows the pages cannot span adjacent reserved regions that were allocated by separate calls
+//!       to ActiasVirtualAlloc.
+//!
+//! \return ActiasResult that indicates the status of the operation.
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasVirtualProtect(void* pointer, USize byteSize, ActiasFlags protection);
 
 ACTIAS_END_C
