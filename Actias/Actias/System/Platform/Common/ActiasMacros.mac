@@ -1,0 +1,22 @@
+%ifndef ACTIAS_MACROS_MAC
+%define ACTIAS_MACROS_MAC
+
+%ifidn __?OUTPUT_FORMAT?__, win64
+
+    %define ACTIAS_DLL_EXPORT(symbol) export symbol
+
+%elifidn __?OUTPUT_FORMAT?__, win32
+
+    %define ACTIAS_DLL_EXPORT(symbol) export symbol
+
+%elifidn __?OUTPUT_FORMAT?__, elf64
+
+    %define ACTIAS_DLL_EXPORT(symbol)
+
+%elifidn __?OUTPUT_FORMAT?__, elf32
+
+    %define ACTIAS_DLL_EXPORT(symbol)
+
+%endif
+
+%endif
