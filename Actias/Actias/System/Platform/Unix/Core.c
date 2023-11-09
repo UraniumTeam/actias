@@ -1,6 +1,6 @@
 #include <Actias/System/Core.h>
-#include <sys/sysinfo.h>
 #include <errno.h>
+#include <sys/sysinfo.h>
 
 Int32 ACTIAS_ABI ActiasGetNativeErrorCode(void)
 {
