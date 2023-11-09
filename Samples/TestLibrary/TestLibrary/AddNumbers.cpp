@@ -1,14 +1,6 @@
 #include <Actias/Memory/Memory.hpp>
 #include <TestLibrary/AddNumbers.h>
 
-extern "C" __declspec(dllimport) Int32 ACTIAS_ABI ActiasAtomicAddI32(volatile Int32* pAddend, Int32 Value);
-
-Int32 ACTIAS_ABI Add(Int32 a, Int32 b)
-{
-    ActiasAtomicAddI32(&a, b);
-    return a;
-}
-
 Int32 ACTIAS_ABI AddNumbers(Int32 a, Int32 b)
 {
     return a + b;
