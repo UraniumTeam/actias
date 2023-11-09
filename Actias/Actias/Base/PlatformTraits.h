@@ -3,7 +3,7 @@
 #if defined _WIN32 || defined _WIN64 || defined _WINDOWS
 #    define ACTIAS_WINDOWS 1
 
-#    define ACTIAS_ABI __vectorcall
+#    define ACTIAS_ABI
 
 #    define ACTIAS_DLL_EXTENSION ".dll"
 #    define ACTIAS_EXE_EXTENSION ".exe"

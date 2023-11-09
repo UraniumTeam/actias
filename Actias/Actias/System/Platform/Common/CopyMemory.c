@@ -1,9 +1,9 @@
 #include <Actias/System/Core.h>
-#include <Actias/System/Platform/Common/InlineCopyMemory.h>
 #include <immintrin.h>
 
 #define ACTIAS_DEFAULT_L3_CACHE_SIZE 4 * 1024 * 1024
 
+ACTIAS_NO_BUILTIN(memcpy)
 void ACTIAS_ABI ActiasCopyMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource, USize byteSize)
 #if ACTIAS_AVX2_SUPPORTED
 {

@@ -10,14 +10,16 @@ have `.acbl` extension.
 
 If an Actias binary executable file has a `main()` function it can be executed as a program:
 ```sh
-actias ./program.acbx
+actias run ./program.acbx
 ```
 
 Otherwise it can be used as a shared (dynamic-link) library:
 ```cpp
-// TODO: write actual example when the loader is functional
-ActiasLibHandle handle = ActiasLoadLibrary("./library.acbl");
-void* pFunction = ActiasGetEntryPointAddress(handle, "AddNumbers");
+ActiasHandle moduleHandle = NULL;
+ActiasLoadModule("TestLibrary.acbl", &moduleHandle);
+
+ActiasProc address;
+ActiasFindSymbolAddress(moduleHandle, "AddNumbers", &address);
 ```
 
 > :warning: Warning: the format specification and the APIs are yet unstable and are subject to change.

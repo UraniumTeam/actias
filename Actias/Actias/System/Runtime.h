@@ -26,7 +26,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasInit(void);
 //! \param pHandle - A pointer to the variable that receives the resulting handle.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasLoadNativeModule(ACTIAS_CONST char* pFilePath, ActiasHandle* pHandle);
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasLoadNativeModule(const char* pFilePath, ActiasHandle* pHandle);
 
 //! \brief Request the runtime to unload a dynamic module (OS-native only).
 //!
@@ -42,7 +42,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadNativeModule(ActiasHandle 
 //! \param pAddress - A pointer to the variable that receives the resulting symbol address.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName,
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHandle moduleHandle, const char* pSymbolName,
                                                                         ActiasProc* pAddress);
 
 //! \brief Request the runtime to load a dynamic module (ACBX only).
@@ -51,8 +51,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHa
 //! \param pModuleHandle - A pointer to the variable that receives the resulting handle.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasLoadModuleEx(ACTIAS_CONST ACBXLoaderRunInfo* pRunInfo,
-                                                             ActiasHandle* pModuleHandle);
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasLoadModuleEx(const ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle);
 
 //! \brief Request the runtime to unload a dynamic module (ACBX only).
 //!
@@ -67,7 +66,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadModule(ActiasHandle module
 //! \param pHandle - A pointer to the variable that receives the resulting handle.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-inline ActiasResult ACTIAS_ABI ActiasLoadModule(ACTIAS_CONST char* pFilePath, ActiasHandle* pHandle)
+inline ActiasResult ACTIAS_ABI ActiasLoadModule(const char* pFilePath, ActiasHandle* pHandle)
 {
     ACBXLoaderRunInfo runInfo;
     ActiasZeroMemory(&runInfo, sizeof(runInfo));
@@ -82,7 +81,7 @@ inline ActiasResult ACTIAS_ABI ActiasLoadModule(ACTIAS_CONST char* pFilePath, Ac
 //! \param pAddress - A pointer to the variable that receives the resulting symbol address.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasFindSymbolAddress(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName,
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasFindSymbolAddress(ActiasHandle moduleHandle, const char* pSymbolName,
                                                                   ActiasProc* pAddress);
 
 ACTIAS_END_C

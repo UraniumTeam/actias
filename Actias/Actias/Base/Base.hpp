@@ -1,7 +1,7 @@
 #pragma once
 #include <Actias/Base/Platform.h>
+#include <Actias/System/Assert.h>
 #include <atomic>
-#include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <emmintrin.h>
@@ -193,10 +193,4 @@ namespace Actias
 #else
 #    define ACTIAS_AssumeAligned(align, value) (value)
 #endif
-
-#ifndef ACTIAS_Assert
-#    define ACTIAS_Assert(expr, msg) assert((expr) && (msg))
-#endif
-
-#define ACTIAS_Unreachable(msg) ACTIAS_Assert(false, msg)
 } // namespace Actias

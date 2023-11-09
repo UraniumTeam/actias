@@ -12,7 +12,7 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(ActiasStandardDescriptor descript
     return ACTIAS_FAIL_INVALID_STD_DESCRIPTOR;
 }
 
-ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount, USize* pBytesWritten)
+ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, const void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
     ssize_t result = write((int)((USize)fileHandle), pBuffer, byteCount);
     if (result == -1)

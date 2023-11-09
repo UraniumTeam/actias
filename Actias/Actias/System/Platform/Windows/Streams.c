@@ -35,7 +35,7 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(ActiasStandardDescriptor descript
     return ACTIAS_SUCCESS;
 }
 
-ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount, USize* pBytesWritten)
+ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, const void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
     DWORD bytesWritten;
     BOOL result = WriteFile(fileHandle, pBuffer, (DWORD)byteCount, &bytesWritten, NULL);

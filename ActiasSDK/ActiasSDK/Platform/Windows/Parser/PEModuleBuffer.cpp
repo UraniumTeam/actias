@@ -71,7 +71,7 @@ namespace Actias::SDK::PE
 
         const auto imageSize = AlignUp(static_cast<USize>(pHeaders->GetImageSize()), pageSize);
 
-        auto* pLocalCopy = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE_BIT);
+        auto* pLocalCopy = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE);
 
         auto* pResult  = AllocateObject<PEModuleBuffer>(static_cast<Byte*>(pLocalCopy), imageSize);
         auto mapResult = MapSections(rawBuffer, pResult->m_Buffer, pHeaders, sections);
