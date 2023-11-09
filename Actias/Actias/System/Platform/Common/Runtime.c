@@ -3,7 +3,7 @@
 
 static ActiasHandle g_CurrentRuntimeModule = NULL;
 
-inline ActiasResult LoadRuntimeProc(char* procName, ActiasProc* pAddress)
+inline static ActiasResult LoadRuntimeProc(char* procName, ActiasProc* pAddress)
 {
     if (g_CurrentRuntimeModule == NULL)
     {
