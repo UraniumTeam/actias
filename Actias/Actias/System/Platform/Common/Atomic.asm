@@ -1,28 +1,31 @@
+%include "Actias/System/Platform/Common/ActiasMacros.mac"
 section .text
 bits 64
 
-global ActiasAtomicAddI8@@16, ActiasAtomicAddI16@@16, ActiasAtomicAddI32@@16, ActiasAtomicAddI64@@16
-
-export ActiasAtomicAddI8@@16
-ActiasAtomicAddI8@@16:
+ACTIAS_DLL_EXPORT(ActiasAtomicAddI8)
+global ActiasAtomicAddI8
+ActiasAtomicAddI8:
     mov     eax,  DWORD edx
     lock    xadd  BYTE [rcx], al
     ret
 
-export ActiasAtomicAddI16@@16
-ActiasAtomicAddI16@@16:
+ACTIAS_DLL_EXPORT(ActiasAtomicAddI16)
+global ActiasAtomicAddI16
+ActiasAtomicAddI16:
     mov     eax,  DWORD edx
     lock    xadd  WORD [rcx], ax
     ret
 
-export ActiasAtomicAddI32@@16
-ActiasAtomicAddI32@@16:
+ACTIAS_DLL_EXPORT(ActiasAtomicAddI32)
+global ActiasAtomicAddI32
+ActiasAtomicAddI32:
     mov     eax,  DWORD edx
     lock    xadd  DWORD [rcx], eax
     ret
 
-export ActiasAtomicAddI64@@16
-ActiasAtomicAddI64@@16:
+ACTIAS_DLL_EXPORT(ActiasAtomicAddI64)
+global ActiasAtomicAddI64
+ActiasAtomicAddI64:
     mov     rax,  QWORD rdx
     lock    xadd  QWORD [rcx], rax
     ret

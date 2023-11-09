@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.19)
 project(Actias VERSION 0.1.0
     LANGUAGES CXX C ASM_NASM
 )
@@ -17,8 +17,6 @@ list(PREPEND CMAKE_MODULE_PATH "${ACTIAS_PROJECT_ROOT}/cmake")
 
 include(Config)
 include(deps)
-
-set(CMAKE_C_EXTENSIONS OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
