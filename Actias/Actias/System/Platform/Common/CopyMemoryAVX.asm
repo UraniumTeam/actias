@@ -4,9 +4,9 @@ bits 64
 
 %define YWORD_AT(i) (i * 32)
 
-ACTIAS_DLL_EXPORT(ActiasCopyAlignedMemory@@24)
-global ActiasCopyAlignedMemory@@24
-ActiasCopyAlignedMemory@@24:
+ACTIAS_DLL_EXPORT(ActiasCopyAlignedMemory)
+global ActiasCopyAlignedMemory
+ActiasCopyAlignedMemory:
     cmp     r8, 256
     jb      .end
     xor     eax, eax
@@ -40,9 +40,9 @@ ActiasCopyAlignedMemory@@24:
 .end:
     ret
 
-ACTIAS_DLL_EXPORT(ActiasStreamMemory@@24)
-global ActiasStreamMemory@@24
-ActiasStreamMemory@@24:
+ACTIAS_DLL_EXPORT(ActiasStreamMemory)
+global ActiasStreamMemory
+ActiasStreamMemory:
     cmp     r8, 256
     jb      .end
     xor     eax, eax
@@ -75,4 +75,3 @@ ActiasStreamMemory@@24:
 
 .end:
     ret
-

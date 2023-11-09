@@ -13,7 +13,7 @@ void ACTIAS_ABI ActiasAlignedFree(void* pointer)
     free(pointer);
 }
 
-inline int ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
+inline static int ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
 {
     int result = PROT_NONE;
     if (protection & ACTIAS_MEMORY_PROTECTION_READ_BIT)

@@ -72,6 +72,7 @@
         "CMAKE_C_COMPILER": "clang",
         "CMAKE_ASM_NASM_COMPILER": "nasm",
         "CMAKE_MAKE_PROGRAM": "ninja",
+        "CMAKE_LINKER": "lld",
         "ACTIAS_USE_SSE41": "ON",
         "ACTIAS_USE_SSE3": "ON",
         "ACTIAS_USE_AVX2": "ON",

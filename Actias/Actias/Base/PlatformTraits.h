@@ -21,11 +21,7 @@
 #elif defined __linux__
 #    define ACTIAS_LINUX 1
 
-#    if defined __INTELLISENSE__
-#        define ACTIAS_ABI __attribute__((ms_abi))
-#    else
-#        define ACTIAS_ABI __vectorcall
-#endif
+#    define ACTIAS_ABI __attribute__((ms_abi))
 
 #    define ACTIAS_DLL_EXTENSION ".so"
 #    define ACTIAS_EXE_EXTENSION ""
