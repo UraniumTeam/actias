@@ -1,5 +1,4 @@
 #include <Actias/System/Memory.h>
-#include <errno.h>
 #include <malloc.h>
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -14,19 +13,23 @@ void ACTIAS_ABI ActiasAlignedFree(void* pointer)
     free(pointer);
 }
 
-inline USize ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
+inline int ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
 {
-    switch (protection)
+    int result = PROT_NONE;
+    if (protection & ACTIAS_MEMORY_PROTECTION_READ_BIT)
     {
-    case ACTIAS_MEMORY_PROTECTION_READ_BIT:
-        return PROT_READ;
-    case ACTIAS_MEMORY_PROTECTION_WRITE_BIT:
-        return PROT_WRITE;
-    case ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT:
-        return PROT_EXEC;
-    default:
-        return PROT_NONE;
+        result |= PROT_READ;
     }
+    if (protection & ACTIAS_MEMORY_PROTECTION_WRITE_BIT)
+    {
+        result |= PROT_WRITE;
+    }
+    if (protection & ACTIAS_MEMORY_PROTECTION_EXECUTE_BIT)
+    {
+        result |= PROT_EXEC;
+    }
+
+    return result;
 }
 
 void* ACTIAS_ABI ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags protection)
@@ -36,7 +39,8 @@ void* ACTIAS_ABI ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags 
 
 ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pAddress, USize byteSize)
 {
-    if (munmap(pAddress, byteSize) != 0)
+    int result = munmap(pAddress, byteSize);
+    if (result == -1)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
