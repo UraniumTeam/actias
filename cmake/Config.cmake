@@ -40,6 +40,7 @@ endif ()
 if (ACTIAS_COMPILER_MSVC)
     string(APPEND CMAKE_CXX_FLAGS " /W4 /WX")
 else ()
+    add_link_options("-fuse-ld=lld")
     string(APPEND CMAKE_CXX_FLAGS " -Wall -Wextra -Werror -fPIC")
 endif ()
 

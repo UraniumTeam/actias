@@ -3,13 +3,13 @@
 
 ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle)
 {
-    *pHandle = (void*)&descriptor;
+    *pHandle = (ActiasHandle)descriptor;
     if (descriptor <= ACTIAS_STDERR && descriptor > 0)
     {
-        return ACTIAS_FAIL_INVALID_STD_DESCRIPTOR;
+        return ACTIAS_SUCCESS;
     }
 
-    return ACTIAS_SUCCESS;
+    return ACTIAS_FAIL_INVALID_STD_DESCRIPTOR;
 }
 
 ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount, USize* pBytesWritten)

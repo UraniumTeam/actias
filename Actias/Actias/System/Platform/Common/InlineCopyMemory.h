@@ -12,7 +12,7 @@ ACTIAS_BEGIN_C
 
 //! \internal
 #define ACTIAS_MAKE_COPY_PROC(bitCount)                                                                                          \
-    ACTIAS_FORCE_INLINE void ActiasCopy##bitCount(void* pDestination, const void* pSource)                                       \
+    ACTIAS_FORCE_INLINE static void ActiasCopy##bitCount(void* pDestination, const void* pSource)                                \
     {                                                                                                                            \
         UInt##bitCount* dst = (UInt##bitCount*)pDestination;                                                                     \
         UInt##bitCount* src = (UInt##bitCount*)pSource;                                                                          \
@@ -34,8 +34,8 @@ ACTIAS_MAKE_COPY_PROC(64);
 #undef ACTIAS_MAKE_COPY_PROC
 
 //! \internal
-ACTIAS_FORCE_INLINE void ActiasCopySmallBuffer(Int8* ACTIAS_RESTRICT pDestination, const Int8* ACTIAS_RESTRICT pSource,
-                                               USize byteSize)
+ACTIAS_FORCE_INLINE static void ActiasCopySmallBuffer(Int8* ACTIAS_RESTRICT pDestination, const Int8* ACTIAS_RESTRICT pSource,
+                                                      USize byteSize)
 {
     // byteSize must be <= 16
 
@@ -68,8 +68,8 @@ ACTIAS_FORCE_INLINE void ActiasCopySmallBuffer(Int8* ACTIAS_RESTRICT pDestinatio
 //! \param pDestination - A pointer to the memory to copy to.
 //! \param pSource - A pointer to the memory to copy from.
 //! \param byteSize - The number of bytes to copy.
-inline void ACTIAS_ABI ActiasInlineCopyMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
-                                              USize byteSize)
+inline static void ACTIAS_ABI ActiasInlineCopyMemory(void* ACTIAS_RESTRICT pDestination, const void* ACTIAS_RESTRICT pSource,
+                                                     USize byteSize)
 {
     Int8* ACTIAS_RESTRICT dst       = (Int8 * ACTIAS_RESTRICT)(pDestination);
     const Int8* ACTIAS_RESTRICT src = (const Int8* ACTIAS_RESTRICT)(pSource);
