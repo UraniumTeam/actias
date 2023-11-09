@@ -28,7 +28,7 @@ ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHandle moduleHandle,
                                                       ActiasProc* pAddress)
 {
     void* result = dlsym(moduleHandle, pSymbolName);
-    if (result = NULL)
+    if (result == NULL)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
