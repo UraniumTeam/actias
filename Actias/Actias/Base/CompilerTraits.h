@@ -88,6 +88,8 @@ ACTIAS_END_C
 
 #    define ACTIAS_PRETTY_FUNCTION __PRETTY_FUNCTION__
 
+#    define ACTIAS_BUILTIN_ASSUME(expr) __builtin_assume(expr)
+
 #    ifndef ACTIAS_FORCE_INLINE
 #        define ACTIAS_FORCE_INLINE inline
 #    endif
@@ -103,6 +105,8 @@ ACTIAS_END_C
 #    define ACTIAS_POP_CLANG_WARNING
 
 #    define ACTIAS_PRETTY_FUNCTION __FUNCSIG__
+
+#    define ACTIAS_BUILTIN_ASSUME(expr) __assume(expr)
 
 #    ifndef ACTIAS_FORCE_INLINE
 #        define ACTIAS_FORCE_INLINE __forceinline
