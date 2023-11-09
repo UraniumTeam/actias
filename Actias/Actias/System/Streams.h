@@ -35,7 +35,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(ActiasStandardD
 //! \param pBytesWritten - A pointer to the variable that receives the number of bytes written, can be NULL.
 //!
 //! \return ActiasResult that indicates the status of the operation.
-ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, ACTIAS_CONST void* pBuffer, USize byteCount,
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, const void* pBuffer, USize byteCount,
                                                       USize* pBytesWritten);
 
 ACTIAS_END_C

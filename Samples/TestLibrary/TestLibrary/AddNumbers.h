@@ -1,4 +1,5 @@
 #pragma once
+#include <Actias/Memory/Object.hpp>
 #include <Actias/System/Core.h>
 
 #if TestLibrary_EXPORTS
@@ -8,3 +9,5 @@
 #endif
 
 extern "C" TESTLIB_API Int32 ACTIAS_ABI AddNumbers(Int32 a, Int32 b);
+extern "C" TESTLIB_API Int32 ACTIAS_ABI AddNumbersEx(Int32 a, Int32 b, Int32 c);
+extern "C" TESTLIB_API const char* ACTIAS_ABI GetMessage();

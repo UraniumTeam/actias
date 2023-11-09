@@ -256,7 +256,7 @@ namespace Actias
         //! \brief Destruct the back of the container.
         inline void RemoveBack()
         {
-            assert(!Empty() && "List was empty");
+            ACTIAS_Assert(!Empty(), "List was empty");
             DestructAtEnd(m_End - 1);
         }
 
@@ -462,7 +462,7 @@ namespace Actias
         //! \brief Remove value at index, will move all right values by one to the left.
         inline void RemoveAt(USize index)
         {
-            assert(index < Size() && "Invalid index");
+            ACTIAS_Assert(index < Size() && "Invalid index");
             if constexpr (std::is_trivially_copyable_v<T>)
             {
                 memmove(m_Begin + index, m_Begin + index + 1, Size() - index - 1);
@@ -482,7 +482,7 @@ namespace Actias
         //! \brief Remove value at index, will swap the last value with the removed value.
         inline void SwapRemoveAt(USize index)
         {
-            assert(index < Size() && "Invalid index");
+            ACTIAS_Assert(index < Size() && "Invalid index");
             if (index < Size() - 1)
             {
                 std::swap(m_Begin[index], m_Begin[Size() - 1]);
@@ -608,13 +608,13 @@ namespace Actias
 
         [[nodiscard]] inline T& operator[](USize index) noexcept
         {
-            assert(index < Size() && "Invalid index");
+            ACTIAS_Assert(index < Size() && "Invalid index");
             return m_Begin[index];
         }
 
         [[nodiscard]] inline const T& operator[](USize index) const noexcept
         {
-            assert(index < Size() && "Invalid index");
+            ACTIAS_Assert(index < Size() && "Invalid index");
             return m_Begin[index];
         }
 
@@ -627,28 +627,28 @@ namespace Actias
         //! \brief Get the first element of the container.
         [[nodiscard]] inline T& Front() noexcept
         {
-            assert(!Empty() && "List was empty");
+            ACTIAS_Assert(!Empty() && "List was empty");
             return *m_Begin;
         }
 
         //! \brief Get the first element of the container.
         [[nodiscard]] inline const T& Front() const noexcept
         {
-            assert(!Empty() && "List was empty");
+            ACTIAS_Assert(!Empty() && "List was empty");
             return *m_Begin;
         }
 
         //! \brief Get the last element of the container.
         [[nodiscard]] inline T& Back() noexcept
         {
-            assert(!Empty() && "List was empty");
+            ACTIAS_Assert(!Empty() && "List was empty");
             return *(m_End - 1);
         }
 
         //! \brief Get the last element of the container.
         [[nodiscard]] inline const T& Back() const noexcept
         {
-            assert(!Empty() && "List was empty");
+            ACTIAS_Assert(!Empty() && "List was empty");
             return *(m_End - 1);
         }
 
@@ -668,7 +668,7 @@ namespace Actias
         template<USize I>
         [[nodiscard]] inline auto AsTuple() const
         {
-            assert(I == Size() && "Tuple size must match List size");
+            ACTIAS_Assert(I == Size() && "Tuple size must match List size");
             return AsTupleImpl(std::make_index_sequence<I>{});
         }
 

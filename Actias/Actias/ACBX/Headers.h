@@ -77,7 +77,7 @@ typedef struct ACBXSectionHeader
     UInt64 RawSize;            //!< Size of raw section data.
     UInt64 Size;               //!< Size of the section when loaded.
     UInt64 RelocationsAddress; //!< Address of the relocations block, see Relocations Table.
-    UInt32 SectionFlags;       //!< The section flags, see Section Flags.
+    UInt32 SectionFlags;       //!< The section flags, see ACBXSectionFlagBits.
 } ACBXSectionHeader;
 
 //! \brief ACBX file export table header.

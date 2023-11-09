@@ -8,19 +8,22 @@
         {
 #    define ACTIAS_END_C }
 
-#    define ACTIAS_CONST const
 #    define ACTIAS_RESTRICT __restrict
+
+#    define ACTIAS_FALSE false
+#    define ACTIAS_TRUE true
 #else
 #    define ACTIAS_BEGIN_C
 #    define ACTIAS_END_C
-
-#    define ACTIAS_CONST
 
 #    if defined _MSC_VER
 #        define ACTIAS_RESTRICT __restrict
 #    else
 #        define ACTIAS_RESTRICT restrict
 #    endif
+
+#    define ACTIAS_FALSE 0
+#    define ACTIAS_TRUE 1
 #endif
 
 ACTIAS_BEGIN_C
@@ -65,10 +68,12 @@ ACTIAS_END_C
 
 #define ACTIAS_MAKE_STR(txt) #txt
 
-#define ACTIAS_UNUSED(param) (void)param
+#define ACTIAS_UNUSED(param) (void)(param)
 
 #if defined __clang__
 #    define ACTIAS_COMPILER_CLANG 1
+
+#    define ACTIAS_NO_BUILTIN(value) __attribute__((no_builtin(#value)))
 
 #    if defined _MSC_VER
 #        define ACTIAS_COMPILER_MS_CLANG 1
@@ -83,11 +88,15 @@ ACTIAS_END_C
 
 #    define ACTIAS_PRETTY_FUNCTION __PRETTY_FUNCTION__
 
+#    define ACTIAS_BUILTIN_ASSUME(expr) __builtin_assume(expr)
+
 #    ifndef ACTIAS_FORCE_INLINE
 #        define ACTIAS_FORCE_INLINE inline
 #    endif
 #elif defined _MSC_VER
 #    define ACTIAS_COMPILER_MSVC 1
+
+#    define ACTIAS_NO_BUILTIN(value)
 
 #    define ACTIAS_PUSH_MSVC_WARNING(warn) __pragma(warning(push)) __pragma(warning(disable : warn))
 #    define ACTIAS_POP_MSVC_WARNING __pragma(warning(pop))
@@ -97,13 +106,9 @@ ACTIAS_END_C
 
 #    define ACTIAS_PRETTY_FUNCTION __FUNCSIG__
 
+#    define ACTIAS_BUILTIN_ASSUME(expr) __assume(expr)
+
 #    ifndef ACTIAS_FORCE_INLINE
 #        define ACTIAS_FORCE_INLINE __forceinline
 #    endif
-#endif
-
-#if ACTIAS_COMPILER_MSVC || ACTIAS_COMPILER_MS_CLANG
-#    define ACTIAS_DEBUG_BREAK __debugbreak()
-#else
-#    define ACTIAS_DEBUG_BREAK raise(SIGTRAP)
 #endif

@@ -20,10 +20,10 @@ ActiasResult ACTIAS_ABI ActiasInit(void)
         return ACTIAS_FAIL_RT_INITIALIZED;
     }
 
-    return ActiasLoadNativeModule("ActiasRuntime", &g_CurrentRuntimeModule);
+    return ActiasLoadNativeModule("ActiasRuntime" ACTIAS_DLL_EXTENSION, &g_CurrentRuntimeModule);
 }
 
-ActiasResult ACTIAS_ABI ActiasLoadModuleEx(ACTIAS_CONST ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle)
+ActiasResult ACTIAS_ABI ActiasLoadModuleEx(const ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle)
 {
     ActiasProc address     = NULL;
     ActiasResult symResult = LoadRuntimeProc(ActiasRtLoadModule_ProcName, &address);
@@ -49,7 +49,7 @@ ActiasResult ACTIAS_ABI ActiasUnloadModule(ActiasHandle moduleHandle)
     return unload(moduleHandle);
 }
 
-ActiasResult ACTIAS_ABI ActiasFindSymbolAddress(ActiasHandle moduleHandle, ACTIAS_CONST char* pSymbolName, ActiasProc* pAddress)
+ActiasResult ACTIAS_ABI ActiasFindSymbolAddress(ActiasHandle moduleHandle, const char* pSymbolName, ActiasProc* pAddress)
 {
     ActiasProc address     = NULL;
     ActiasResult symResult = LoadRuntimeProc(ActiasRtFindSymbolAddress_ProcName, &address);

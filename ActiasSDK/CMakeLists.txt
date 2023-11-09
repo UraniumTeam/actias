@@ -2,19 +2,19 @@ set(SRC
     ActiasSDK/Base/Base.hpp
     ActiasSDK/Base/ISymbolNameAllocator.hpp
 
-	ActiasSDK/Driver/ExecutableBuilder.hpp
-	ActiasSDK/Driver/ExecutableBuilder.cpp
+    ActiasSDK/Driver/ExecutableBuilder.hpp
+    ActiasSDK/Driver/ExecutableBuilder.cpp
 
     ActiasSDK/Parser/Result.hpp
 
     ActiasSDK/Platform/INativeExecutable.hpp
-	ActiasSDK/Platform/NativeExecutableFactory.hpp
-	ActiasSDK/Platform/NativeExecutableFactory.cpp
+    ActiasSDK/Platform/NativeExecutableFactory.hpp
+    ActiasSDK/Platform/NativeExecutableFactory.cpp
 
-    ActiasSDK/Platform/Windows/Parser/Exports.hpp
     ActiasSDK/Platform/Windows/Parser/NTHeader.hpp
     ActiasSDK/Platform/Windows/Parser/NTHeader.cpp
     ActiasSDK/Platform/Windows/Parser/PECommon.hpp
+    ActiasSDK/Platform/Windows/Parser/PEDataDirectory.hpp
     ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.hpp
     ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.cpp
     ActiasSDK/Platform/Windows/PortableExecutable.hpp
