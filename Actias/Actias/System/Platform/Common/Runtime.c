@@ -20,7 +20,7 @@ ActiasResult ACTIAS_ABI ActiasInit(void)
         return ACTIAS_FAIL_RT_INITIALIZED;
     }
 
-    return ActiasLoadNativeModule("ActiasRuntime", &g_CurrentRuntimeModule);
+    return ActiasLoadNativeModule("ActiasRuntime" ACTIAS_DLL_EXTENSION, &g_CurrentRuntimeModule);
 }
 
 ActiasResult ACTIAS_ABI ActiasLoadModuleEx(const ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle)

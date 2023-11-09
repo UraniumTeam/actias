@@ -47,3 +47,14 @@ ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pAddress, USize byteSize)
 
     return ACTIAS_SUCCESS;
 }
+
+ActiasResult ACTIAS_ABI ActiasVirtualProtect(void* pointer, USize byteSize, ActiasFlags protection)
+{
+    int result = mprotect(pointer, byteSize, ActiasConvertMemoryProtection(protection));
+    if (result == -1)
+    {
+        return ACTIAS_FAIL_UNKNOWN;
+    }
+
+    return ACTIAS_SUCCESS;
+}

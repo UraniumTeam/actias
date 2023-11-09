@@ -90,7 +90,7 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasSetMemory(void* pDestination, UInt8 valu
 //!
 //! \param pDestination - A pointer to the memory to fill.
 //! \param byteCount - The number of bytes to fill.
-inline void ACTIAS_ABI ActiasInlineZeroMemory(void* pDestination, USize byteCount)
+inline static void ACTIAS_ABI ActiasInlineZeroMemory(void* pDestination, USize byteCount)
 {
     ActiasInlineSetMemory(pDestination, 0, byteCount);
 }
@@ -99,7 +99,7 @@ inline void ACTIAS_ABI ActiasInlineZeroMemory(void* pDestination, USize byteCoun
 //!
 //! \param pDestination - A pointer to the memory to fill.
 //! \param byteCount - The number of bytes to fill.
-inline void ACTIAS_ABI ActiasZeroMemory(void* pDestination, USize byteCount)
+inline static void ACTIAS_ABI ActiasZeroMemory(void* pDestination, USize byteCount)
 {
     ActiasSetMemory(pDestination, 0, byteCount);
 }
