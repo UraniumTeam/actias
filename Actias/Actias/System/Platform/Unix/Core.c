@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <sys/sysinfo.h>
+#include <sys/utsname.h>
 
 Int32 ACTIAS_ABI ActiasGetNativeErrorCode(void)
 {
@@ -31,6 +32,19 @@ ActiasResult ACTIAS_ABI ActiasRaiseSignal(Int32 signal)
 
 void ACTIAS_ABI ActiasGetSystemProperties(ActiasSystemProperties* pProperties)
 {
+    struct utsname un;
+    if (uname(&un) == 0)
+    {
+        pProperties->OSName = un.sysname;
+    }
+    else
+    {
+        pProperties->OSName = "Unknown Unix";
+    }
+
+    pProperties->OSFamily = ACTIAS_OS_FAMILY_UNIX;
+    pProperties->OS       = ACTIAS_OS_LINUX;
+
     pProperties->PageSize       = 4 * 1024;
     pProperties->ProcessorCount = get_nprocs_conf();
 }

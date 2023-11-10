@@ -9,7 +9,6 @@
 
 #    define ACTIAS_NATIVE_DL_EXTENSION ".dll"
 #    define ACTIAS_NATIVE_EX_EXTENSION ".exe"
-#    define ACTIAS_OS_NAME "Windows"
 
 #    define ACTIAS_ByteSwapUInt16(value) _byteswap_ushort(value)
 #    define ACTIAS_ByteSwapUInt32(value) _byteswap_ulong(value)
@@ -25,7 +24,6 @@
 
 #    define ACTIAS_NATIVE_DL_EXTENSION ".so"
 #    define ACTIAS_NATIVE_EX_EXTENSION ""
-#    define ACTIAS_OS_NAME "Linux"
 
 #    define ACTIAS_ByteSwapUInt16(value) __builtin_bswap16(value)
 #    define ACTIAS_ByteSwapUInt32(value) __builtin_bswap32(value)
