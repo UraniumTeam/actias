@@ -36,6 +36,10 @@ void ACTIAS_ABI ActiasGetSystemProperties(ActiasSystemProperties* pProperties)
     SYSTEM_INFO windowsInfo;
     GetSystemInfo(&windowsInfo);
 
+    pProperties->OSName   = "Windows";
+    pProperties->OSFamily = ACTIAS_OS_FAMILY_WINDOWS;
+    pProperties->OS       = ACTIAS_OS_WINDOWS;
+
     pProperties->PageSize       = windowsInfo.dwPageSize;
     pProperties->ProcessorCount = windowsInfo.dwNumberOfProcessors;
 }

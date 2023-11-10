@@ -58,9 +58,6 @@ ACTIAS_END_C
     (((UInt32)(major)) << (ACTIAS_VERSION_PATCH_BIT_COUNT + ACTIAS_VERSION_MINOR_BIT_COUNT))                                     \
         | (((UInt32)(minor)) << ACTIAS_VERSION_PATCH_BIT_COUNT) | ((UInt32)(patch))
 
-#undef ACTIAS_VERSION_PATCH_BIT_COUNT
-#undef ACTIAS_VERSION_MINOR_BIT_COUNT
-
 #define ACTIAS_VERSION_1_0 ACTIAS_MAKE_VERSION(1, 0, 0)
 
 #if defined NDEBUG
