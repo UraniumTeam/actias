@@ -2,7 +2,7 @@
   "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 22,
+    "minor": 19,
     "patch": 0
   },
   "configurePresets": [
@@ -18,7 +18,7 @@
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "clang++.exe",
         "ACTIAS_USE_SSE41": "ON",
         "ACTIAS_USE_SSE3": "ON",
         "ACTIAS_USE_AVX2": "ON",
@@ -45,7 +45,7 @@
       },
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "clang++.exe",
         "ACTIAS_USE_SSE41": "ON",
         "ACTIAS_USE_SSE3": "ON",
         "ACTIAS_USE_AVX2": "ON",

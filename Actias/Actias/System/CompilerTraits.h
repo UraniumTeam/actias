@@ -66,9 +66,9 @@ ACTIAS_END_C
 #    define ACTIAS_DEBUG 1
 #endif
 
-#define ACTIAS_MAKE_STR(txt) #txt
+#define ACTIAS_Stringify(txt) #txt
 
-#define ACTIAS_UNUSED(param) (void)(param)
+#define ACTIAS_Unused(param) (void)(param)
 
 #if defined __clang__
 #    define ACTIAS_COMPILER_CLANG 1
@@ -83,7 +83,7 @@ ACTIAS_END_C
 #    define ACTIAS_POP_MSVC_WARNING
 
 #    define ACTIAS_PUSH_CLANG_WARNING(warn)                                                                                      \
-        _Pragma("clang diagnostic push") _Pragma(ACTIAS_MAKE_STR(clang diagnostic ignored warn))
+        _Pragma("clang diagnostic push") _Pragma(ACTIAS_Stringify(clang diagnostic ignored warn))
 #    define ACTIAS_POP_CLANG_WARNING _Pragma("clang diagnostic pop")
 
 #    define ACTIAS_PRETTY_FUNCTION __PRETTY_FUNCTION__

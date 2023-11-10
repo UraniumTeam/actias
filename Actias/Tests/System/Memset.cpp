@@ -7,7 +7,7 @@ inline constexpr USize OverflowCheckCount = 4;
 inline constexpr USize BufferAlignment    = 256;
 inline constexpr USize MaxMemcopyTestSize = 64 * 1024 * 1024;
 
-static alignas(32) UInt8 g_Destination[MaxMemcopyTestSize + OverflowCheckCount];
+alignas(32) static UInt8 g_Destination[MaxMemcopyTestSize + OverflowCheckCount];
 
 using FMemset = decltype(ActiasSetMemory);
 

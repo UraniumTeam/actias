@@ -7,7 +7,7 @@
  */
 
 #pragma once
-#include <Actias/Base/CompilerTraits.h>
+#include <Actias/System/CompilerTraits.h>
 
 ACTIAS_BEGIN_C
 

@@ -1,5 +1,5 @@
 #pragma once
-#include <Actias/Base/Platform.h>
+#include <Actias/System/Platform.h>
 
 #if ActiasSystem_EXPORTS
 #    define ACTIAS_SYSTEM_API ACTIAS_EXPORT
