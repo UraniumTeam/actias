@@ -21,7 +21,7 @@ typedef enum ActiasResultValues
 
     // IO results
 
-    ACTIAS_FAIL_IO_ERROR = -20, //!< IO error.
+    ACTIAS_FAIL_IO_ERROR = -100, //!< IO error.
 
     ACTIAS_FAIL_INVALID_STD_DESCRIPTOR = ACTIAS_FAIL_IO_ERROR - 1,  //!< Provided standard file descriptor was not valid.
     ACTIAS_FAIL_PERMISSION_DENIED      = ACTIAS_FAIL_IO_ERROR - 2,  //!< Permission denied.
@@ -41,7 +41,7 @@ typedef enum ActiasResultValues
 
     // Runtime results
 
-    ACTIAS_FAIL_RT_ERROR = ACTIAS_FAIL_IO_ERROR - 30, //!< Runtime error.
+    ACTIAS_FAIL_RT_ERROR = ACTIAS_FAIL_IO_ERROR - 100, //!< Runtime error.
 
     ACTIAS_FAIL_RT_INITIALIZED             = ACTIAS_FAIL_RT_ERROR - 1, //!< Runtime was already initialized.
     ACTIAS_FAIL_RT_NOT_INITIALIZED         = ACTIAS_FAIL_RT_ERROR - 2, //!< Runtime was not initialized.
