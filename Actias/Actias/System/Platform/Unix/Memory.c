@@ -1,4 +1,5 @@
 #include <Actias/System/Memory.h>
+#include <Actias/System/Platform/Unix/linux_syscall_support.h>
 #include <malloc.h>
 #include <stdlib.h>
 #include <sys/mman.h>
@@ -34,12 +35,12 @@ inline static int ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protectio
 
 void* ACTIAS_ABI ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags protection)
 {
-    return mmap(pAddress, byteSize, ActiasConvertMemoryProtection(protection), MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+    return sys_mmap(pAddress, byteSize, ActiasConvertMemoryProtection(protection), MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 }
 
 ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pAddress, USize byteSize)
 {
-    int result = munmap(pAddress, byteSize);
+    int result = sys_munmap(pAddress, byteSize);
     if (result == -1)
     {
         return ACTIAS_FAIL_UNKNOWN;
@@ -50,7 +51,7 @@ ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pAddress, USize byteSize)
 
 ActiasResult ACTIAS_ABI ActiasVirtualProtect(void* pointer, USize byteSize, ActiasFlags protection)
 {
-    int result = mprotect(pointer, byteSize, ActiasConvertMemoryProtection(protection));
+    int result = sys_mprotect(pointer, byteSize, ActiasConvertMemoryProtection(protection));
     if (result == -1)
     {
         return ACTIAS_FAIL_UNKNOWN;
