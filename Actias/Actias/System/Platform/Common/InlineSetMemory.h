@@ -16,7 +16,7 @@ ACTIAS_BEGIN_C
 #define ACTIAS_MEMSET_MASK_64 (((UInt64)ACTIAS_MEMSET_MASK_32 << 32) | (UInt64)ACTIAS_MEMSET_MASK_32)
 
 //! \internal
-ACTIAS_FORCE_INLINE void ActiasSetSmallBuffer(Int8* pDestination, UInt8 value, USize byteSize)
+ACTIAS_FORCE_INLINE static void ActiasSetSmallBuffer(Int8* pDestination, UInt8 value, USize byteSize)
 {
     // byteSize must be <= 16
 
@@ -51,7 +51,7 @@ ACTIAS_FORCE_INLINE void ActiasSetSmallBuffer(Int8* pDestination, UInt8 value, U
 //! \param pDestination - A pointer to the memory to fill.
 //! \param value - The fill byte.
 //! \param byteCount - The number of bytes to fill.
-ACTIAS_NO_BUILTIN(memset) inline void ACTIAS_ABI ActiasInlineSetMemory(void* pDestination, UInt8 value, USize byteCount)
+ACTIAS_NO_BUILTIN(memset) inline static void ACTIAS_ABI ActiasInlineSetMemory(void* pDestination, UInt8 value, USize byteCount)
 {
     Int8* dst = (Int8*)(pDestination);
 
