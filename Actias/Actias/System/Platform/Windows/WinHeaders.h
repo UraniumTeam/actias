@@ -1,5 +1,5 @@
 #pragma once
-#include <Actias/Base/CompilerTraits.h>
+#include <Actias/System/CompilerTraits.h>
 
 #define WIN32_LEAN_AND_MEAN
 #define NOMINMAX

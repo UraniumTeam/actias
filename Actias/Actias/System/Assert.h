@@ -21,7 +21,7 @@
 #    if ACTIAS_DEBUG
 #        define ACTIAS_AssertDebug(expr, ...) ACTIAS_AssertSignal(ACTIAS_SIGTRAP, expr, __VA_ARGS__)
 #    else
-#        define ACTIAS_AssertDebug(expr, ...) ACTIAS_UNUSED(expr)
+#        define ACTIAS_AssertDebug(expr, ...) ACTIAS_Unused(expr)
 #    endif
 #endif
 

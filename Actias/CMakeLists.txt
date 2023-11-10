@@ -4,10 +4,7 @@ set(SRC
 
     Actias/Base/Base.hpp
     Actias/Base/Byte.hpp
-    Actias/Base/CompilerTraits.h
     Actias/Base/Flags.hpp
-    Actias/Base/Platform.h
-    Actias/Base/PlatformTraits.h
 
     Actias/Containers/ArraySlice.hpp
     Actias/Containers/HeapArray.hpp
@@ -53,8 +50,11 @@ set(SRC_SYSTEM
     Actias/System/Assert.h
     Actias/System/Atomic.h
     Actias/System/Base.h
+    Actias/System/CompilerTraits.h
     Actias/System/Core.h
     Actias/System/Memory.h
+    Actias/System/Platform.h
+    Actias/System/PlatformTraits.h
     Actias/System/Result.h
     Actias/System/Runtime.h
     Actias/System/Streams.h
