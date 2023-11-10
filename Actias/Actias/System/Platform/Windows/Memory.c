@@ -38,7 +38,7 @@ void* ACTIAS_ABI ActiasVirtualAlloc(void* pAddress, USize byteSize, ActiasFlags 
 
 ActiasResult ACTIAS_ABI ActiasVirtualFree(void* pointer, USize byteSize)
 {
-    ACTIAS_UNUSED(byteSize);
+    ACTIAS_Unused(byteSize);
 
     BOOL result = VirtualFree(pointer, 0, MEM_RELEASE);
     if (result)

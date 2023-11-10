@@ -25,7 +25,7 @@ public:
 TEST(RTTI, TypeName)
 {
     Foo foo;
-    std::string_view expectedName = "class Foo";
+    std::string_view expectedName = "Foo";
     ASSERT_EQ(foo.ActiasRTTI_GetName(), expectedName);
     ASSERT_EQ(Foo::ActiasRTTI_GetSName(), expectedName);
 }
