@@ -1,20 +1,20 @@
+#include <Actias/System/Platform/Unix/linux_syscall_support.h>
 #include <Actias/System/Streams.h>
-#include <unistd.h>
 
-ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(ActiasStandardDescriptor descriptor, ActiasHandle* pHandle)
+ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* pHandle)
 {
-    *pHandle = (ActiasHandle)descriptor;
-    if (descriptor <= ACTIAS_STDERR && descriptor > 0)
+    if (descriptor < ACTIAS_STD_DESCRIPTOR_MIN || descriptor > ACTIAS_STD_DESCRIPTOR_MAX)
     {
-        return ACTIAS_SUCCESS;
+        return ACTIAS_FAIL_INVALID_STD_DESCRIPTOR;
     }
 
-    return ACTIAS_FAIL_INVALID_STD_DESCRIPTOR;
+    *pHandle = (ActiasHandle)((USize)descriptor);
+    return ACTIAS_SUCCESS;
 }
 
 ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, const void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
-    ssize_t result = write((int)((USize)fileHandle), pBuffer, byteCount);
+    ssize_t result = sys_write((int)((USize)fileHandle), pBuffer, byteCount);
     if (result == -1)
     {
         return ACTIAS_FAIL_UNKNOWN;
