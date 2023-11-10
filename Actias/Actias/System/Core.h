@@ -31,14 +31,29 @@ enum ActiasSignalValues
     ACTIAS_SIGTRAP = 7, //!< Breakpoint trap.
 };
 
+enum ActiasOSFamilyValues
+{
+    ACTIAS_OS_FAMILY_WINDOWS = 1, //!< Windows OS family.
+    ACTIAS_OS_FAMILY_UNIX    = 2, //!< Unix OS family.
+};
+
+enum ActiasOSValues
+{
+    ACTIAS_OS_WINDOWS = 1, //!< Windows operating system.
+    ACTIAS_OS_LINUX   = 2, //!< Linux operating system.
+};
+
 //! \brief Basic flags type.
 typedef UInt32 ActiasFlags;
 
 //! \brief Basic system properties.
 typedef struct ActiasSystemProperties
 {
+    const char* OSName;    //!< Name of the OS the current process is running on.
     UInt32 PageSize;       //!< Size of memory page in bytes.
     UInt32 ProcessorCount; //!< Number of logical processors.
+    UInt16 OSFamily;       //!< Family of the OS the current process is running on, see ActiasOSFamilyValues.
+    UInt16 OS;             //!< OS the current process is running on, see ActiasOSValues.
 } ActiasSystemProperties;
 
 //! \brief Get last OS native error code.

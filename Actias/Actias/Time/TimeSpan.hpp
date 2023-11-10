@@ -1,6 +1,6 @@
 #pragma once
 #include <Actias/Base/Base.hpp>
-#include <Actias/Base/Platform.h>
+#include <Actias/System/Platform.h>
 #include <ctime>
 #include <ostream>
 #include <sstream>

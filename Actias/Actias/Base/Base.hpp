@@ -1,6 +1,6 @@
 #pragma once
-#include <Actias/Base/Platform.h>
 #include <Actias/System/Assert.h>
+#include <Actias/System/Platform.h>
 #include <atomic>
 #include <cstdint>
 #include <cstring>
@@ -65,6 +65,12 @@ namespace Actias
             fn.remove_prefix(fn.find_first_of('=') + 1);
             fn.remove_suffix(fn.length() - fn.find_last_of(']'));
 #endif
+            constexpr std::string_view classPrefix = "class ";
+            if (fn.substr(0, classPrefix.length()) == classPrefix)
+            {
+                fn.remove_prefix(classPrefix.length());
+            }
+
             return SVWrapper{ TrimTypeName(fn) };
         }
     } // namespace Internal
