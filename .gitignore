@@ -20,6 +20,7 @@ BuildRelease/
 BuildProfile/
 cmake-build-debug/
 cmake-build-release/
+cmake-build/
 **/*/obj/
 **/*/bin/
 
