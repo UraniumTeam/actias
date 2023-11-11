@@ -12,7 +12,7 @@
 
 ACTIAS_BEGIN_C
 
-typedef void* ActiasHandle;
+typedef struct ActiasHandleStruct* ActiasHandle;
 typedef Int64(ACTIAS_ABI* ActiasProc)();
 
 enum ActiasFlagValues
