@@ -18,6 +18,9 @@ enum ActiasResultValues
     ACTIAS_FAIL_UNKNOWN           = -1, //!< Operation failed with an unexpected error, try ActiasGetNativeErrorCode.
     ACTIAS_FAIL_NOT_SUPPORTED     = -2, //!< Operation is not supported.
     ACTIAS_FAIL_INSUFFICIENT_SIZE = -3, //!< Insufficient buffer size.
+    ACTIAS_FAIL_INVALID_ENCODING  = -4, //!< UTF-8 string has incorrect encoding.
+
+    ACTIAS_TIMEOUT = 1, //!< Operation timed out.
 
     // IO results
 
@@ -48,6 +51,16 @@ enum ActiasResultValues
     ACTIAS_FAIL_SYMBOL_NOT_FOUND           = ACTIAS_FAIL_RT_ERROR - 3, //!< Runtime was unable to find an exported symbol.
     ACTIAS_FAIL_ACBX_INVALID_SIGNATURE     = ACTIAS_FAIL_RT_ERROR - 4, //!< ACBX file signature was not valid.
     ACTIAS_FAIL_ACBX_SECTION_OUT_OF_BOUNDS = ACTIAS_FAIL_RT_ERROR - 5, //!< ACBX file section was out of bounds.
+
+    // Wait results
+
+    ACTIAS_FAIL_WAIT_ERROR = ACTIAS_FAIL_RT_ERROR - 100, //!< Wait error.
+
+    ACTIAS_FAIL_THREAD_WAIT_ERROR = ACTIAS_FAIL_WAIT_ERROR - 1, //!< Thread wait error.
+    ACTIAS_FAIL_MUTEX_WAIT_ERROR  = ACTIAS_FAIL_WAIT_ERROR - 2, //!< Mutex wait error.
+
+    ACTIAS_THREAD_WAIT_TIMEOUT = 1 - ACTIAS_FAIL_WAIT_ERROR, //!< Thread wait timeout.
+    ACTIAS_MUTEX_WAIT_TIMEOUT  = 2 - ACTIAS_FAIL_WAIT_ERROR, //!< Mutex wait timeout.
 };
 
 //! \brief Indicates operation status.
