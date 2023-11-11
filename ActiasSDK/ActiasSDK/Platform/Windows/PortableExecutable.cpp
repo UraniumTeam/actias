@@ -65,7 +65,7 @@ namespace Actias::SDK::PE
         pResult->m_SectionHeaders   = sections;
         pResult->m_pNTHeaders       = pHeaders;
         pResult->m_pExportDirectory = pHeaders->GetExportDirectoryEntry(pMapped->GetImageHandle());
-        pResult->m_pMappedBase      = ac_byte_cast(pMapped->GetImageHandle());
+        pResult->m_pMappedBase      = reinterpret_cast<Byte*>(pMapped->GetImageHandle());
 
         return pResult.Detach();
     }

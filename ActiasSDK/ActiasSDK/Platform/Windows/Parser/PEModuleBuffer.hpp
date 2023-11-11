@@ -27,7 +27,7 @@ namespace Actias::SDK::PE
 
         [[nodiscard]] inline ActiasHandle GetImageHandle()
         {
-            return m_Buffer.Data();
+            return reinterpret_cast<ActiasHandle>(m_Buffer.Data());
         }
 
         [[nodiscard]] inline USize ByteSize() const

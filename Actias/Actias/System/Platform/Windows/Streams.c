@@ -25,12 +25,14 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* p
         return ACTIAS_FAIL_INVALID_STD_DESCRIPTOR;
     }
 
-    *pHandle = GetStdHandle(winStdHandle);
+    HANDLE handle = GetStdHandle(winStdHandle);
 
     if (*pHandle == INVALID_HANDLE_VALUE)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
+
+    *pHandle = (ActiasHandle)handle;
 
     return ACTIAS_SUCCESS;
 }
@@ -38,7 +40,7 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* p
 ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, const void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
     DWORD bytesWritten;
-    BOOL result = WriteFile(fileHandle, pBuffer, (DWORD)byteCount, &bytesWritten, NULL);
+    BOOL result = WriteFile((HANDLE)fileHandle, pBuffer, (DWORD)byteCount, &bytesWritten, NULL);
 
     if (result == FALSE)
     {

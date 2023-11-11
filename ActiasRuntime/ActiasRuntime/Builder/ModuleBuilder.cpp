@@ -101,10 +101,10 @@ namespace Actias::Runtime
         auto lastSection = m_Sections.Back();
         auto imageSize   = AlignUp(sectionBaseAddress + lastSection->Address + lastSection->Size, systemProperties.PageSize);
 
-        ActiasHandle handle = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE);
+        void* handle = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE);
         ActiasCopyMemory(handle, m_RawData.Data(), m_TotalHeaderSize);
 
-        *reinterpret_cast<UInt64*>(handle) = static_cast<UInt64>(imageSize);
+        *static_cast<UInt64*>(handle) = static_cast<UInt64>(imageSize);
 
         auto* pImageBase = ac_byte_cast(handle);
         for (auto* section : m_Sections)
@@ -134,6 +134,6 @@ namespace Actias::Runtime
             }
         }
 
-        return handle;
+        return static_cast<ActiasHandle>(handle);
     }
 } // namespace Actias::Runtime
