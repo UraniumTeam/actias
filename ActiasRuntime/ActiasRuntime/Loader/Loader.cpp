@@ -7,7 +7,7 @@ using namespace Actias::Runtime;
 
 inline ACBXExportTableHeader* LocateExportTable(ActiasHandle moduleHandle)
 {
-    auto* ptr = ac_byte_cast(moduleHandle);
+    auto* ptr = reinterpret_cast<Byte*>(moduleHandle);
     ptr       = AlignUpPtr(ptr + sizeof(ACBXFileInformationHeader), ACBX_FILE_ALIGNMENT);
     return reinterpret_cast<ACBXExportTableHeader*>(ptr);
 }
@@ -56,15 +56,17 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(Actia
 extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddress(ActiasHandle moduleHandle,
                                                                                 const char* pSymbolName, ActiasProc* pAddress)
 {
+    auto* pModule = reinterpret_cast<Byte*>(moduleHandle);
+
     const auto* pExportHeader = LocateExportTable(moduleHandle);
-    const auto* pExportTable  = reinterpret_cast<ACBXExportTableEntry*>(ac_byte_cast(moduleHandle) + pExportHeader->Address);
+    const auto* pExportTable  = reinterpret_cast<ACBXExportTableEntry*>(pModule + pExportHeader->Address);
     for (UInt64 i = 0; i < pExportHeader->EntryCount; ++i)
     {
         const auto& entry = pExportTable[i];
-        const char* pName = reinterpret_cast<const char*>(ac_byte_cast(moduleHandle) + entry.NameAddress);
+        const char* pName = reinterpret_cast<const char*>(pModule + entry.NameAddress);
         if (strcmp(pName, pSymbolName) == 0)
         {
-            *pAddress = reinterpret_cast<ActiasProc>(ac_byte_cast(moduleHandle) + entry.SymbolAddress);
+            *pAddress = reinterpret_cast<ActiasProc>(pModule + entry.SymbolAddress);
             return ACTIAS_SUCCESS;
         }
     }

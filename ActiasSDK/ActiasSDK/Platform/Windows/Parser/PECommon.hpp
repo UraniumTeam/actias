@@ -66,7 +66,7 @@ namespace Actias::SDK::PE
         template<class T>
         inline T* ToPointer(ActiasHandle pImageBuffer) const noexcept
         {
-            auto* bytes = ac_byte_cast(pImageBuffer) + Value;
+            auto* bytes = reinterpret_cast<Byte*>(pImageBuffer) + Value;
             return reinterpret_cast<T*>(bytes);
         }
     };
