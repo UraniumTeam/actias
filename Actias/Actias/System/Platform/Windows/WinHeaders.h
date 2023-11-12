@@ -35,7 +35,8 @@ inline static LPWSTR ActiasConvertUTF8ToWide(const char* pString, USize length)
         return NULL;
     }
 
-    LPWSTR pResult = (LPWSTR)ActiasAlloc(((USize)wideCount + 1) * sizeof(WCHAR));
+    LPWSTR pResult     = (LPWSTR)ActiasAlloc(((USize)wideCount + 1) * sizeof(WCHAR));
+    pResult[wideCount] = L'\0';
 
     if (MultiByteToWideChar(CP_UTF8, ACTIAS_MB_FLAGS, pString, (int)length, pResult, wideCount) <= 0)
     {
