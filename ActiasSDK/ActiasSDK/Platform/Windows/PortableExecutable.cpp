@@ -22,18 +22,6 @@ namespace Actias::SDK::PE
         return result;
     }
 
-    inline USize GetExportNameLength(const char* pName)
-    {
-        // We ignore any decorations here
-        const char* pEnd = pName;
-        while (*pEnd != '\0' && *pEnd != '@')
-        {
-            ++pEnd;
-        }
-
-        return pEnd - pName;
-    }
-
     ExecutableParseResult<INativeExecutable*> PortableExecutable::Load(const ArraySlice<Byte>& rawBuffer)
     {
         Ptr pResult = AllocateObject<PortableExecutable>();
@@ -60,12 +48,13 @@ namespace Actias::SDK::PE
             }
         }
 
-        pResult->m_SectionBaseVA    = sectionBase;
-        pResult->m_pVirtualBuffer   = pMapped;
-        pResult->m_SectionHeaders   = sections;
-        pResult->m_pNTHeaders       = pHeaders;
-        pResult->m_pExportDirectory = pHeaders->GetExportDirectoryEntry(pMapped->GetImageHandle());
-        pResult->m_pMappedBase      = reinterpret_cast<Byte*>(pMapped->GetImageHandle());
+        pResult->m_SectionBaseVA      = sectionBase;
+        pResult->m_pVirtualBuffer     = pMapped;
+        pResult->m_SectionHeaders     = sections;
+        pResult->m_pNTHeaders         = pHeaders;
+        pResult->m_pExportDirectory   = pHeaders->GetExportDirectoryEntry(pMapped->GetImageHandle());
+        pResult->m_pImportDescriptors = pHeaders->GetImportDescriptors(pMapped->GetImageHandle());
+        pResult->m_pMappedBase        = reinterpret_cast<Byte*>(pMapped->GetImageHandle());
 
         return pResult.Detach();
     }
@@ -103,19 +92,110 @@ namespace Actias::SDK::PE
         const auto* pNameTable       = reinterpret_cast<UInt32*>(m_pMappedBase + pExportDirectory->AddressOfNames);
         const auto* pNameOrdinals    = reinterpret_cast<UInt16*>(m_pMappedBase + pExportDirectory->AddressOfNameOrdinals);
 
-        const auto* pName       = m_pMappedBase + pNameTable[entryID];
-        const auto nameByteSize = GetExportNameLength(reinterpret_cast<const char*>(pName));
+        const StringSlice nameRaw(reinterpret_cast<const char*>(m_pMappedBase + pNameTable[entryID]));
+        const StringSlice name(nameRaw.begin(), nameRaw.FindFirstOf('@'));
 
         const auto ordinal    = pNameOrdinals[entryID];
         pEntry->SymbolAddress = pAddressTable[ordinal];
 
-        auto* pAllocatedName = pNameAllocator->Allocate(nameByteSize + 1, pEntry->NameAddress);
-        ActiasCopyMemory(pAllocatedName, pName, nameByteSize);
-        static_cast<char*>(pAllocatedName)[nameByteSize] = '\0';
+        auto* pAllocatedName = pNameAllocator->Allocate(name.Size() + 1, pEntry->NameAddress);
+        ActiasCopyMemory(pAllocatedName, name.Data(), name.Size());
+        static_cast<char*>(pAllocatedName)[name.Size()] = '\0';
     }
 
-    void PortableExecutable::CopySection(UInt32 sectionID, Byte* pDestination)
+    void ACTIAS_ABI PortableExecutable::CreateImportTableHeader(ACBXImportTableHeader* pHeader)
     {
-        CopySectionData(m_RawBuffer, m_SectionHeaders[sectionID], pDestination);
+        const auto* pImportDescriptors = m_pImportDescriptors;
+
+        if (!pImportDescriptors)
+        {
+            pHeader->EntryCount = 0;
+            return;
+        }
+
+        UInt64 count = 0;
+        for (USize i = 0;; ++i)
+        {
+            const auto currentSize = reinterpret_cast<const Byte*>(&pImportDescriptors[i + 1]) - m_pMappedBase;
+            if (currentSize > static_cast<SSize>(m_pVirtualBuffer->ByteSize()))
+            {
+                ACTIAS_Unreachable();
+                break;
+            }
+
+            if (pImportDescriptors[i].FirstThunk == 0 && pImportDescriptors[i].OriginalFirstThunk == 0)
+            {
+                break;
+            }
+
+            ++count;
+        }
+
+        pHeader->EntryCount = count;
+    }
+
+    template<class T>
+    inline UInt64 ProcessImportThunks(Byte* pBase, USize mappedSize, UInt32 firstThunk, UInt64 sectionBaseVA)
+    {
+        auto* pThunks = reinterpret_cast<T*>(pBase + firstThunk);
+
+        UInt64 count = 0;
+        for (USize i = 0;; ++i)
+        {
+            auto& thunk = pThunks[i];
+
+            if (firstThunk + i * sizeof(T) > mappedSize)
+            {
+                ACTIAS_Unreachable();
+                break;
+            }
+            if (thunk == 0)
+            {
+                break;
+            }
+
+            const auto* pImportByName = reinterpret_cast<ImportByName*>(pBase + thunk);
+            ACTIAS_Unused(pImportByName);
+
+            thunk -= static_cast<T>(sectionBaseVA);
+
+            ++count;
+        }
+
+        return count;
+    }
+
+    void ACTIAS_ABI PortableExecutable::CreateImportTableLibraryHeader(UInt64 libraryID, ACBXImportTableEntry* pEntry,
+                                                                       ISymbolNameAllocator* pNameAllocator)
+    {
+        const auto& importDescriptor = m_pImportDescriptors[libraryID];
+
+        const auto thunk = importDescriptor.FirstThunk;
+
+        StringSlice nameRaw(reinterpret_cast<const char*>(m_pMappedBase + importDescriptor.Name));
+        StringSlice name(nameRaw.begin(), nameRaw.FindLastOf('.'));
+
+        auto* pAllocatedName = pNameAllocator->Allocate(name.Size() + 1, pEntry->NameAddress);
+        ActiasCopyMemory(pAllocatedName, name.Data(), name.Size());
+        static_cast<char*>(pAllocatedName)[name.Size()] = '\0';
+
+        pEntry->Address = thunk - m_SectionBaseVA;
+
+        if (m_pNTHeaders->Is64Bit())
+        {
+            pEntry->EntryCount = ProcessImportThunks<UInt64>(m_pMappedBase, m_pVirtualBuffer->ByteSize(), thunk, m_SectionBaseVA);
+        }
+        else
+        {
+            pEntry->EntryCount = ProcessImportThunks<UInt32>(m_pMappedBase, m_pVirtualBuffer->ByteSize(), thunk, m_SectionBaseVA);
+        }
+    }
+
+    void ACTIAS_ABI PortableExecutable::CopySection(UInt32 sectionID, Byte* pDestination)
+    {
+        const auto* pSection = m_SectionHeaders[sectionID];
+        const auto* pSource  = pSection->VirtualAddress.ToPointer<Byte>(m_pMappedBase);
+
+        ActiasCopyMemory(pDestination, pSource, pSection->SizeOfRawData);
     }
 } // namespace Actias::SDK::PE

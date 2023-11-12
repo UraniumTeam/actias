@@ -98,6 +98,31 @@ typedef struct ACBXExportTableEntry
     UInt64 NameAddress;   //!< The exported symbol name address.
 } ACBXExportTableEntry;
 
+//! \brief ACBX file import table header.
+//!
+//! \see ACBXImportTableEntry
+typedef struct ACBXImportTableHeader
+{
+    UInt64 EntryCount; //!< The number of import table library entries.
+    UInt64 Address;    //!< The address of import table.
+} ACBXImportTableHeader;
+
+//! \brief ACBX file import table library entry.
+//!
+//! \see ACBXImportTableHeader
+typedef struct ACBXImportTableEntry
+{
+    UInt64 EntryCount;  //!< The number of import entries from the library.
+    UInt64 NameAddress; //!< The library name address.
+    UInt64 Address;     //!< The address of import entry array.
+} ACBXImportTableEntry;
+
+typedef struct ACBXImportNameEntry
+{
+    UInt16 Hint;  //!< Reserved.
+    char Name[1]; //!< Imported symbol name.
+} ACBXImportNameEntry;
+
 //! \brief ACBX file relocation block header.
 //!
 //! Each relocation table block starts with such header.

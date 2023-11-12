@@ -36,6 +36,19 @@ namespace Actias::SDK
         virtual void ACTIAS_ABI CreateExportTableEntry(UInt64 entryID, ACBXExportTableEntry* pEntry,
                                                        ISymbolNameAllocator* pNameAllocator) = 0;
 
+        //! \brief Retrieve native executable import table and write it to an ACBX import table header.
+        //!
+        //! \param pHeader - A pointer to the variable that receives the header data.
+        virtual void ACTIAS_ABI CreateImportTableHeader(ACBXImportTableHeader* pHeader) = 0;
+
+        //! \brief Retrieve native executable imported library info and write an associated ACBX library import header.
+        //!
+        //! \param libraryID - The ID of the library to create header for.
+        //! \param pEntry - A pointer to the variable that receives the entry data.
+        //! \param pNameAllocator - An allocator used to allocate strings for library names.
+        virtual void ACTIAS_ABI CreateImportTableLibraryHeader(UInt64 libraryID, ACBXImportTableEntry* pEntry,
+                                                               ISymbolNameAllocator* pNameAllocator) = 0;
+
         //! \brief Copy raw section data from a native executable.
         //!
         //! \param sectionID - The ID of the section to copy.

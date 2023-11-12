@@ -63,6 +63,7 @@ int main()
     typedef decltype(AddNumbers) AddNumbersProc;
     typedef decltype(AddNumbersEx) AddNumbersExProc;
     typedef decltype(GetMessage) GetMessageProc;
+    typedef decltype(PrintMessage) PrintMessageProc;
 
     ActiasProc address;
     auto symResult = ActiasFindSymbolAddress(moduleHandle, "AddNumbers", &address);
@@ -94,6 +95,16 @@ int main()
 
     auto* getMsg = reinterpret_cast<GetMessageProc*>(address);
     std::cout << getMsg() << std::endl;
+
+    symResult = ActiasFindSymbolAddress(moduleHandle, "PrintMessage", &address);
+    if (symResult != ACTIAS_SUCCESS)
+    {
+        std::cout << "Error finding a symbol in ACBX module: " << symResult << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    auto* printMsg = reinterpret_cast<PrintMessageProc*>(address);
+    printMsg();
 
     auto unloadResult = ActiasUnloadModule(moduleHandle);
     if (unloadResult != ACTIAS_SUCCESS)

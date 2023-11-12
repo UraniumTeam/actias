@@ -12,5 +12,6 @@ ACTIAS_BEGIN_C
 TESTLIB_API Int32 ACTIAS_ABI AddNumbers(Int32 a, Int32 b);
 TESTLIB_API Int32 ACTIAS_ABI AddNumbersEx(Int32 a, Int32 b, Int32 c);
 TESTLIB_API const char* ACTIAS_ABI GetMessage();
+TESTLIB_API void ACTIAS_ABI PrintMessage();
 
 ACTIAS_END_C
