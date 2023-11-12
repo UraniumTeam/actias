@@ -58,6 +58,8 @@ set(SRC_SYSTEM
     Actias/System/Result.h
     Actias/System/Runtime.h
     Actias/System/Streams.h
+    Actias/System/Threading.h
+
     Actias/System/Platform/Common/Atomic.asm
     Actias/System/Platform/Common/CopyMemory.c
     Actias/System/Platform/Common/CopyMemoryAVX.asm
@@ -77,6 +79,7 @@ if (ACTIAS_WINDOWS)
         Actias/System/Platform/Windows/Memory.c
         Actias/System/Platform/Windows/Runtime.c
         Actias/System/Platform/Windows/Streams.c
+        Actias/System/Platform/Windows/Threading.c
         Actias/System/Platform/Windows/WinHeaders.h
     )
 else ()

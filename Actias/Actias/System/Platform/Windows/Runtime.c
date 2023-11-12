@@ -9,13 +9,13 @@ ActiasResult ACTIAS_ABI ActiasLoadNativeModule(const char* pFilePath, ActiasHand
         return ACTIAS_FAIL_UNKNOWN;
     }
 
-    *pHandle = handle;
+    *pHandle = (ActiasHandle)handle;
     return ACTIAS_SUCCESS;
 }
 
 ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadNativeModule(ActiasHandle moduleHandle)
 {
-    BOOL result = FreeLibrary(moduleHandle);
+    BOOL result = FreeLibrary((HANDLE)moduleHandle);
     if (result)
     {
         return ACTIAS_SUCCESS;
@@ -26,7 +26,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadNativeModule(ActiasHandle 
 
 ActiasResult ACTIAS_ABI ActiasFindNativeSymbolAddress(ActiasHandle moduleHandle, const char* pSymbolName, ActiasProc* pAddress)
 {
-    FARPROC address = GetProcAddress(moduleHandle, pSymbolName);
+    FARPROC address = GetProcAddress((HANDLE)moduleHandle, pSymbolName);
     if (address == NULL)
     {
         return ACTIAS_FAIL_UNKNOWN;
