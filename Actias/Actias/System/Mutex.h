@@ -23,10 +23,10 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasInitializeMutex(ActiasMutex* pMutex);
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasReleaseMutex(ActiasMutex* pMutex);
 
-ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasEnterMutex(ActiasMutex* pMutex);
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasLockMutex(ActiasMutex* pMutex);
 
-ACTIAS_SYSTEM_API ActiasBool ACTIAS_ABI ActiasTryEnterMutex(ActiasMutex* pMutex);
+ACTIAS_SYSTEM_API ActiasBool ACTIAS_ABI ActiasTryLockMutex(ActiasMutex* pMutex);
 
-ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasLeaveMutex(ActiasMutex* pMutex);
+ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasUnlockMutex(ActiasMutex* pMutex);
 
 ACTIAS_END_C
