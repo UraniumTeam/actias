@@ -53,6 +53,7 @@ set(SRC_SYSTEM
     Actias/System/CompilerTraits.h
     Actias/System/Core.h
     Actias/System/Memory.h
+    Actias/System/Mutex.h
     Actias/System/Platform.h
     Actias/System/PlatformTraits.h
     Actias/System/Result.h
@@ -89,6 +90,7 @@ if (ACTIAS_WINDOWS)
         ${SRC_SYSTEM}
         Actias/System/Platform/Windows/Core.c
         Actias/System/Platform/Windows/Memory.c
+        Actias/System/Platform/Windows/Mutex.c
         Actias/System/Platform/Windows/Runtime.c
         Actias/System/Platform/Windows/Streams.c
         Actias/System/Platform/Windows/Threading.c
