@@ -60,7 +60,11 @@ set(SRC_SYSTEM
     Actias/System/Streams.h
     Actias/System/Threading.h
 
-    Actias/System/Platform/Common/Atomic.asm
+    Actias/System/Platform/Common/AtomicImpl.h
+    Actias/System/Platform/Common/AtomicImpl8.h
+    Actias/System/Platform/Common/AtomicImpl16.h
+    Actias/System/Platform/Common/AtomicImpl32.h
+    Actias/System/Platform/Common/AtomicImpl64.h
     Actias/System/Platform/Common/CopyMemory.c
     Actias/System/Platform/Common/CopyMemoryAVX.asm
     Actias/System/Platform/Common/Core.c
@@ -71,6 +75,14 @@ set(SRC_SYSTEM
     Actias/System/Platform/Common/RuntimeDef.h
     Actias/System/Platform/Common/SetMemory.c
 )
+
+if (ACTIAS_COMPILER_MSVC)
+    set(SRC_SYSTEM
+        ${SRC_SYSTEM}
+        Actias/System/Compiler/AtomicImplMSVC.h
+    )
+else ()
+endif ()
 
 if (ACTIAS_WINDOWS)
     set(SRC_SYSTEM

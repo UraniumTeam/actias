@@ -8,14 +8,6 @@ if (APPLE)
     string(APPEND CMAKE_ASM_NASM_FLAGS "--prefix _")
 endif ()
 
-if (WIN32)
-    foreach(flag_var
-            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-        STRING (REGEX REPLACE "/RTC[^ ]*" "" ${flag_var} "${${flag_var}}")
-    endforeach(flag_var)
-endif ()
-
 option(ACTIAS_BUILD_SAMPLES OFF)
 option(ACTIAS_BUILD_TESTS OFF)
 

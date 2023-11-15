@@ -1,14 +1,13 @@
 #pragma once
-#include <Actias/System/Core.h>
 
-ACTIAS_BEGIN_C
+// clang-format off
 
-ACTIAS_SYSTEM_API Int8 ACTIAS_ABI ActiasAtomicAddI8(volatile Int8* pAddend, Int8 Value);
+#include <Actias/System/Platform/Common/AtomicImpl8.h>
+#include <Actias/System/Platform/Common/AtomicImpl16.h>
+#include <Actias/System/Platform/Common/AtomicImpl32.h>
 
-ACTIAS_SYSTEM_API Int16 ACTIAS_ABI ActiasAtomicAddI16(volatile Int16* pAddend, Int16 Value);
+#if ACTIAS_ARCH_64_BIT
+#    include <Actias/System/Platform/Common/AtomicImpl64.h>
+#endif
 
-ACTIAS_SYSTEM_API Int32 ACTIAS_ABI ActiasAtomicAddI32(volatile Int32* pAddend, Int32 Value);
-
-ACTIAS_SYSTEM_API Int64 ACTIAS_ABI ActiasAtomicAddI64(volatile Int64* pAddend, Int64 Value);
-
-ACTIAS_END_C
+// clang-format on
