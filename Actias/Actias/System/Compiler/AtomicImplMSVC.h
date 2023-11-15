@@ -4,18 +4,18 @@
 
 ACTIAS_BEGIN_C
 
-#define ACTIAS_MAKE_TOMIC_TYPE(bits)                                                                                             \
+#define ACTIAS_MAKE_ATOMIC_TYPE(bits)                                                                                            \
     typedef struct ActiasAtomic##bits                                                                                            \
     {                                                                                                                            \
         UInt##bits Data;                                                                                                         \
     } ActiasAtomic##bits
 
-ACTIAS_MAKE_TOMIC_TYPE(8);
-ACTIAS_MAKE_TOMIC_TYPE(16);
-ACTIAS_MAKE_TOMIC_TYPE(32);
-ACTIAS_MAKE_TOMIC_TYPE(64);
+ACTIAS_MAKE_ATOMIC_TYPE(8);
+ACTIAS_MAKE_ATOMIC_TYPE(16);
+ACTIAS_MAKE_ATOMIC_TYPE(32);
+ACTIAS_MAKE_ATOMIC_TYPE(64);
 
-#undef ACTIAS_MAKE_TOMIC_TYPE
+#undef ACTIAS_MAKE_ATOMIC_TYPE
 
 #define ACTIAS_VolatileLoad(value, bits) ((volatile ActiasAtomic##bits*)value)->Data
 
