@@ -37,14 +37,16 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(const A
         return static_cast<ActiasResult>(headerResult);
     }
 
-    auto buildResult = builder.Build();
-    if (buildResult)
+    auto buildResult     = builder.Build();
+    auto buildResultCode = buildResult.UnwrapErrOrDefault();
+    if (buildResultCode != ResultCode::Success)
     {
-        *pModuleHandle = buildResult.Unwrap();
-        return ACTIAS_SUCCESS;
+        return static_cast<ActiasResult>(buildResultCode);
     }
 
-    return static_cast<ActiasResult>(buildResult.UnwrapErr());
+    *pModuleHandle = buildResult.Unwrap();
+
+    return static_cast<ActiasResult>(builder.ImportAll().UnwrapErrOrDefault());
 }
 
 extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(ActiasHandle moduleHandle)

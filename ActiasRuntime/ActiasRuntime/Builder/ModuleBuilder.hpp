@@ -13,6 +13,8 @@ namespace Actias::Runtime
         ACBXFileInformationHeader* m_pFileInfoHeader = nullptr;
         List<ACBXSectionHeader*> m_Sections;
         ACBXExportTableHeader* m_pExportHeader = nullptr;
+        ACBXImportTableHeader* m_pImportHeader = nullptr;
+        Byte* m_pMapped                        = nullptr;
 
         USize m_TotalHeaderSize = 0;
 
@@ -20,5 +22,6 @@ namespace Actias::Runtime
         VoidResult<IO::ResultCode> LoadFromStream(IO::IStream* pStream);
         VoidResult<ResultCode> ParseHeaders();
         Result<ActiasHandle, ResultCode> Build();
+        VoidResult<ResultCode> ImportAll();
     };
 } // namespace Actias::Runtime
