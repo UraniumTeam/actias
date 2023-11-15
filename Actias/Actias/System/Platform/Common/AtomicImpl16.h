@@ -10,11 +10,21 @@ ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicLoad16Explicit(const ActiasAtomic1
     return result;
 }
 
+ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicLoad16(const ActiasAtomic16* pSource)
+{
+    return ActiasAtomicLoad16Explicit(pSource, ACTIAS_MEMORY_ORDER_SEQ_CST);
+}
+
 ACTIAS_FORCE_INLINE static void ActiasAtomicStore16Explicit(ActiasAtomic16* pDestination, UInt16 source,
                                                             ActiasMemoryOrder memoryOrder)
 {
     ACTIAS_PlaceReleaseFenceIfNeeded(memoryOrder);
     ActiasAtomicStore16Relaxed(pDestination, source);
+}
+
+ACTIAS_FORCE_INLINE static void ActiasAtomicStore16(ActiasAtomic16* pDestination, UInt16 source)
+{
+    ActiasAtomicStore16Explicit(pDestination, source, ACTIAS_MEMORY_ORDER_SEQ_CST);
 }
 
 ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchAdd16Explicit(ActiasAtomic16* pDestination, Int16 value,
@@ -26,6 +36,11 @@ ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchAdd16Explicit(ActiasAtomic16*
     return result;
 }
 
+ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchAdd16(ActiasAtomic16* pDestination, Int16 value)
+{
+    return ActiasAtomicFetchAdd16Explicit(pDestination, value, ACTIAS_MEMORY_ORDER_SEQ_CST);
+}
+
 ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchAnd16Explicit(ActiasAtomic16* pDestination, UInt16 value,
                                                                  ActiasMemoryOrder memoryOrder)
 {
@@ -33,6 +48,11 @@ ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchAnd16Explicit(ActiasAtomic16*
     UInt16 result = ActiasAtomicFetchAnd16Relaxed(pDestination, value);
     ACTIAS_PlaceAquireFenceIfNeeded(memoryOrder);
     return result;
+}
+
+ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchAnd16(ActiasAtomic16* pDestination, UInt16 value)
+{
+    return ActiasAtomicFetchAnd16Explicit(pDestination, value, ACTIAS_MEMORY_ORDER_SEQ_CST);
 }
 
 ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchOr16Explicit(ActiasAtomic16* pDestination, UInt16 value,
@@ -44,6 +64,11 @@ ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchOr16Explicit(ActiasAtomic16* 
     return result;
 }
 
+ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicFetchOr16(ActiasAtomic16* pDestination, UInt16 value)
+{
+    return ActiasAtomicFetchOr16Explicit(pDestination, value, ACTIAS_MEMORY_ORDER_SEQ_CST);
+}
+
 ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicExchange16Explicit(ActiasAtomic16* pDestination, UInt16 desired,
                                                                  ActiasMemoryOrder memoryOrder)
 {
@@ -51,6 +76,11 @@ ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicExchange16Explicit(ActiasAtomic16*
     UInt16 result = ActiasAtomicExchange16Relaxed(pDestination, desired);
     ACTIAS_PlaceAquireFenceIfNeeded(memoryOrder);
     return result;
+}
+
+ACTIAS_FORCE_INLINE static UInt16 ActiasAtomicExchange16(ActiasAtomic16* pDestination, UInt16 desired)
+{
+    return ActiasAtomicExchange16Explicit(pDestination, desired, ACTIAS_MEMORY_ORDER_SEQ_CST);
 }
 
 ACTIAS_FORCE_INLINE static ActiasBool ActiasAtomicCompareExchageWeak16Explicit(ActiasAtomic16* pDestination, UInt16* pExpected,
@@ -75,6 +105,13 @@ ACTIAS_FORCE_INLINE static ActiasBool ActiasAtomicCompareExchageWeak16Explicit(A
     }
 
     return result;
+}
+
+ACTIAS_FORCE_INLINE static ActiasBool ActiasAtomicCompareExchageWeak16(ActiasAtomic16* pDestination, UInt16* pExpected,
+                                                                       UInt16 desired)
+{
+    return ActiasAtomicCompareExchageWeak16Explicit(
+        pDestination, pExpected, desired, ACTIAS_MEMORY_ORDER_SEQ_CST, ACTIAS_MEMORY_ORDER_SEQ_CST);
 }
 
 ACTIAS_END_C
