@@ -34,4 +34,10 @@ namespace Actias::SDK::PE
         UInt32 Name;
         UInt32 FirstThunk; // RVA to IAT.
     };
+
+    struct ImportByName
+    {
+        UInt16 Hint;
+        char Name[1];
+    };
 } // namespace Actias::SDK::PE

@@ -124,3 +124,23 @@ A relocation entry is stored in a UInt16, offset is specified in bits.
 |--------------:|-------:|:------|:-----------|
 | 0 | 4 | Flags | The relocation flags (reserved, must be 0). |
 | 4 | 12 | Offset | The offset of the relocation, an address relative to the base address. |
+
+### Import Table
+
+#### Import Table Header
+
+| Offset | Type | Field | Description|
+|-------:|-----:|:------|:-----------|
+| 0 | UInt64 | EntryCount | The number of import table library entries. |
+| 8 | UInt64 | Address | The address of import table. |
+
+#### Import Table Entry
+
+| Offset | Type | Field | Description|
+|-------:|-----:|:------|:-----------|
+| 0 | UInt64 | EntryCount | The number of import entries from the library. |
+| 8 | UInt64 | NameAddress | The library name address. |
+| 16 | UInt64 | Address | The address of import entry array. |
+
+Each import entry is a `UInt64` which is the address of the imported symbol name
+that must be replaced with the address of the symbol at runtime.

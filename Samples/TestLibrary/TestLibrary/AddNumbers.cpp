@@ -1,3 +1,4 @@
+#include <Actias/System/Streams.h>
 #include <TestLibrary/AddNumbers.h>
 
 extern "C"
@@ -14,6 +15,15 @@ extern "C"
 
     const char* ACTIAS_ABI GetMessage()
     {
-        return "Hello, World!";
+        return "Hello, World!\n";
+    }
+
+    void ACTIAS_ABI PrintMessage()
+    {
+        const char* pMessage = GetMessage();
+
+        ActiasHandle hStdout;
+        ActiasGetStdFileHandle(ACTIAS_STDOUT, &hStdout);
+        ActiasWrite(hStdout, pMessage, 14, nullptr);
     }
 }

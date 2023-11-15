@@ -21,7 +21,7 @@ namespace Actias::SDK
             m_AddressStack.Push(address);
 
             auto data = HeapArray<Byte>::CreateUninitialized(byteSize);
-            memset(data.Data(), 0, byteSize);
+            ActiasInlineZeroMemory(data.Data(), byteSize);
             return reinterpret_cast<T*>(m_Data.Push(std::move(data)).Data());
         }
 
@@ -93,6 +93,9 @@ extern "C" void ACTIAS_ABI ActiasBuildExecutable(IBlob** ppExecutableData, const
     auto* pExportHeader = builder.Allocate<ACBXExportTableHeader>();
     pNative->CreateExportTableHeader(pExportHeader);
 
+    auto* pImportHeader = builder.Allocate<ACBXImportTableHeader>();
+    pNative->CreateImportTableHeader(pImportHeader);
+
     List<ACBXSectionHeader*> sectionHeaders;
     sectionHeaders.Reserve(pFileInfo->SectionCount);
     for (UInt16 i = 0; i < pFileInfo->SectionCount; ++i)
@@ -101,13 +104,25 @@ extern "C" void ACTIAS_ABI ActiasBuildExecutable(IBlob** ppExecutableData, const
         pNative->CreateSectionHeader(i, pSectionHeader);
     }
 
-    pExportHeader->Address = builder.NextAddress();
-    auto* pExportTable     = builder.Allocate<ACBXExportTableEntry>(pExportHeader->EntryCount);
-
     SymbolNameAllocator nameAllocator(&builder);
+
+    pExportHeader->Address = builder.NextAddress();
+
+    auto* pExportTable = builder.Allocate<ACBXExportTableEntry>(pExportHeader->EntryCount);
     for (UInt64 i = 0; i < pExportHeader->EntryCount; ++i)
     {
         pNative->CreateExportTableEntry(i, pExportTable + i, &nameAllocator);
+    }
+
+    if (pImportHeader->EntryCount > 0)
+    {
+        pImportHeader->Address = builder.NextAddress();
+
+        auto* pLibraryEntries = builder.Allocate<ACBXImportTableEntry>(pImportHeader->EntryCount);
+        for (UInt64 i = 0; i < pImportHeader->EntryCount; ++i)
+        {
+            pNative->CreateImportTableLibraryHeader(i, pLibraryEntries + i, &nameAllocator);
+        }
     }
 
     for (UInt16 i = 0; i < pFileInfo->SectionCount; ++i)

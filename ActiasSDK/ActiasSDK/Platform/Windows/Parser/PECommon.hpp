@@ -63,9 +63,14 @@ namespace Actias::SDK::PE
             return PEVirtualAddress{ 0 };
         }
 
-        template<class T>
-        inline T* ToPointer(ActiasHandle pImageBuffer) const noexcept
+        template<class T, class THandle>
+        inline T* ToPointer(THandle* pImageBuffer) const noexcept
         {
+            if (Value == 0)
+            {
+                return nullptr;
+            }
+
             auto* bytes = reinterpret_cast<Byte*>(pImageBuffer) + Value;
             return reinterpret_cast<T*>(bytes);
         }
