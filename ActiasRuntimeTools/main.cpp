@@ -1,8 +1,7 @@
-#include "../ActiasSDK/ActiasSDK/Driver/ExecutableBuilder.hpp"
-#include "../ActiasSDK/ActiasSDK/Platform/NativeExecutableFactory.cpp"
-#include "../ActiasSDK/ActiasSDK/Platform/NativeExecutableFactory.hpp"
-#include <../ActiasSDK/ActiasSDK/Driver/ExecutableBuilder.cpp>
-#include <../ActiasSDK/ActiasSDK/Parser/Result.hpp>
+#include <ActiasSDK/Driver/ExecutableBuilder.hpp>
+#include <ActiasSDK/Parser/Result.hpp>
+#include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
+#include <ActiasSDK/Platform/INativeExecutable.hpp>
 #include <Actias/IO/FileHandle.hpp>
 #include <Actias/System/Memory.h>
 #include <args.hxx>
@@ -38,12 +37,15 @@ int main(int argc, char** argv)
             p, "executable", "The native OS executable to build (dll, exe, so, etc.)", args::Options::Required);
         p.Parse();
 
-        auto ExecutableRead = File::ReadAllBytes((StringSlice)executable.Get());
+        String path;
+        path.Append(executable.Get().data(), executable.Get().size());
+
+        auto ExecutableRead = File::ReadAllBytes(path);
 
         if (!ExecutableRead)
         {
             std::cout << "Executable file not found" << std::endl;
-            return EXIT_FAILURE;
+            return;
         }
 
         auto bytes = ExecutableRead.Unwrap();
@@ -60,7 +62,7 @@ int main(int argc, char** argv)
         if (result != ExecutableParseError::None)
         {
             std::cout << "Error loading a PE: " << ExecutableParseErrorTypeToString(result) << std::endl;
-            return EXIT_FAILURE;
+            return;
         }
         
         buildInfo.pNativeExecutable = nativeExecutable.Get();
@@ -68,11 +70,13 @@ int main(int argc, char** argv)
         Ptr<IBlob> pExecutableData;
         ActiasBuildExecutable(&pExecutableData, &buildInfo);
 
-        auto writeResult = File::WriteBlob((StringSlice)(executable.Get() + ".acbl"), pExecutableData.Get(), OpenMode::Create);
+        String outputPath(path.begin(), path.FindFirstOf('.'));
+        auto writeResult = File::WriteBlob(outputPath + ".acbl", pExecutableData.Get(), OpenMode::Create);
+
         if (writeResult.IsErr())
         {
             std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
-            return EXIT_FAILURE;
+            return;
         }
 
         std::cout << "Building: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
