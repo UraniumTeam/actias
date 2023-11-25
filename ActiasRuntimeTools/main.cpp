@@ -1,9 +1,10 @@
-#include <ActiasSDK/Driver/ExecutableBuilder.hpp>
-#include <ActiasSDK/Parser/Result.hpp>
-#include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
-#include <ActiasSDK/Platform/INativeExecutable.hpp>
 #include <Actias/IO/FileHandle.hpp>
 #include <Actias/System/Memory.h>
+#include <Actias/Utils/LibraryLoader.hpp>
+#include <ActiasSDK/Driver/ExecutableBuilder.hpp>
+#include <ActiasSDK/Parser/Result.hpp>
+#include <ActiasSDK/Platform/INativeExecutable.hpp>
+#include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
 #include <args.hxx>
 #include <functional>
 #include <iostream>
@@ -18,6 +19,11 @@ using namespace Actias::SDK;
 constexpr const char* DescriptionMessage = "Actias CLI (runtime and SDK)";
 constexpr const char* VersionMessage     = R"(Actias SDK version 0.1
 Actias runtime version 0.1)";
+
+typedef ExecutableParseError ACTIAS_ABI ActiasLoadNativeExecutableProc(INativeExecutable** ppExecutable,
+                                                                       const ActiasNativeExecutableLoadInfo* pLoadInfo);
+
+typedef void ACTIAS_ABI ActiasBuildExecutableProc(IBlob** ppExecutableData, const ActiasExecutableBuildInfo* pBuildInfo);
 
 int main(int argc, char** argv)
 {
@@ -37,6 +43,8 @@ int main(int argc, char** argv)
             p, "executable", "The native OS executable to build (dll, exe, so, etc.)", args::Options::Required);
         p.Parse();
 
+        LibraryLoader loader("ActiasSDK", true);
+
         String path;
         path.Append(executable.Get().data(), executable.Get().size());
 
@@ -52,11 +60,12 @@ int main(int argc, char** argv)
 
         ActiasNativeExecutableLoadInfo loadInfo{};
         loadInfo.pRawData        = bytes.Data();
-        loadInfo.RawDataByteSize    = bytes.Size();
-        
+        loadInfo.RawDataByteSize = bytes.Size();
+
         Ptr<INativeExecutable> nativeExecutable;
 
-        ExecutableParseError result = ActiasLoadNativeExecutable(&nativeExecutable, &loadInfo);
+        auto* actiasLoadNativeExecutable = loader.FindFunction<ActiasLoadNativeExecutableProc>("ActiasLoadNativeExecutable");
+        ExecutableParseError result      = actiasLoadNativeExecutable(&nativeExecutable, &loadInfo);
         ActiasExecutableBuildInfo buildInfo{};
 
         if (result != ExecutableParseError::None)
@@ -64,11 +73,13 @@ int main(int argc, char** argv)
             std::cout << "Error loading a PE: " << ExecutableParseErrorTypeToString(result) << std::endl;
             return;
         }
-        
+
         buildInfo.pNativeExecutable = nativeExecutable.Get();
 
         Ptr<IBlob> pExecutableData;
-        ActiasBuildExecutable(&pExecutableData, &buildInfo);
+
+        auto* actiasBuildExecutable = loader.FindFunction<ActiasBuildExecutableProc>("ActiasBuildExecutable");
+        actiasBuildExecutable(&pExecutableData, &buildInfo);
 
         String outputPath(path.begin(), path.FindFirstOf('.'));
         auto writeResult = File::WriteBlob(outputPath + ".acbl", pExecutableData.Get(), OpenMode::Create);
