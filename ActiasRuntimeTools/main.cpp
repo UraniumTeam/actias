@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 
         if (result != ExecutableParseError::None)
         {
-            std::cout << "Error loading a PE: " << ExecutableParseErrorTypeToString(result) << std::endl;
+            std::cerr << "Error loading a PE: " << ExecutableParseErrorTypeToString(result) << std::endl;
             return;
         }
 
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 
         if (writeResult.IsErr())
         {
-            std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
+            std::cerr << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
             return;
         }
 
