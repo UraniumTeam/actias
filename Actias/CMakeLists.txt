@@ -40,10 +40,12 @@ set(SRC
     Actias/Time/DateTime.cpp
     Actias/Time/TimeSpan.hpp
 
-    Actias/Utils/UUID.hpp
-    Actias/Utils/Result.hpp
     Actias/Utils/BitUtils.hpp
+    Actias/Utils/LibraryLoader.hpp
+    Actias/Utils/LibraryLoader.cpp
+    Actias/Utils/Result.hpp
     Actias/Utils/UUID.cpp
+    Actias/Utils/UUID.hpp
 )
 
 set(SRC_SYSTEM
