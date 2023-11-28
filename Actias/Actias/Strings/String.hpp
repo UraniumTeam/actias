@@ -302,6 +302,11 @@ namespace Actias
         {
         }
 
+        inline String(Iterator begin, Iterator end) noexcept
+            : String(begin.m_Iter, end.m_Iter - begin.m_Iter)
+        {
+        }
+
         inline ~String() noexcept
         {
             if (IsLong())
