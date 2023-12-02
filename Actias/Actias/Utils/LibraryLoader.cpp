@@ -49,7 +49,7 @@ namespace Actias
                                  : ActiasFindSymbolAddress(m_Handle, symbolName.Data(), &address);
         if (result == ACTIAS_SUCCESS)
         {
-            return address;
+            return reinterpret_cast<void*>(address);
         }
 
         return nullptr;
