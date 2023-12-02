@@ -19,14 +19,31 @@ typedef struct ActiasMutex
     UInt64 DummyData[5];
 } ActiasMutex;
 
+//! \brief Initialize a mutex.
+//!
+//! \param pMutex - A pointer to the mutex to initialize.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasInitializeMutex(ActiasMutex* pMutex);
 
+//! \brief Destroy a mutex.
+//!
+//! \param pMutex - A pointer to the mutex to destroy.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasReleaseMutex(ActiasMutex* pMutex);
 
+//! \brief Lock a mutex, block current thread if not available.
+//!
+//! \param pMutex - A pointer to the mutex to lock.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasLockMutex(ActiasMutex* pMutex);
 
+//! \brief Try to lock a mutex, return if not available.
+//!
+//! \param pMutex - A pointer to the mutex to lock.
+//!
+//! \return True on success.
 ACTIAS_SYSTEM_API ActiasBool ACTIAS_ABI ActiasTryLockMutex(ActiasMutex* pMutex);
 
+//! \brief Unlock a previously locked mutex.
+//!
+//! \param pMutex - A pointer to the mutex to unlock.
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasUnlockMutex(ActiasMutex* pMutex);
 
 ACTIAS_END_C
