@@ -2,9 +2,17 @@
 #include <Actias/Strings/String.hpp>
 #include <Actias/System/Runtime.h>
 #include <ActiasRuntime/Builder/ModuleBuilder.hpp>
+#include <array>
 
 namespace Actias::Runtime
 {
+    // OS-specific libraries to ignore
+    constexpr std::array g_SystemLibraries = {
+        StringSlice("KERNEL32"),
+        StringSlice("UCRTBASED"),
+        StringSlice("VCRUNTIME"),
+    };
+
     VoidResult<IO::ResultCode> ModuleBuilder::LoadFromStream(IO::IStream* pStream)
     {
         auto lengthResult = pStream->Length();
@@ -149,6 +157,22 @@ namespace Actias::Runtime
             const char* pLibName = reinterpret_cast<const char*>(m_pMapped + libEntry.NameAddress);
 
             String libName = pLibName;
+
+            auto isSystemLibrary = false;
+            for (const auto& systemLibrary : g_SystemLibraries)
+            {
+                if (libName.StartsWith(systemLibrary, false))
+                {
+                    isSystemLibrary = true;
+                    break;
+                }
+            }
+
+            if (isSystemLibrary)
+            {
+                continue;
+            }
+
             libName += ACTIAS_NATIVE_DL_EXTENSION;
 
             ActiasHandle hLibrary;
