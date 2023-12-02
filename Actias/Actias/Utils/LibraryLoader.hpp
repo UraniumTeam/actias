@@ -18,7 +18,7 @@ namespace Actias
         template <class T>
         inline T* FindFunction(StringSlice name)
         {
-            return static_cast<T*>(FindSymbol(name));
+            return reinterpret_cast<T*>(FindSymbol(name));
         }
     };
 } // namespace Actias

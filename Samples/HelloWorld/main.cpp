@@ -1,5 +1,5 @@
-﻿#include <Actias/System/Assert.h>
-#include <Actias/System/Atomic.h>
+#include <Actias/System/Assert.h>
+// #include <Actias/System/Atomic.h>
 #include <Actias/System/Streams.h>
 #include <Actias/System/Threading.h>
 #include <limits>
