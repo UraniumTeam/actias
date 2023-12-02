@@ -117,12 +117,12 @@ namespace Actias
 
         inline static void CopyData(TChar* dest, const TChar* src, size_t size) noexcept
         {
-            TCharTraits::copy(dest, src, size);
+            ActiasInlineCopyMemory(dest, src, size);
         }
 
         inline static void SetData(TChar* dest, TChar value, size_t size) noexcept
         {
-            TCharTraits::assign(dest, size, value);
+            ActiasInlineSetMemory(dest, static_cast<UInt8>(value), size);
         }
 
         inline TChar* InitImpl(size_t size) noexcept
