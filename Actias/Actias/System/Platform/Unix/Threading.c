@@ -53,10 +53,16 @@ ActiasResult ACTIAS_ABI ActiasReleaseThread(ActiasHandle threadHandle)
     return ACTIAS_SUCCESS;
 }
 
+static void MsToTimespecConverter(struct timespec* ts, UInt64 milliseconds)
+{
+    ts->tv_sec  = milliseconds / 1000;
+    ts->tv_nsec = (milliseconds % 1000) * 1000000;
+}
+
 ActiasResult ACTIAS_ABI ActiasWaitForThread(ActiasHandle threadHandle, UInt64 millisecondTimeout)
 {
     struct timespec ts;
-    ts.tv_nsec = millisecondTimeout * 1000000;
+    MsToTimespecConverter(&ts, millisecondTimeout);
 
     int result = pthread_timedjoin_np((pthread_t)threadHandle, NULL, &ts);
 
