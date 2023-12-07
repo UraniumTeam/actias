@@ -19,6 +19,7 @@ enum ActiasResultValues
     ACTIAS_FAIL_NOT_SUPPORTED     = -2, //!< Operation is not supported.
     ACTIAS_FAIL_INSUFFICIENT_SIZE = -3, //!< Insufficient buffer size.
     ACTIAS_FAIL_INVALID_ENCODING  = -4, //!< UTF-8 string has incorrect encoding.
+    ACTIAS_FAIL_INVALID_ARGUMENT  = -5, //!< Argument value has not been accepted.
 
     ACTIAS_TIMEOUT = 1, //!< Operation timed out.
 
@@ -51,6 +52,7 @@ enum ActiasResultValues
     ACTIAS_FAIL_SYMBOL_NOT_FOUND           = ACTIAS_FAIL_RT_ERROR - 3, //!< Runtime was unable to find an exported symbol.
     ACTIAS_FAIL_ACBX_INVALID_SIGNATURE     = ACTIAS_FAIL_RT_ERROR - 4, //!< ACBX file signature was not valid.
     ACTIAS_FAIL_ACBX_SECTION_OUT_OF_BOUNDS = ACTIAS_FAIL_RT_ERROR - 5, //!< ACBX file section was out of bounds.
+    ACTIAS_FAIL_ARGUMENT_OUT_OF_RANGE      = ACTIAS_FAIL_RT_ERROR - 6, //!< Value of an argument is outside the allowable range of values.
 
     // Wait results
 

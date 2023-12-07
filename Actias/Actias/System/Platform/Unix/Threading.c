@@ -6,14 +6,19 @@
 
 ActiasResult ACTIAS_ABI ActiasSetThreadName(ActiasHandle threadHandle, const char* pName, USize nameLength)
 {
-    if (nameLength <= 0)
+    if (nameLength == 0)
     {
-        return ACTIAS_FAIL_INVALID_ENCODING;
+        return ACTIAS_FAIL_INVALID_ARGUMENT;
     }
 
     int result = pthread_setname_np((pthread_t)threadHandle, pName);
 
-    if (result != 0 || result == ERANGE)
+    if (result == ERANGE)
+    {
+        return ACTIAS_FAIL_ARGUMENT_OUT_OF_RANGE;
+    }
+
+    if (result != 0)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
@@ -23,22 +28,21 @@ ActiasResult ACTIAS_ABI ActiasSetThreadName(ActiasHandle threadHandle, const cha
 
 ActiasResult ACTIAS_ABI ActiasCreateThread(const ActiasThreadCreateInfo* pCreateInfo, ActiasThreadInfo* pResult)
 {
-    pthread_t pThread;
+    pthread_t thread;
 
-    int result = pthread_create(&pThread, NULL, (void*)pCreateInfo->StartRoutine, pCreateInfo->StartParameter);
+    int result = pthread_create(&thread, NULL, (void*)pCreateInfo->StartRoutine, pCreateInfo->StartParameter);
 
     switch (result)
     {
     case EAGAIN:
-        return ACTIAS_FAIL_UNKNOWN;
     case EINVAL:
         return ACTIAS_FAIL_UNKNOWN;
     case EPERM:
         return ACTIAS_FAIL_PERMISSION_DENIED;
     }
 
-    pResult->ID     = pThread;
-    pResult->Handle = (ActiasHandle)pThread;
+    pResult->ID     = thread;
+    pResult->Handle = (ActiasHandle)thread;
 
     return ACTIAS_SUCCESS;
 }
@@ -63,9 +67,9 @@ ActiasResult ACTIAS_ABI ActiasWaitForThread(ActiasHandle threadHandle, UInt64 mi
     case EBUSY:
         return ACTIAS_FAIL_UNKNOWN;
     case EINVAL:
-        return ACTIAS_FAIL_UNKNOWN;
+        return ACTIAS_FAIL_INVALID_ARGUMENT;
     case ETIMEDOUT:
-        return ACTIAS_THREAD_WAIT_TIMEOUT;
+        return ACTIAS_FAIL_THREAD_WAIT_ERROR;
 
     default:
         return ACTIAS_FAIL_UNKNOWN;
