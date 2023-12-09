@@ -3,17 +3,14 @@ set(SRC
     TestLibrary/AddNumbers.cpp
 )
 
-if (WIN32)
-    foreach(flag_var
-            CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
-            CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
-        STRING (REGEX REPLACE "/RTC[^ ]*" "" ${flag_var} "${${flag_var}}")
-    endforeach(flag_var)
-endif ()
-
 add_library(TestLibrary SHARED ${SRC})
 
-target_link_libraries(TestLibrary Actias)
+if (ACTIAS_WINDOWS)
+    target_link_options(TestLibrary PRIVATE /nodefaultlib)
+else()
+endif()
+
+target_link_libraries(TestLibrary ActiasSystem)
 
 actias_configure_target(TestLibrary)
 
