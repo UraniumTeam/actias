@@ -19,7 +19,7 @@ int main()
 
     if (!dllRead)
     {
-        std::cout << "DLL not found" << std::endl;
+        std::cout << "Error running SDK: native DLL not found" << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -34,7 +34,7 @@ int main()
 
     if (result != ExecutableParseError::None)
     {
-        std::cout << "Error loading a PE: " << ExecutableParseErrorTypeToString(result) << std::endl;
+        std::cout << "Error loading the native executable: " << ExecutableParseErrorTypeToString(result) << std::endl;
         return EXIT_FAILURE;
     }
 
