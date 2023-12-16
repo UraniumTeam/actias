@@ -1,8 +1,36 @@
 #define _GNU_SOURCE
 
+#include <Actias/System/Memory.h>
 #include <Actias/System/Threading.h>
 #include <errno.h>
-#include <pthread.h>
+
+#if __has_include(<pthread.h>)
+#    include <pthread.h>
+#endif
+
+#if __has_include(<pthread_np.h>)
+#    include <pthread_np.h>
+#endif
+
+#if defined(__linux__)
+#    define pthread_setname_np(thread, name) (pthread_setname_np(thread, name));
+#endif
+
+#if defined(__NetBSD__)
+#    define pthread_setname_np(thread, name) (pthread_setname_np(thread, name, NULL));
+#endif
+
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
+#    define pthread_setname_np(thread, name) (pthread_setname_np(thread, name));
+#endif
+
+static void* UnixThreadFunction(void* startParameter)
+{
+    ActiasThreadCreateInfo* info = (ActiasThreadCreateInfo*)startParameter;
+    ActiasFree(info);
+
+    return NULL;
+}
 
 ActiasResult ACTIAS_ABI ActiasSetThreadName(ActiasHandle threadHandle, const char* pName, USize nameLength)
 {
@@ -30,7 +58,10 @@ ActiasResult ACTIAS_ABI ActiasCreateThread(const ActiasThreadCreateInfo* pCreate
 {
     pthread_t thread;
 
-    int result = pthread_create(&thread, NULL, (void*)pCreateInfo->StartRoutine, pCreateInfo->StartParameter);
+    ActiasThreadCreateInfo* pHeapCreateInfo = (ActiasThreadCreateInfo*)ActiasAlloc(sizeof(ActiasThreadCreateInfo));
+    ActiasInlineCopyMemory(pHeapCreateInfo, pCreateInfo, sizeof(ActiasThreadCreateInfo));
+
+    int result = pthread_create(&thread, NULL, UnixThreadFunction, pHeapCreateInfo);
 
     switch (result)
     {
