@@ -27,6 +27,7 @@
 static void* UnixThreadFunction(void* startParameter)
 {
     ActiasThreadCreateInfo* info = (ActiasThreadCreateInfo*)startParameter;
+    info->StartRoutine(info->StartParameter);
     ActiasFree(info);
 
     return NULL;
@@ -84,7 +85,7 @@ ActiasResult ACTIAS_ABI ActiasReleaseThread(ActiasHandle threadHandle)
     return ACTIAS_SUCCESS;
 }
 
-static void MsToTimespecConverter(struct timespec* ts, UInt64 milliseconds)
+static void ConvertMsToTimespec(struct timespec* ts, UInt64 milliseconds)
 {
     ts->tv_sec  = milliseconds / 1000;
     ts->tv_nsec = (milliseconds % 1000) * 1000000;
@@ -93,7 +94,7 @@ static void MsToTimespecConverter(struct timespec* ts, UInt64 milliseconds)
 ActiasResult ACTIAS_ABI ActiasWaitForThread(ActiasHandle threadHandle, UInt64 millisecondTimeout)
 {
     struct timespec ts;
-    MsToTimespecConverter(&ts, millisecondTimeout);
+    ConvertMsToTimespec(&ts, millisecondTimeout);
 
     int result = pthread_timedjoin_np((pthread_t)threadHandle, NULL, &ts);
 
