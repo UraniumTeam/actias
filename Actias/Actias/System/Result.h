@@ -26,10 +26,12 @@ enum ActiasResultValues
 
     ACTIAS_SUCCESS = 0, //!< Operation completed successfully.
 
-    ACTIAS_FAIL_UNKNOWN           = -1, //!< Operation failed with an unexpected error, try ActiasGetNativeErrorCode.
-    ACTIAS_FAIL_NOT_SUPPORTED     = -2, //!< Operation is not supported.
-    ACTIAS_FAIL_INSUFFICIENT_SIZE = -3, //!< Insufficient buffer size.
-    ACTIAS_FAIL_INVALID_ENCODING  = -4, //!< UTF-8 string has incorrect encoding.
+    ACTIAS_FAIL_UNKNOWN               = -1, //!< Operation failed with an unexpected error, try ActiasGetNativeErrorCode.
+    ACTIAS_FAIL_NOT_SUPPORTED         = -2, //!< Operation is not supported.
+    ACTIAS_FAIL_INSUFFICIENT_SIZE     = -3, //!< Insufficient buffer size.
+    ACTIAS_FAIL_INVALID_ENCODING      = -4, //!< UTF-8 string has incorrect encoding.
+    ACTIAS_FAIL_INVALID_ARGUMENT      = -5, //!< Argument value has not been accepted.
+    ACTIAS_FAIL_ARGUMENT_OUT_OF_RANGE = -6, //!< Argument value is outside the allowable range of values.
 
     ACTIAS_TIMEOUT = 1, //!< Operation timed out.
 
