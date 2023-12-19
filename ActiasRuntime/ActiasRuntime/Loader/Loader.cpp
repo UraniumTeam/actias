@@ -1,4 +1,5 @@
 #include <Actias/IO/FileStream.hpp>
+#include <Actias/System/CRT/EntryPoint.h>
 #include <ActiasRuntime/Base/Base.hpp>
 #include <ActiasRuntime/Builder/ModuleBuilder.hpp>
 
@@ -44,13 +45,34 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(const A
         return static_cast<ActiasResult>(buildResultCode);
     }
 
-    *pModuleHandle = buildResult.Unwrap();
+    auto moduleHandle = buildResult.Unwrap();
+    *pModuleHandle    = moduleHandle;
 
-    return static_cast<ActiasResult>(builder.ImportAll().UnwrapErrOrDefault());
+    auto importResult = builder.ImportAll().UnwrapErrOrDefault();
+    if (importResult != ResultCode::Success)
+    {
+        return static_cast<ActiasResult>(importResult);
+    }
+
+    ActiasProc mainAddress;
+    auto loadMainResult = ActiasRtFindSymbolAddress(moduleHandle, ActiasLibraryMain_ProcName, &mainAddress);
+    if (loadMainResult != ACTIAS_SUCCESS)
+    {
+        return loadMainResult;
+    }
+
+    return reinterpret_cast<ActiasLibraryMainProc*>(mainAddress)(ACTIAS_MAIN_CALL_REASON_LIBRARY_LOAD, moduleHandle);
 }
 
 extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(ActiasHandle moduleHandle)
 {
+    ActiasProc mainAddress;
+    auto loadMainResult = ActiasRtFindSymbolAddress(moduleHandle, ActiasLibraryMain_ProcName, &mainAddress);
+    if (loadMainResult == ACTIAS_SUCCESS)
+    {
+        reinterpret_cast<ActiasLibraryMainProc*>(mainAddress)(ACTIAS_MAIN_CALL_REASON_LIBRARY_UNLOAD, moduleHandle);
+    }
+
     auto moduleSize = *reinterpret_cast<UInt64*>(moduleHandle);
     return ActiasVirtualFree(moduleHandle, static_cast<USize>(moduleSize));
 }
