@@ -11,6 +11,7 @@ namespace Actias::Runtime
         StringSlice("KERNEL32"),
         StringSlice("UCRTBASED"),
         StringSlice("VCRUNTIME"),
+        StringSlice("MSVCP140D"),
     };
 
     VoidResult<IO::ResultCode> ModuleBuilder::LoadFromStream(IO::IStream* pStream)
@@ -179,7 +180,7 @@ namespace Actias::Runtime
             auto loadResult = ActiasLoadNativeModule(libName.Data(), &hLibrary);
             if (loadResult != ACTIAS_SUCCESS)
             {
-                return Err(ResultCode::UnknownError);
+                return Err(ResultCode::NoFileOrDirectory);
             }
 
             auto* importEntries = reinterpret_cast<USize*>(m_pMapped + libEntry.Address + sectionBaseAddress);

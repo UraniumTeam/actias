@@ -2,12 +2,12 @@
 
 using namespace Actias;
 
-static Float64 CalculateMultiply(Float64 lhs, Float64 rhs)
+static Float64 ACTIAS_ABI CalculateMultiply(Float64 lhs, Float64 rhs)
 {
     return lhs * rhs;
 }
 
-static Float64 CalculateDivide(Float64 lhs, Float64 rhs)
+static Float64 ACTIAS_ABI CalculateDivide(Float64 lhs, Float64 rhs)
 {
     return lhs / rhs;
 }

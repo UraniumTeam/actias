@@ -12,7 +12,11 @@ using namespace Actias::SDK;
 
 int main()
 {
-    ActiasInit();
+    if (ActiasInit() < 0)
+    {
+        std::cerr << "Failed to initialize the Runtime!" << std::endl;
+        return EXIT_FAILURE;
+    }
 
 #if ACTIAS_WINDOWS
     auto dllRead = File::ReadAllBytes("TestLibrary.dll");
