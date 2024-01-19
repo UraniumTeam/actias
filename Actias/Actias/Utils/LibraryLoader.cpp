@@ -1,32 +1,10 @@
+#include <Actias/Strings/String.hpp>
 #include <Actias/System/Runtime.h>
 #include <Actias/Utils/LibraryLoader.hpp>
-#include <Actias/Strings/String.hpp>
 
 namespace Actias
 {
-    LibraryLoader::LibraryLoader(StringSlice libraryName, bool forceNative)
-    {
-        String name = libraryName;
-        name += ".acbl";
-
-        if (!forceNative)
-        {
-            auto result = ActiasLoadModule(name.Data(), &m_Handle);
-            if (result == ACTIAS_SUCCESS)
-            {
-                m_IsNative = false;
-                return;
-            }
-        }
-
-        String nativeName = libraryName;
-        nativeName += ACTIAS_NATIVE_DL_EXTENSION;
-
-        ActiasLoadNativeModule(nativeName.Data(), &m_Handle);
-        m_IsNative = true;
-    }
-
-    LibraryLoader::~LibraryLoader()
+    void LibraryLoader::Release()
     {
         if (!m_Handle)
         {
@@ -40,6 +18,40 @@ namespace Actias
         }
 
         ActiasUnloadModule(m_Handle);
+    }
+
+    LibraryLoader::LibraryLoader(StringSlice libraryName, bool forceNative)
+    {
+        String name = libraryName;
+
+        if (!libraryName.EndsWith(".acbl"))
+        {
+            name += ".acbl";
+        }
+
+        if (!forceNative)
+        {
+            auto result = ActiasLoadModule(name.Data(), &m_Handle);
+            if (result == ACTIAS_SUCCESS)
+            {
+                m_IsNative = false;
+                return;
+            }
+        }
+
+        String nativeName = libraryName;
+        if (!libraryName.EndsWith(ACTIAS_NATIVE_DL_EXTENSION))
+        {
+            nativeName += ACTIAS_NATIVE_DL_EXTENSION;
+        }
+
+        ActiasLoadNativeModule(nativeName.Data(), &m_Handle);
+        m_IsNative = true;
+    }
+
+    LibraryLoader::~LibraryLoader()
+    {
+        Release();
     }
 
     void* LibraryLoader::FindSymbol(StringSlice symbolName)

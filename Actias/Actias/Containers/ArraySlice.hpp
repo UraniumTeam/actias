@@ -308,12 +308,12 @@ namespace Actias
             return result;
         }
 
-        [[nodiscard]] inline const T* begin() const noexcept
+        [[nodiscard]] inline T* begin() const noexcept
         {
             return m_pBegin;
         }
 
-        [[nodiscard]] inline const T* end() const noexcept
+        [[nodiscard]] inline T* end() const noexcept
         {
             return m_pEnd;
         }
