@@ -13,5 +13,6 @@ namespace Actias::Runtime
         InsufficientSize   = ACTIAS_FAIL_INSUFFICIENT_SIZE,
         InvalidSignature   = ACTIAS_FAIL_ACBX_INVALID_SIGNATURE,
         SectionOutOfBounds = ACTIAS_FAIL_ACBX_SECTION_OUT_OF_BOUNDS,
+        NoFileOrDirectory     = ACTIAS_FAIL_NO_FILE_OR_DIRECTORY
     };
 } // namespace Actias::Runtime

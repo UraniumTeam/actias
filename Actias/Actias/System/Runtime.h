@@ -78,7 +78,7 @@ ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasUnloadModule(ActiasHandle module
 inline ActiasResult ACTIAS_ABI ActiasLoadModule(const char* pFilePath, ActiasHandle* pHandle)
 {
     ACBXLoaderRunInfo runInfo;
-    ActiasZeroMemory(&runInfo, sizeof(runInfo));
+    ActiasInlineZeroMemory(&runInfo, sizeof(runInfo));
     runInfo.pModulePath = pFilePath;
     return ActiasLoadModuleEx(&runInfo, pHandle);
 }

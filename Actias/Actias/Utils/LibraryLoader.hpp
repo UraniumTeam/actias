@@ -30,6 +30,8 @@ namespace Actias
             m_Handle       = other.m_Handle;
             m_IsNative     = other.m_IsNative;
             other.m_Handle = nullptr;
+
+            return *this;
         }
 
         ~LibraryLoader();
