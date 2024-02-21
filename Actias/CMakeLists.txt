@@ -103,6 +103,7 @@ else ()
         ${SRC_SYSTEM}
         Actias/System/Platform/Unix/Core.c
         Actias/System/Platform/Unix/Memory.c
+        Actias/System/Platform/Unix/Mutex.c
         Actias/System/Platform/Unix/Runtime.c
         Actias/System/Platform/Unix/Streams.c
         Actias/System/Platform/Unix/Threading.c
