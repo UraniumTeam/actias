@@ -2,9 +2,11 @@
 #include <Actias/System/Base.h>
 
 #if ACTIAS_COMPILER_MSVC | ACTIAS_COMPILER_MS_CLANG
-#    include <Actias/System/Compiler/AtomicImplMSVC.h>
+#   include <Actias/System/Compiler/AtomicImplMSVC.h>
+#elif ACTIAS_COMPILER_CLANG
+#   include <Actias/System/Compiler/AtomicImplClang.h>
 #else
-#    error Atomics are not currently supported with this compiler
+#   error Atomics are not currently supported with this compiler
 #endif
 
 ACTIAS_BEGIN_C
