@@ -84,6 +84,11 @@ if (ACTIAS_COMPILER_MSVC)
         ${SRC_SYSTEM}
         Actias/System/Compiler/AtomicImplMSVC.h
     )
+elseif (ACTIAS_COMPILER_CLANG)
+    set(SRC_SYSTEM
+        ${SRC_SYSTEM}
+        Actias/System/Compiler/AtomicImplClang.h
+    )
 else ()
 endif ()
 
@@ -103,6 +108,7 @@ else ()
         ${SRC_SYSTEM}
         Actias/System/Platform/Unix/Core.c
         Actias/System/Platform/Unix/Memory.c
+        Actias/System/Platform/Unix/Mutex.c
         Actias/System/Platform/Unix/Runtime.c
         Actias/System/Platform/Unix/Streams.c
         Actias/System/Platform/Unix/Threading.c
