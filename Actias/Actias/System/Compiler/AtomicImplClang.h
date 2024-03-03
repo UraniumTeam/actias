@@ -6,7 +6,7 @@ ACTIAS_BEGIN_C
 #define ACTIAS_MAKE_ATOMIC_TYPE(bits)                                                                                            \
     typedef struct ActiasAtomic##bits                                                                                            \
     {                                                                                                                            \
-        UInt##bits Data;                                                                                                         \
+        volatile UInt##bits Data;                                                                                                         \
     } ActiasAtomic##bits
 
 ACTIAS_MAKE_ATOMIC_TYPE(8);
