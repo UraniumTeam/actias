@@ -48,7 +48,7 @@ set(SRC
     Actias/Utils/UUID.hpp
 )
 
-set(SRC_SYSTEM
+set(SRC_SYSTEM_SHARED
     Actias/System/Assert.h
     Actias/System/Atomic.h
     Actias/System/Base.h
@@ -80,8 +80,8 @@ set(SRC_SYSTEM
 )
 
 if (ACTIAS_COMPILER_MSVC)
-    set(SRC_SYSTEM
-        ${SRC_SYSTEM}
+    set(SRC_SYSTEM_SHARED
+        ${SRC_SYSTEM_SHARED}
         Actias/System/Compiler/AtomicImplMSVC.h
     )
 elseif (ACTIAS_COMPILER_CLANG)
@@ -93,8 +93,8 @@ else ()
 endif ()
 
 if (ACTIAS_WINDOWS)
-    set(SRC_SYSTEM
-        ${SRC_SYSTEM}
+    set(SRC_SYSTEM_SHARED
+        ${SRC_SYSTEM_SHARED}
         Actias/System/Platform/Windows/Core.c
         Actias/System/Platform/Windows/Memory.c
         Actias/System/Platform/Windows/Mutex.c
@@ -104,8 +104,8 @@ if (ACTIAS_WINDOWS)
         Actias/System/Platform/Windows/WinHeaders.h
     )
 else ()
-    set(SRC_SYSTEM
-        ${SRC_SYSTEM}
+    set(SRC_SYSTEM_SHARED
+        ${SRC_SYSTEM_SHARED}
         Actias/System/Platform/Unix/Core.c
         Actias/System/Platform/Unix/Memory.c
         Actias/System/Platform/Unix/Mutex.c
@@ -115,7 +115,40 @@ else ()
     )
 endif ()
 
-add_library(ActiasSystem SHARED ${SRC_SYSTEM})
+add_library(ActiasSystemShared SHARED ${SRC_SYSTEM_SHARED})
+
+actias_configure_target(ActiasSystemShared)
+actias_enable_simd_for_target(ActiasSystemShared)
+
+target_include_directories(ActiasSystemShared PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
+
+set_target_properties(ActiasSystemShared PROPERTIES FOLDER "Runtime")
+
+get_property("TARGET_SOURCE_FILES" TARGET ActiasSystemShared PROPERTY SOURCES)
+source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${TARGET_SOURCE_FILES})
+
+set(SRC_SYSTEM
+    Actias/System/CRT/Common/EntryPoint.c
+    Actias/System/CRT/EntryPoint.h
+)
+
+if (ACTIAS_WINDOWS)
+    set(SRC_SYSTEM
+        ${SRC_SYSTEM}
+        Actias/System/CRT/Windows/EntryPointDll.c
+        Actias/System/CRT/Windows/EntryPointExe.c
+    )
+else ()
+    set(SRC_SYSTEM
+        ${SRC_SYSTEM}
+    )
+endif ()
+
+add_library(ActiasSystem STATIC ${SRC_SYSTEM})
+
+if (ACTIAS_WINDOWS)
+	target_compile_options(ActiasSystem PRIVATE /GS-)
+endif()
 
 actias_configure_target(ActiasSystem)
 actias_enable_simd_for_target(ActiasSystem)
@@ -123,6 +156,7 @@ actias_enable_simd_for_target(ActiasSystem)
 target_include_directories(ActiasSystem PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set_target_properties(ActiasSystem PROPERTIES FOLDER "Runtime")
+target_link_libraries(ActiasSystem PUBLIC ActiasSystemShared)
 
 get_property("TARGET_SOURCE_FILES" TARGET ActiasSystem PROPERTY SOURCES)
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${TARGET_SOURCE_FILES})
@@ -135,7 +169,7 @@ actias_enable_simd_for_target(Actias)
 target_include_directories(Actias PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set_target_properties(Actias PROPERTIES FOLDER "Runtime")
-target_link_libraries(Actias ActiasSystem)
+target_link_libraries(Actias ActiasSystemShared)
 
 get_property("TARGET_SOURCE_FILES" TARGET Actias PROPERTY SOURCES)
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${TARGET_SOURCE_FILES})

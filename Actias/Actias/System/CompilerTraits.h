@@ -16,8 +16,6 @@
  */
 
 #pragma once
-#include <stddef.h>
-#include <stdint.h>
 
 #if defined __cplusplus
 #    define ACTIAS_BEGIN_C                                                                                                       \
@@ -41,6 +39,61 @@
 
 #    define ACTIAS_FALSE 0
 #    define ACTIAS_TRUE 1
+#endif
+
+#if defined __clang__
+#    define ACTIAS_COMPILER_CLANG 1
+
+#    define ACTIAS_NO_BUILTIN(value) __attribute__((no_builtin(#value)))
+
+#    if defined _MSC_VER
+#        define ACTIAS_COMPILER_MS_CLANG 1
+#    endif
+
+#    define ACTIAS_PUSH_MSVC_WARNING(...)
+#    define ACTIAS_POP_MSVC_WARNING
+
+#    define ACTIAS_PUSH_CLANG_WARNING(warn)                                                                                      \
+        _Pragma("clang diagnostic push") _Pragma(ACTIAS_Stringify(clang diagnostic ignored warn))
+#    define ACTIAS_POP_CLANG_WARNING _Pragma("clang diagnostic pop")
+
+#    define ACTIAS_PRETTY_FUNCTION __PRETTY_FUNCTION__
+
+#    define ACTIAS_BUILTIN_ASSUME(expr) __builtin_assume(expr)
+
+#    ifndef ACTIAS_FORCE_INLINE
+#        define ACTIAS_FORCE_INLINE inline
+#    endif
+
+#    error stdint must be defined here
+#elif defined _MSC_VER
+#    define ACTIAS_COMPILER_MSVC 1
+
+#    define ACTIAS_NO_BUILTIN(value)
+
+#    define ACTIAS_PUSH_MSVC_WARNING(warn) __pragma(warning(push)) __pragma(warning(disable : warn))
+#    define ACTIAS_POP_MSVC_WARNING __pragma(warning(pop))
+
+#    define ACTIAS_PUSH_CLANG_WARNING(...)
+#    define ACTIAS_POP_CLANG_WARNING
+
+#    define ACTIAS_PRETTY_FUNCTION __FUNCSIG__
+
+#    define ACTIAS_BUILTIN_ASSUME(expr) __assume(expr)
+
+#    ifndef ACTIAS_FORCE_INLINE
+#        define ACTIAS_FORCE_INLINE __forceinline
+#    endif
+
+typedef signed char int8_t;
+typedef short int16_t;
+typedef int int32_t;
+typedef long long int64_t;
+typedef unsigned char uint8_t;
+typedef unsigned short uint16_t;
+typedef unsigned int uint32_t;
+typedef unsigned long long uint64_t;
+
 #endif
 
 ACTIAS_BEGIN_C
@@ -88,46 +141,3 @@ ACTIAS_END_C
 #define ACTIAS_Stringify(txt) #txt
 
 #define ACTIAS_Unused(param) (void)(param)
-
-#if defined __clang__
-#    define ACTIAS_COMPILER_CLANG 1
-
-#    define ACTIAS_NO_BUILTIN(value) __attribute__((no_builtin(#value)))
-
-#    if defined _MSC_VER
-#        define ACTIAS_COMPILER_MS_CLANG 1
-#    endif
-
-#    define ACTIAS_PUSH_MSVC_WARNING(...)
-#    define ACTIAS_POP_MSVC_WARNING
-
-#    define ACTIAS_PUSH_CLANG_WARNING(warn)                                                                                      \
-        _Pragma("clang diagnostic push") _Pragma(ACTIAS_Stringify(clang diagnostic ignored warn))
-#    define ACTIAS_POP_CLANG_WARNING _Pragma("clang diagnostic pop")
-
-#    define ACTIAS_PRETTY_FUNCTION __PRETTY_FUNCTION__
-
-#    define ACTIAS_BUILTIN_ASSUME(expr) __builtin_assume(expr)
-
-#    ifndef ACTIAS_FORCE_INLINE
-#        define ACTIAS_FORCE_INLINE inline
-#    endif
-#elif defined _MSC_VER
-#    define ACTIAS_COMPILER_MSVC 1
-
-#    define ACTIAS_NO_BUILTIN(value)
-
-#    define ACTIAS_PUSH_MSVC_WARNING(warn) __pragma(warning(push)) __pragma(warning(disable : warn))
-#    define ACTIAS_POP_MSVC_WARNING __pragma(warning(pop))
-
-#    define ACTIAS_PUSH_CLANG_WARNING(...)
-#    define ACTIAS_POP_CLANG_WARNING
-
-#    define ACTIAS_PRETTY_FUNCTION __FUNCSIG__
-
-#    define ACTIAS_BUILTIN_ASSUME(expr) __assume(expr)
-
-#    ifndef ACTIAS_FORCE_INLINE
-#        define ACTIAS_FORCE_INLINE __forceinline
-#    endif
-#endif
