@@ -31,7 +31,7 @@ namespace Actias
 
         if (!forceNative)
         {
-            auto result = ActiasLoadModule(name.Data(), &m_Handle);
+            const auto result = ActiasLoadModule(name.Data(), &m_Handle);
             if (result == ACTIAS_SUCCESS)
             {
                 m_IsNative = false;
@@ -54,11 +54,11 @@ namespace Actias
         Release();
     }
 
-    void* LibraryLoader::FindSymbol(StringSlice symbolName)
+    void* LibraryLoader::FindSymbol(StringSlice symbolName) const
     {
         ActiasProc address;
-        auto result = m_IsNative ? ActiasFindNativeSymbolAddress(m_Handle, symbolName.Data(), &address)
-                                 : ActiasFindSymbolAddress(m_Handle, symbolName.Data(), &address);
+        const auto result = m_IsNative ? ActiasFindNativeSymbolAddress(m_Handle, symbolName.Data(), &address)
+                                       : ActiasFindSymbolAddress(m_Handle, symbolName.Data(), &address);
         if (result == ACTIAS_SUCCESS)
         {
             return reinterpret_cast<void*>(address);
