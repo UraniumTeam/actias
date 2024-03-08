@@ -60,12 +60,12 @@ int main()
         return EXIT_FAILURE;
     }
 
-    auto libraries = LoadPluginLibraries();
+    const auto libraries = LoadPluginLibraries();
 
     List<Ptr<ICalculatorPlugin>> plugins;
     plugins.Push(AllocateObject<BasicPlugin>());
 
-    for (auto& library : libraries)
+    for (const auto& library : libraries)
     {
         auto* createPlugin = library.FindFunction<CreateCalculatorPluginProc>("CreateCalculatorPlugin");
 
