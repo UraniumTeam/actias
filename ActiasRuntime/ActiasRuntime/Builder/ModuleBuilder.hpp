@@ -4,6 +4,7 @@
 #include <Actias/Containers/HeapArray.hpp>
 #include <Actias/IO/IStream.hpp>
 #include <ActiasRuntime/Base/Base.hpp>
+#include <ActiasRuntime/Kernel/RuntimeKernel.hpp>
 
 namespace Actias::Runtime
 {
@@ -21,7 +22,7 @@ namespace Actias::Runtime
     public:
         VoidResult<IO::ResultCode> LoadFromStream(IO::IStream* pStream);
         VoidResult<ResultCode> ParseHeaders();
-        Result<ActiasHandle, ResultCode> Build();
+        Result<ModuleInfo, ResultCode> Build();
         VoidResult<ResultCode> ImportAll();
     };
 } // namespace Actias::Runtime
