@@ -4,6 +4,9 @@ set(SRC
     ActiasRuntime/Builder/ModuleBuilder.hpp
     ActiasRuntime/Builder/ModuleBuilder.cpp
 
+    ActiasRuntime/Kernel/RuntimeKernel.hpp
+    ActiasRuntime/Kernel/RuntimeKernel.cpp
+
     ActiasRuntime/Loader/Loader.cpp
 )
 

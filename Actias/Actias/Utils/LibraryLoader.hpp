@@ -36,10 +36,10 @@ namespace Actias
 
         ~LibraryLoader();
 
-        void* FindSymbol(StringSlice symbolName);
+        void* FindSymbol(StringSlice symbolName) const;
 
         template<class T>
-        inline T* FindFunction(StringSlice name)
+        inline T* FindFunction(StringSlice name) const
         {
             return reinterpret_cast<T*>(FindSymbol(name));
         }
