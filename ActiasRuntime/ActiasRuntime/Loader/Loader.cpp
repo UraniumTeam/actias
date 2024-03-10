@@ -2,6 +2,7 @@
 #include <ActiasRuntime/Base/Base.hpp>
 #include <ActiasRuntime/Builder/ModuleBuilder.hpp>
 #include <ActiasRuntime/Kernel/RuntimeKernel.hpp>
+#include <algorithm>
 
 using namespace Actias;
 using namespace Actias::Runtime;
@@ -92,19 +93,29 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(Actia
 extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddress(ActiasHandle moduleHandle,
                                                                                 const char* pSymbolName, ActiasProc* pAddress)
 {
-    auto* pModule = reinterpret_cast<Byte*>(moduleHandle);
+    const auto* pModule = reinterpret_cast<const Byte*>(moduleHandle);
 
     const auto* pExportHeader = LocateExportTable(moduleHandle);
-    const auto* pExportTable  = reinterpret_cast<ACBXExportTableEntry*>(pModule + pExportHeader->Address);
-    for (UInt64 i = 0; i < pExportHeader->EntryCount; ++i)
+    const auto* pExportTable  = reinterpret_cast<const ACBXExportTableEntry*>(pModule + pExportHeader->Address);
+
+    const auto* pEntry = std::lower_bound(pExportTable,
+                                          pExportTable + pExportHeader->EntryCount,
+                                          pSymbolName,
+                                          [pModule](const ACBXExportTableEntry& lhs, const char* rhs) {
+                                              const char* pName = reinterpret_cast<const char*>(pModule + lhs.NameAddress);
+                                              return strcmp(pName, rhs) < 0;
+                                          });
+
+    if (pEntry - pExportTable >= static_cast<SSize>(pExportHeader->EntryCount))
     {
-        const auto& entry = pExportTable[i];
-        const char* pName = reinterpret_cast<const char*>(pModule + entry.NameAddress);
-        if (strcmp(pName, pSymbolName) == 0)
-        {
-            *pAddress = reinterpret_cast<ActiasProc>(pModule + entry.SymbolAddress);
-            return ACTIAS_SUCCESS;
-        }
+        return ACTIAS_FAIL_SYMBOL_NOT_FOUND;
+    }
+
+    const char* pFoundName = reinterpret_cast<const char*>(pModule + pEntry->NameAddress);
+    if (strcmp(pFoundName, pSymbolName) == 0)
+    {
+        *pAddress = reinterpret_cast<ActiasProc>(pModule + pEntry->SymbolAddress);
+        return ACTIAS_SUCCESS;
     }
 
     return ACTIAS_FAIL_SYMBOL_NOT_FOUND;
