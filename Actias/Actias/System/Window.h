@@ -1,21 +1,13 @@
 #pragma once
 
-#define GLFW_INCLUDE_NONE
-
-#include <Actias/System/Core.h>
 #include "../../../cmake-build/windows-debug-msvc-avx/_deps/glfw-src/include/GLFW/glfw3.h"
+//#include <GLFW/glfw3.h>
+#include <Actias/System/Core.h>
 
 ACTIAS_BEGIN_C
 
-typedef struct ActiasWindow
-{
-    GLFWwindow* window;
-} ActiasWindow;
-
-typedef struct ActiasWindowMonitor
-{
-    GLFWmonitor* monitor;
-} ActiasWindowMonitor;
+typedef struct ActiasWindowStruct* ActiasWindow;
+typedef struct ActiasWindowMonitorStruct* ActiasWindowMonitor;
 
 ACTIAS_SYSTEM_API ActiasWindow ACTIAS_ABI ActiasCreateWindow(Int32 width, Int32 height, const char* title,
                                                              ActiasWindowMonitor monitor, ActiasWindow share);
