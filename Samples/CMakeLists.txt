@@ -1,5 +1,6 @@
 add_subdirectory(TestLibrary)
 add_subdirectory(HelloWorld)
+add_subdirectory(HelloWindow)
 add_subdirectory(SDKUsage)
 
 add_subdirectory(CalculatorPluginSystem)
