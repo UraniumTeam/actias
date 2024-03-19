@@ -107,7 +107,7 @@ ActiasResult ACTIAS_ABI ActiasWaitForThread(ActiasHandle threadHandle, UInt64 mi
     case EINVAL:
         return ACTIAS_FAIL_INVALID_ARGUMENT;
     case ETIMEDOUT:
-        return ACTIAS_FAIL_THREAD_WAIT_ERROR;
+        return ACTIAS_THREAD_WAIT_TIMEOUT;
 
     default:
         return ACTIAS_FAIL_UNKNOWN;

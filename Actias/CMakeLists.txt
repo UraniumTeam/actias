@@ -62,7 +62,6 @@ set(SRC_SYSTEM
     Actias/System/Runtime.h
     Actias/System/Streams.h
     Actias/System/Threading.h
-    Actias/System/Window.h
 
     Actias/System/Platform/Common/AtomicImpl.h
     Actias/System/Platform/Common/AtomicImpl8.h
@@ -78,8 +77,15 @@ set(SRC_SYSTEM
     Actias/System/Platform/Common/Runtime.c
     Actias/System/Platform/Common/RuntimeDef.h
     Actias/System/Platform/Common/SetMemory.c
-    Actias/System/Platform/Common/Window.c
 )
+
+if (ACTIAS_BUILD_GUI)
+    set(SRC_SYSTEM
+        ${SRC_SYSTEM}
+        Actias/System/Window.h
+        Actias/System/Platform/Common/Window.c
+    )
+endif ()
 
 if (ACTIAS_COMPILER_MSVC)
     set(SRC_SYSTEM
@@ -125,7 +131,10 @@ actias_enable_simd_for_target(ActiasSystem)
 target_include_directories(ActiasSystem PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
 
 set_target_properties(ActiasSystem PROPERTIES FOLDER "Runtime")
-target_link_libraries(ActiasSystem glfw)
+
+if (ACTIAS_BUILD_GUI)
+    target_link_libraries(ActiasSystem glfw)
+endif ()
 
 get_property("TARGET_SOURCE_FILES" TARGET ActiasSystem PROPERTY SOURCES)
 source_group(TREE "${CMAKE_CURRENT_LIST_DIR}" FILES ${TARGET_SOURCE_FILES})
