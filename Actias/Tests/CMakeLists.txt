@@ -7,6 +7,7 @@ set(SRC
     Strings/String.cpp
     System/Memcopy.cpp
     System/Memset.cpp
+	System/MemoryPool.cpp
     Utils/UUID.cpp
 )
 
