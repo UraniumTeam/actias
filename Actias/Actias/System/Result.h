@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 the Actias project authors (see the file AUTHORS
+ * Copyright 2024 the Actias project authors (see the file AUTHORS
  * for a complete list)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
