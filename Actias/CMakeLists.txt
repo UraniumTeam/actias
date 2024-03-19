@@ -55,6 +55,7 @@ set(SRC_SYSTEM
     Actias/System/CompilerTraits.h
     Actias/System/Core.h
     Actias/System/Memory.h
+    Actias/System/MemoryPool.h
     Actias/System/Mutex.h
     Actias/System/Platform.h
     Actias/System/PlatformTraits.h
