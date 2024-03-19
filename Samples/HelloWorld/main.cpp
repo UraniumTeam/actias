@@ -28,8 +28,19 @@ int main()
     auto threadResult = ActiasCreateThread(&createInfo, &thread);
     ACTIAS_Assert(threadResult == ACTIAS_SUCCESS);
 
-    auto waitResult = ActiasWaitForThread(thread.Handle, 100000);
-    ACTIAS_Assert(waitResult == ACTIAS_SUCCESS);
+    for (;;)
+    {
+        // seems weird we have to do this, idk
+
+        auto waitResult = ActiasWaitForThread(thread.Handle, 100000);
+        if (waitResult == ACTIAS_THREAD_WAIT_TIMEOUT)
+        {
+            continue;
+        }
+
+        ACTIAS_Assert(waitResult == ACTIAS_SUCCESS);
+        break;
+    }
 
     auto releaseResult = ActiasReleaseThread(thread.Handle);
     ACTIAS_Assert(releaseResult == ACTIAS_SUCCESS);

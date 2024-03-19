@@ -1,6 +1,9 @@
 include(ThirdParty/get_cpm)
 include(ThirdParty/args)
-include(ThirdParty/glfw)
+
+if (ACTIAS_BUILD_GUI)
+    include(ThirdParty/glfw)
+endif ()
 
 if (ACTIAS_BUILD_TESTS)
     include(ThirdParty/gtest)
