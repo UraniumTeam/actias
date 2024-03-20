@@ -1,6 +1,10 @@
 add_subdirectory(TestLibrary)
 add_subdirectory(HelloWorld)
-add_subdirectory(HelloWindow)
+
+if (ACTIAS_BUILD_GUI)
+    add_subdirectory(HelloWindow)
+endif ()
+
 add_subdirectory(SDKUsage)
 
 add_subdirectory(CalculatorPluginSystem)

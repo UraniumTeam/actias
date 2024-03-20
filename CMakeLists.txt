@@ -10,6 +10,7 @@ endif ()
 
 option(ACTIAS_BUILD_SAMPLES OFF)
 option(ACTIAS_BUILD_TESTS OFF)
+option(ACTIAS_BUILD_GUI ON)
 
 enable_testing()
 set(ACTIAS_PROJECT_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")

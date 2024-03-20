@@ -1,5 +1,3 @@
-#define _OPEN_THREADS
-
 #include <Actias/System/Mutex.h>
 #include <pthread.h>
 

@@ -27,6 +27,9 @@
         "value": "x64",
         "strategy": "external"
       },
+      "cacheVariables": {
+        "ACTIAS_BUILD_GUI": "ON"
+      },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
           "hostOS": [
@@ -42,7 +45,8 @@
       "cacheVariables": {
         "CMAKE_ASM_NASM_COMPILER": "nasm",
         "CMAKE_MAKE_PROGRAM": "ninja",
-        "CMAKE_LINKER": "lld"
+        "CMAKE_LINKER": "lld",
+        "ACTIAS_BUILD_GUI": "OFF"
       },
       "vendor": {
         "microsoft.com/VisualStudioSettings/CMake/1.0": {
