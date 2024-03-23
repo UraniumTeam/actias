@@ -13,6 +13,7 @@ namespace Actias
 
     public:
         PoolAllocator() = default;
+        ~PoolAllocator();
 
         PoolAllocator(PoolAllocator&& other) noexcept;
         PoolAllocator& operator=(PoolAllocator&& other) noexcept;
@@ -29,6 +30,11 @@ namespace Actias
         [[nodiscard]] UInt64 GetElementByteSize() const;
         [[nodiscard]] UInt64 GetPageByteSize() const;
     };
+
+    inline PoolAllocator::~PoolAllocator()
+    {
+        Reset();
+    }
 
     inline PoolAllocator::PoolAllocator(PoolAllocator&& other) noexcept
         : m_Pool{ other.m_Pool }
