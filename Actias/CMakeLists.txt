@@ -24,6 +24,7 @@ set(SRC
 
     Actias/Memory/IAllocator.hpp
     Actias/Memory/Memory.hpp
+    Actias/Memory/MemoryPool.hpp
     Actias/Memory/Object.hpp
     Actias/Memory/Ptr.hpp
     Actias/Memory/ReferenceCounter.hpp

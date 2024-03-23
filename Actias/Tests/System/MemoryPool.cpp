@@ -1,5 +1,5 @@
 #include <Actias/Containers/List.hpp>
-#include <Actias/System/MemoryPool.h>
+#include <Actias/Memory/MemoryPool.hpp>
 #include <algorithm>
 #include <gtest/gtest.h>
 #include <random>
@@ -84,4 +84,18 @@ TEST(MemoryPool, AllocMultiPage)
     ActiasMemoryPoolFree(&pool, ptr);
 
     ActiasDestroyMemoryPool(&pool);
+}
+
+TEST(MemoryPool, CppWrapper)
+{
+    struct Dummy
+    {
+        UInt64 data[7];
+    };
+
+    Actias::PoolAllocator pool;
+    pool.Init<Dummy>(128);
+
+    Dummy* p = Actias::Memory::New<Dummy>(&pool);
+    Actias::Memory::Delete(&pool, p);
 }
