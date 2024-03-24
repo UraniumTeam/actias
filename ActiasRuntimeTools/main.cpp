@@ -1,5 +1,6 @@
 #include <Actias/IO/FileHandle.hpp>
 #include <Actias/System/Memory.h>
+#include <Actias/System/Runtime.h>
 #include <Actias/Utils/LibraryLoader.hpp>
 #include <ActiasSDK/Driver/ExecutableBuilder.hpp>
 #include <ActiasSDK/Parser/Result.hpp>
@@ -97,7 +98,45 @@ int main(int argc, char** argv)
         args::Positional<std::string> executable(p, "executable", "The executable (ACBX) file to run", args::Options::Required);
         p.Parse();
 
-        std::cout << "Running: " << executable.Get() << std::endl;
+        String executableName = executable.Get().data();
+        String executableExtension(executableName.FindLastOf('.')++, executableName.end());
+
+        if (executableExtension == "acbx")
+        {
+            ActiasHandle moduleHandle;
+            ActiasResult loadResult = ActiasLoadModule(executableName.Data(), &moduleHandle);
+
+            if (loadResult != ACTIAS_SUCCESS)
+            {
+                std::cerr << "Failed to load ACBX executable." << std::endl;
+                return;
+            }
+
+            ActiasProc mainFunc;
+            ActiasResult findResult = ActiasFindSymbolAddress(moduleHandle, "ActiasMain", &mainFunc);
+
+            if (findResult != ACTIAS_SUCCESS)
+            {
+                std::cerr << "Failed to find ActiasMain function." << std::endl;
+                ActiasUnloadModule(moduleHandle);
+                return;
+            }
+
+            std::cout << "Running: " << executableName << std::endl;
+            ActiasResult runResult = reinterpret_cast<ActiasResult (*)()>(mainFunc)();
+
+            if (runResult != ACTIAS_SUCCESS)
+            {
+                std::cerr << "Failed to run ACBX executable." << std::endl;
+            }
+
+            ActiasUnloadModule(moduleHandle);
+        }
+        else
+        {
+            std::cout << "Running: " << executableName << std::endl;
+            system(executableName.Data());
+        }
     });
 
     const args::GlobalOptions globals(parser, arguments);
