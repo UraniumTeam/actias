@@ -45,7 +45,12 @@ namespace Actias
             nativeName += ACTIAS_NATIVE_DL_EXTENSION;
         }
 
-        ActiasLoadNativeModule(nativeName.Data(), &m_Handle);
+        const auto nativeResult = ActiasLoadNativeModule(nativeName.Data(), &m_Handle);
+        if (nativeResult != ACTIAS_SUCCESS)
+        {
+            m_Handle = nullptr;
+        }
+
         m_IsNative = true;
     }
 

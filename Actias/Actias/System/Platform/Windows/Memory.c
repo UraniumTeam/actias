@@ -2,7 +2,7 @@
 #include <Actias/System/Platform/Windows/WinHeaders.h>
 #include <stdlib.h>
 
-inline DWORD ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
+inline static DWORD ACTIAS_ABI ActiasConvertMemoryProtection(ActiasFlags protection)
 {
     DWORD result = PAGE_READONLY;
     if (protection & ACTIAS_MEMORY_PROTECTION_WRITE_BIT)
