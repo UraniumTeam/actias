@@ -3,7 +3,7 @@
 
 namespace Actias
 {
-    class LibraryLoader
+    class LibraryLoader final
     {
         ActiasHandle m_Handle;
         bool m_IsNative;
@@ -16,14 +16,14 @@ namespace Actias
     public:
         LibraryLoader(StringSlice libraryName, bool forceNative = false);
 
-        LibraryLoader(LibraryLoader&& other) noexcept
+        inline LibraryLoader(LibraryLoader&& other) noexcept
         {
             m_Handle       = other.m_Handle;
             m_IsNative     = other.m_IsNative;
             other.m_Handle = nullptr;
         }
 
-        LibraryLoader& operator=(LibraryLoader&& other) noexcept
+        inline LibraryLoader& operator=(LibraryLoader&& other) noexcept
         {
             Release();
 
@@ -42,6 +42,11 @@ namespace Actias
         inline T* FindFunction(StringSlice name) const
         {
             return reinterpret_cast<T*>(FindSymbol(name));
+        }
+
+        inline explicit operator bool() const noexcept
+        {
+            return m_Handle;
         }
     };
 } // namespace Actias
