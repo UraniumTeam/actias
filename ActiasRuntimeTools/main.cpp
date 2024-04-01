@@ -108,28 +108,8 @@ int main(int argc, char** argv)
 
         if (executableExtension == ".acbx")
         {
-            ActiasHandle moduleHandle;
-
             LibraryLoader loader(executableName, false);
-            ActiasResult loadResult = ActiasLoadModule(executableName.Data(), &moduleHandle);
-
-            if (loadResult != ACTIAS_SUCCESS)
-            {
-                std::cerr << "Failed to load ACBX executable." << std::endl;
-                result = 1;
-                return EXIT_FAILURE;
-            }
-
-            ActiasProc mainFunc;
-            ActiasResult findResult = ActiasFindSymbolAddress(moduleHandle, "ActiasMain", &mainFunc);
-
-            if (findResult != ACTIAS_SUCCESS)
-            {
-                std::cerr << "Failed to find ActiasMain function." << std::endl;
-                ActiasUnloadModule(moduleHandle);
-                result = 1;
-                return EXIT_FAILURE;
-            }
+            ActiasProc* mainFunc = loader.FindFunction<ActiasProc>("ActiasMain");
 
             std::cout << "Running: " << executableName << std::endl;
             ActiasResult runResult = reinterpret_cast<ActiasResult (*)()>(mainFunc)();
@@ -140,32 +120,13 @@ int main(int argc, char** argv)
                 result = 1;
                 return EXIT_FAILURE;
             }
-
-            ActiasUnloadModule(moduleHandle);
         }
         else if (executableExtension == ACTIAS_NATIVE_DL_EXTENSION)
         {
             ::build(executable.Get().data(), result);
-            ActiasHandle nativeModuleHandle;
-            ActiasResult loadResult = ActiasLoadNativeModule(executableName.Data(), &nativeModuleHandle);
 
-            if (loadResult != ACTIAS_SUCCESS)
-            {
-                std::cerr << "Failed to load ACBX executable." << std::endl;
-                result = 1;
-                return EXIT_FAILURE;
-            }
-
-            ActiasProc mainFunc;
-            ActiasResult findResult = ActiasFindNativeSymbolAddress(nativeModuleHandle, "ActiasMain", &mainFunc);
-
-            if (findResult != ACTIAS_SUCCESS)
-            {
-                std::cerr << "Failed to find ActiasMain function." << std::endl;
-                ActiasUnloadNativeModule(nativeModuleHandle);
-                result = 1;
-                return EXIT_FAILURE;
-            }
+            LibraryLoader loader(executableName, true);
+            ActiasProc* mainFunc = loader.FindFunction<ActiasProc>("ActiasMain");
 
             std::cout << "Running: " << executableName << std::endl;
             ActiasResult runResult = reinterpret_cast<ActiasResult (*)()>(mainFunc)();
@@ -176,8 +137,6 @@ int main(int argc, char** argv)
                 result = 1;
                 return EXIT_FAILURE;
             }
-
-            ActiasUnloadNativeModule(nativeModuleHandle);
         }
 
         return EXIT_SUCCESS;
