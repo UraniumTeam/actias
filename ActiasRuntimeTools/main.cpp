@@ -26,20 +26,17 @@ typedef ExecutableParseError ACTIAS_ABI ActiasLoadNativeExecutableProc(INativeEx
 
 typedef void ACTIAS_ABI ActiasBuildExecutableProc(IBlob** ppExecutableData, const ActiasExecutableBuildInfo* pBuildInfo);
 
-void build(const String& executable, int& result)
+static int Build(const String& executable)
 {
-    LibraryLoader loader("ActiasSDK", true);
+    const LibraryLoader loader{ "ActiasSDK", true };
+    const auto executableRead = File::ReadAllBytes(executable);
 
-    auto ExecutableRead = File::ReadAllBytes(executable);
-
-    if (!ExecutableRead)
+    if (!executableRead)
     {
-        std::cerr << "Executable file not found" << std::endl;
-        result = 1;
-        return;
+        return EXIT_FAILURE;
     }
 
-    auto bytes = ExecutableRead.Unwrap();
+    auto bytes = executableRead.Unwrap();
 
     ActiasNativeExecutableLoadInfo loadInfo{};
     loadInfo.pRawData        = bytes.Data();
@@ -54,8 +51,7 @@ void build(const String& executable, int& result)
     if (loadNativeResult != ExecutableParseError::None)
     {
         std::cerr << "Error loading a PE: " << ExecutableParseErrorTypeToString(loadNativeResult) << std::endl;
-        result = 1;
-        return;
+        return EXIT_FAILURE;
     }
 
     buildInfo.pNativeExecutable = nativeExecutable.Get();
@@ -71,9 +67,10 @@ void build(const String& executable, int& result)
     if (writeResult.IsErr())
     {
         std::cerr << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
-        result = 1;
-        return;
+        return EXIT_FAILURE;
     }
+
+    return EXIT_SUCCESS;
 }
 
 int main(int argc, char** argv)
@@ -96,50 +93,56 @@ int main(int argc, char** argv)
             p, "executable", "The native OS executable to build (dll, exe, so, etc.)", args::Options::Required);
         p.Parse();
 
-        build(executable.Get().data(), result);
+        auto buildResult = Build(executable.Get().data());
+        if (buildResult)
+        {
+            result = EXIT_FAILURE;
+            return;
+        }
     });
 
     const args::Command run(commands, "run", "Run an ACBX executable file", [&result](args::Subparser& p) {
         args::Positional<std::string> executable(p, "executable", "The executable (ACBX) file to run", args::Options::Required);
         p.Parse();
 
-        String executableName = executable.Get().data();
-        StringSlice executableExtension(((StringSlice)executableName).FindLastOf('.'), ((StringSlice)executableName).end());
+        const String executableName = executable.Get().data();
+        const StringSlice executableExtension(((StringSlice)executableName).FindLastOf('.'), ((StringSlice)executableName).end());
 
         if (executableExtension == ".acbx")
         {
-            LibraryLoader loader(executableName, false);
-            ActiasProc* mainFunc = loader.FindFunction<ActiasProc>("ActiasMain");
+            const LibraryLoader loader{ executableName, false };
+            const ActiasProc* mainFunc = loader.FindFunction<ActiasProc>("ActiasMain");
 
             std::cout << "Running: " << executableName << std::endl;
-            ActiasResult runResult = reinterpret_cast<ActiasResult (*)()>(mainFunc)();
+            const ActiasResult runResult = reinterpret_cast<ActiasResult (*)()>(mainFunc)();
 
             if (runResult != ACTIAS_SUCCESS)
             {
-                std::cerr << "Failed to run ACBX executable." << std::endl;
-                result = 1;
-                return EXIT_FAILURE;
+                result = EXIT_FAILURE;
+                return;
             }
         }
         else if (executableExtension == ACTIAS_NATIVE_DL_EXTENSION)
         {
-            ::build(executable.Get().data(), result);
+            auto buildResult = Build(executable.Get().data());
+            if (buildResult)
+            {
+                result = EXIT_FAILURE;
+                return;
+            }
 
-            LibraryLoader loader(executableName, true);
-            ActiasProc* mainFunc = loader.FindFunction<ActiasProc>("ActiasMain");
+            const LibraryLoader loader{ executableName, true };
+            const ActiasProc* mainFunc = loader.FindFunction<ActiasProc>("ActiasMain");
 
             std::cout << "Running: " << executableName << std::endl;
-            ActiasResult runResult = reinterpret_cast<ActiasResult (*)()>(mainFunc)();
+            const ActiasResult runResult = reinterpret_cast<ActiasResult (*)()>(mainFunc)();
 
             if (runResult != ACTIAS_SUCCESS)
             {
-                std::cerr << "Failed to run ACBX executable." << std::endl;
-                result = 1;
-                return EXIT_FAILURE;
+                result = EXIT_FAILURE;
+                return;
             }
         }
-
-        return EXIT_SUCCESS;
     });
 
     const args::GlobalOptions globals(parser, arguments);
