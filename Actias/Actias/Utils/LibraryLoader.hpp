@@ -36,6 +36,11 @@ namespace Actias
 
         ~LibraryLoader();
 
+        [[nodiscard]] inline bool IsNative() const noexcept
+        {
+            return m_IsNative;
+        }
+
         void* FindSymbol(StringSlice symbolName) const;
 
         template<class T>
