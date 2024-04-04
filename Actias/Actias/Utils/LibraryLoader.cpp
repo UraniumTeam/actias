@@ -24,7 +24,7 @@ namespace Actias
     {
         String name = libraryName;
 
-        if (!libraryName.EndsWith(".acbl"))
+        if (!libraryName.EndsWith(".acbl") && !libraryName.EndsWith(".acbx"))
         {
             name += ".acbl";
         }
