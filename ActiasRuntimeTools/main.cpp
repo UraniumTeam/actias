@@ -90,7 +90,11 @@ int main(int argc, char** argv)
 
     const std::vector<std::string> args{ argv + 1, argv + argc };
 
-    ActiasInit();
+    if (ActiasInit() != ACTIAS_SUCCESS)
+    {
+        std::cerr << "Failed to initialize the Actias Runtime" << std::endl;
+        return EXIT_FAILURE;
+    }
 
     args::ArgumentParser parser{ DescriptionMessage };
     parser.Prog(argv[0]);
