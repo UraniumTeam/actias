@@ -78,6 +78,8 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(const A
 
 extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(ActiasHandle moduleHandle)
 {
+    const Kernel::LockScope lk = Kernel::AquireLock();
+
     ModuleInfo* pInfo = *reinterpret_cast<ModuleInfo**>(moduleHandle);
     if (Kernel::RemoveModuleReference(*pInfo))
     {
@@ -93,7 +95,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(Actia
 extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddress(ActiasHandle moduleHandle,
                                                                                 const char* pSymbolName, ActiasProc* pAddress)
 {
-    const auto* pModule = reinterpret_cast<const Byte*>(moduleHandle);
+    auto* pModule = reinterpret_cast<Byte*>(moduleHandle);
 
     const auto* pExportHeader = LocateExportTable(moduleHandle);
     const auto* pExportTable  = reinterpret_cast<const ACBXExportTableEntry*>(pModule + pExportHeader->Address);
