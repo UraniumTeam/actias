@@ -184,64 +184,7 @@ namespace Actias
     public:
         ACTIAS_RTTI_Struct(String, "340DE9B8-EC27-4248-9E0D-7D40330E8EBA");
 
-        class Iterator
-        {
-            friend class String;
-            const TChar* m_Iter;
-
-        public:
-            using iterator_category = std::bidirectional_iterator_tag;
-            using difference_type   = std::ptrdiff_t;
-            using value_type        = TCodepoint;
-            using pointer           = const TCodepoint*;
-            using reference         = const TCodepoint&;
-
-            inline Iterator(const TChar* iter)
-                : m_Iter(iter)
-            {
-            }
-
-            inline value_type operator*() const
-            {
-                return UTF8::PeekDecode(m_Iter);
-            }
-
-            inline Iterator& operator++()
-            {
-                UTF8::Decode(m_Iter);
-                return *this;
-            }
-
-            inline Iterator operator++(int)
-            {
-                Iterator t = *this;
-                ++(*this);
-                return t;
-            }
-
-            inline Iterator& operator--()
-            {
-                UTF8::DecodePrior(m_Iter);
-                return *this;
-            }
-
-            inline Iterator operator--(int)
-            {
-                Iterator t = *this;
-                UTF8::DecodePrior(m_Iter);
-                return t;
-            }
-
-            inline friend bool operator==(const Iterator& a, const Iterator& b)
-            {
-                return a.m_Iter == b.m_Iter;
-            };
-
-            inline friend bool operator!=(const Iterator& a, const Iterator& b)
-            {
-                return a.m_Iter != b.m_Iter;
-            };
-        };
+        using Iterator = Internal::StrIterator;
 
         inline String() noexcept
         {
@@ -320,7 +263,7 @@ namespace Actias
             return IsLong() ? m_Data.L.Data : m_Data.S.Data;
         }
 
-        inline TChar* Data() noexcept
+        [[nodiscard]] inline TChar* Data() noexcept
         {
             return IsLong() ? m_Data.L.Data : m_Data.S.Data;
         }
@@ -523,42 +466,61 @@ namespace Actias
 
         [[nodiscard]] inline Iterator FindFirstOf(Iterator start, TCodepoint search) const noexcept
         {
-            return StringSlice(Data(), Size()).FindFirstOf(start.m_Iter, search).m_Iter;
+            const USize size  = Size();
+            const TChar* data = Data();
+            ACTIAS_AssertDebug(start.m_Iter >= data && start.m_Iter <= data + size);
+
+            const USize searchSize = data + size - start.m_Iter;
+            return Str::FindFirstOf(start.m_Iter, searchSize, search);
         }
 
         [[nodiscard]] inline Iterator FindFirstOf(TCodepoint search) const noexcept
         {
-            return StringSlice(Data(), Size()).FindFirstOf(search).m_Iter;
+            return FindFirstOf(begin(), search);
         }
 
         [[nodiscard]] inline Iterator FindLastOf(TCodepoint search) const noexcept
         {
-            return StringSlice(Data(), Size()).FindLastOf(search).m_Iter;
+            return Str::FindLastOf(Data(), Size(), search);
         }
 
-        [[nodiscard]] inline List<StringSlice> Split(TCodepoint c = ' ') const
+        [[nodiscard]] inline List<StringSlice> Split(TCodepoint c = ' ', IAllocator* allocator = nullptr) const
         {
-            return StringSlice(Data(), Size()).Split(c);
+            List<StringSlice> result{ allocator };
+            Split(result, c);
+            return result;
         }
 
-        [[nodiscard]] inline List<StringSlice> SplitLines() const
+        inline void Split(List<StringSlice>& result, TCodepoint c = ' ') const
         {
-            return StringSlice(Data(), Size()).SplitLines();
+            StringSlice(Data(), Size()).Split(result, c);
         }
 
-        [[nodiscard]] inline StringSlice StripRight(StringSlice chars = "\n\r\t ") const noexcept
+        [[nodiscard]] inline List<StringSlice> SplitLines(IAllocator* allocator = nullptr) const
         {
-            return StringSlice(Data(), Size()).StripRight(chars);
+            List<StringSlice> result{ allocator };
+            SplitLines(result);
+            return result;
+        }
+
+        inline void SplitLines(List<StringSlice>& result) const
+        {
+            StringSlice(Data(), Size()).SplitLines(result);
         }
 
         [[nodiscard]] inline StringSlice StripLeft(StringSlice chars = "\n\r\t ") const noexcept
         {
-            return StringSlice(Data(), Size()).StripLeft(chars);
+            return { Iterator{ Str::StripLeft(Data(), Size(), chars.Data(), chars.Size()) }, end() };
+        }
+
+        [[nodiscard]] inline StringSlice StripRight(StringSlice chars = "\n\r\t ") const noexcept
+        {
+            return { begin(), Iterator{ Str::StripRight(Data(), Size(), chars.Data(), chars.Size()) } };
         }
 
         [[nodiscard]] inline StringSlice Strip(StringSlice chars = "\n\r\t ") const noexcept
         {
-            return StringSlice(Data(), Size()).Strip(chars);
+            return StripLeft(chars).StripRight(chars);
         }
 
         [[nodiscard]] inline Int32 Compare(const StringSlice& other) const noexcept

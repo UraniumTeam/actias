@@ -4,6 +4,7 @@ set(SRC
 
     Containers/List.cpp
     RTTI/RTTI.cpp
+    Strings/FixedString.cpp
     Strings/String.cpp
     System/Memcopy.cpp
     System/Memset.cpp
