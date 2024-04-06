@@ -1,4 +1,5 @@
 #pragma once
+#include <Actias/Strings/FixedString.hpp>
 #include <Actias/Strings/StringSlice.hpp>
 #include <Actias/System/Mutex.h>
 #include <ActiasRuntime/Base/Base.hpp>
@@ -8,7 +9,7 @@ namespace Actias::Runtime
     //! \brief Loaded runtime module information.
     struct ModuleInfo
     {
-        String Name;                 //!< Module name.
+        FixStr512 Name;              //!< Module name.
         ActiasHandle Handle     = 0; //!< Module handle.
         UInt64 ImageSize        = 0; //!< Size of the loaded image, used for deallocation.
         UInt32 ReferenceCounter = 0; //!< Number of references to this module, incremented by ActiasLoadModule.

@@ -32,7 +32,9 @@ set(SRC
 
     Actias/RTTI/RTTI.hpp
 
+    Actias/Strings/FixedString.hpp
     Actias/Strings/String.hpp
+    Actias/Strings/StringBase.hpp
     Actias/Strings/StringSlice.hpp
     Actias/Strings/StringSlice.cpp
     Actias/Strings/Unicode.hpp

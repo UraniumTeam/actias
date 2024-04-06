@@ -1,4 +1,5 @@
 #include <Actias/IO/IStream.hpp>
+#include <Actias/Strings/FixedString.hpp>
 #include <Actias/Strings/String.hpp>
 #include <Actias/System/Runtime.h>
 #include <ActiasRuntime/Builder/ModuleBuilder.hpp>
@@ -160,7 +161,7 @@ namespace Actias::Runtime
             const auto& libEntry = pLibraries[i];
             const char* pLibName = reinterpret_cast<const char*>(m_pMapped + libEntry.NameAddress);
 
-            String libName = pLibName;
+            FixedString<512> libName = pLibName;
 
             auto isSystemLibrary = false;
             for (const auto& systemLibrary : g_SystemLibraries)

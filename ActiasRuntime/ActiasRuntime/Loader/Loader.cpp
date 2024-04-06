@@ -1,4 +1,5 @@
 #include <Actias/IO/FileStream.hpp>
+#include <Actias/Memory/MemoryPool.hpp>
 #include <ActiasRuntime/Base/Base.hpp>
 #include <ActiasRuntime/Builder/ModuleBuilder.hpp>
 #include <ActiasRuntime/Kernel/RuntimeKernel.hpp>
@@ -6,6 +7,8 @@
 
 using namespace Actias;
 using namespace Actias::Runtime;
+
+static Pool<ModuleInfo> g_ModuleInfoPool{ 1024 };
 
 inline ACBXExportTableHeader* LocateExportTable(ActiasHandle moduleHandle)
 {
@@ -56,7 +59,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(const A
         return static_cast<ActiasResult>(buildResultCode);
     }
 
-    ModuleInfo* pInfo = new (ActiasAlloc(sizeof(ModuleInfo))) ModuleInfo;
+    ModuleInfo* pInfo = g_ModuleInfoPool.New();
     *pInfo            = buildResult.Unwrap();
     pInfo->Name       = moduleName;
     *pModuleHandle    = pInfo->Handle;
@@ -68,8 +71,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(const A
     {
         ACTIAS_AssertDebug(Kernel::RemoveModuleReference(*pInfo));
         ActiasVirtualFree(pInfo->Handle, pInfo->ImageSize);
-        pInfo->~ModuleInfo();
-        ActiasFree(pInfo);
+        g_ModuleInfoPool.Delete(pInfo);
         return result;
     }
 
@@ -84,8 +86,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtUnloadModule(Actia
     if (Kernel::RemoveModuleReference(*pInfo))
     {
         const auto imageSize = pInfo->ImageSize;
-        pInfo->~ModuleInfo();
-        ActiasFree(pInfo);
+        g_ModuleInfoPool.Delete(pInfo);
         return ActiasVirtualFree(moduleHandle, static_cast<USize>(imageSize));
     }
 
@@ -105,7 +106,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddress(
                                           pSymbolName,
                                           [pModule](const ACBXExportTableEntry& lhs, const char* rhs) {
                                               const char* pName = reinterpret_cast<const char*>(pModule + lhs.NameAddress);
-                                              return strcmp(pName, rhs) < 0;
+                                              return Str::ByteCompare(pName, rhs) < 0;
                                           });
 
     if (pEntry - pExportTable >= static_cast<SSize>(pExportHeader->EntryCount))
@@ -114,7 +115,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtFindSymbolAddress(
     }
 
     const char* pFoundName = reinterpret_cast<const char*>(pModule + pEntry->NameAddress);
-    if (strcmp(pFoundName, pSymbolName) == 0)
+    if (Str::ByteCompare(pFoundName, pSymbolName) == 0)
     {
         *pAddress = reinterpret_cast<ActiasProc>(pModule + pEntry->SymbolAddress);
         return ACTIAS_SUCCESS;

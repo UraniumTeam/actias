@@ -105,4 +105,27 @@ namespace Actias
     {
         return m_Pool.PageByteSize;
     }
+
+    template<class T>
+    class Pool final
+    {
+        PoolAllocator m_Allocator;
+
+    public:
+        inline Pool(UInt32 elementsInPage)
+        {
+            m_Allocator.Init<T>(elementsInPage);
+        }
+
+        template<class... Args>
+        [[nodiscard]] inline T* New(Args&&... args)
+        {
+            return Memory::New<T>(&m_Allocator, std::forward<Args>(args)...);
+        }
+
+        inline void Delete(T* pointer)
+        {
+            Memory::Delete<T>(&m_Allocator, pointer);
+        }
+    };
 } // namespace Actias
