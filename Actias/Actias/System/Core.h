@@ -67,6 +67,11 @@ typedef struct ActiasSystemProperties
     UInt16 OS;             //!< OS the current process is running on, see ActiasOSValues.
 } ActiasSystemProperties;
 
+inline static UInt64 ACTIAS_ABI ActiasAlignUp(UInt64 x, UInt64 a)
+{
+    return (x + (a - 1)) & ~(a - 1);
+}
+
 //! \brief Get last OS native error code.
 ACTIAS_SYSTEM_API Int32 ACTIAS_ABI ActiasGetNativeErrorCode(void);
 

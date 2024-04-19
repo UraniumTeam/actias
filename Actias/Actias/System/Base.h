@@ -18,6 +18,8 @@
 #pragma once
 #include <Actias/System/Platform.h>
 
+#define ACTIAS_DEFAULT_ALIGNMENT 16
+
 #if ActiasSystem_EXPORTS
 #    define ACTIAS_SYSTEM_API ACTIAS_EXPORT
 #else

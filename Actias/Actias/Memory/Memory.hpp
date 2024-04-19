@@ -6,19 +6,52 @@
 
 namespace Actias
 {
+    namespace Memory
+    {
+        //! \brief Create a new object of type T using the provided allocator.
+        //!
+        //! \param pAllocator - The allocator to use.
+        //! \param args       - The arguments to call constructor of T with.
+        //!
+        //! \tparam T          - The type of the object to allocate.
+        //! \tparam TAllocator - The type of the provided allocator.
+        //! \tparam Args       - The types of the arguments to call the constructor of T with.
+        //!
+        //! \return The allocated object.
+        template<class T, class TAllocator, class... Args>
+        inline T* New(TAllocator* pAllocator, Args&&... args)
+        {
+            return new (pAllocator->Allocate(sizeof(T), alignof(T))) T(std::forward<Args>(args)...);
+        }
+
+        //! \brief Delete an object previously created via Memory::New().
+        //!
+        //! \param pAllocator - The allocator to use.
+        //! \param pointer    - The pointer to the object to delete previously returned by Memory::New().
+        //!
+        //! \tparam T          - The type of the provided object.
+        //! \tparam TAllocator - The type of the provided allocator.
+        template<class T, class TAllocator>
+        inline void Delete(TAllocator* pAllocator, T* pointer)
+        {
+            pointer->~T();
+            pAllocator->Deallocate(pointer);
+        }
+    } // namespace Memory
+
     //! \brief Create a reference counted object.
     //!
     //! This function allocates storage for a ReferenceCounter and an object of type T.
     //! It attaches reference counter to the allocated object.
     //!
-    //! \param pAllocator - Allocator to use for allocation and deallocation of the object.
-    //! \param args       - Arguments to call constructor of T with.
+    //! \param pAllocator - The allocator to use.
+    //! \param args       - The arguments to call the constructor of T with.
     //!
-    //! \tparam T          - Type of object to allocate.
-    //! \tparam TAllocator - Type of allocator to use for allocation and deallocation of the object.
-    //! \tparam Args       - Types of arguments to call constructor of T with.
+    //! \tparam T          - The type of the object to allocate.
+    //! \tparam TAllocator - The type of the provided allocator.
+    //! \tparam Args       - The types of the arguments to call the constructor of T with.
     //!
-    //! \return The created object.
+    //! \return The allocated object.
     template<class T, class TAllocator, class... Args>
     inline T* AllocateObjectEx(TAllocator* pAllocator, Args&&... args)
     {
@@ -38,10 +71,10 @@ namespace Actias
     //! This function allocates storage for a ReferenceCounter and an object of type T.
     //! It attaches reference counter to the allocated object.
     //!
-    //! \param args - Arguments to call constructor of T with.
+    //! \param args - The arguments to call the constructor of T with.
     //!
-    //! \tparam T    - Type of object to allocate.
-    //! \tparam Args - Types of arguments to call constructor of T with.
+    //! \tparam T    - The type of the object to allocate.
+    //! \tparam Args - The types of the arguments to call the constructor of T with.
     //!
     //! \return The created object.
     template<class T, class... Args>

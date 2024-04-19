@@ -17,7 +17,7 @@ any system calls. It is planned to implement standard C library on top in the ne
 - Libraries must use `ACTIAS_ABI` macro and C-linkage on every exported function;
 - Compile your binaries and convert them using Actias CLI: `actias build [paths to files...]`
 - Use `ActiasLoadModule()`, to load a library and `ActiasFindSymbolAddress()` to get a symbol pointer.
-- Use CLI to run executables: `actias run [path to executable]` **(TODO: not working yet)**;
+- Use CLI to run executables: `actias run [path to executable]`;
 
 See the [Samples folder](https://github.com/UraniumTeam/actias/tree/main/Samples) in the repository
 root for sample projects that use Actias.

@@ -1,4 +1,5 @@
 #include <Actias/IO/IStream.hpp>
+#include <Actias/Strings/FixedString.hpp>
 #include <Actias/Strings/String.hpp>
 #include <Actias/System/Runtime.h>
 #include <ActiasRuntime/Builder/ModuleBuilder.hpp>
@@ -105,21 +106,20 @@ namespace Actias::Runtime
         return OK{};
     }
 
-    Result<ActiasHandle, ResultCode> ModuleBuilder::Build()
+    Result<ModuleInfo, ResultCode> ModuleBuilder::Build()
     {
         ActiasSystemProperties systemProperties;
         ActiasGetSystemProperties(&systemProperties);
 
         const auto sectionBaseAddress = AlignUp(m_TotalHeaderSize, systemProperties.PageSize);
 
-        auto lastSection = m_Sections.Back();
-        auto imageSize   = AlignUp(sectionBaseAddress + lastSection->Address + lastSection->Size, systemProperties.PageSize);
+        const auto lastSection = m_Sections.Back();
+        const auto imageSize = AlignUp(sectionBaseAddress + lastSection->Address + lastSection->Size, systemProperties.PageSize);
 
         void* handle = ActiasVirtualAlloc(nullptr, imageSize, ACTIAS_MEMORY_PROTECTION_READ_WRITE);
         ActiasCopyMemory(handle, m_RawData.Data(), m_TotalHeaderSize);
 
-        m_pMapped                     = ac_byte_cast(handle);
-        *static_cast<UInt64*>(handle) = static_cast<UInt64>(imageSize);
+        m_pMapped = ac_byte_cast(handle);
 
         for (auto* section : m_Sections)
         {
@@ -140,7 +140,11 @@ namespace Actias::Runtime
             ActiasCopyMemory(m_pMapped + section->Address, pRawSection, section->RawSize);
         }
 
-        return static_cast<ActiasHandle>(handle);
+        ModuleInfo moduleInfo{};
+        moduleInfo.ImageSize        = static_cast<UInt64>(imageSize);
+        moduleInfo.Handle           = static_cast<ActiasHandle>(handle);
+        moduleInfo.ReferenceCounter = 1;
+        return moduleInfo;
     }
 
     VoidResult<ResultCode> ModuleBuilder::ImportAll()
@@ -157,7 +161,7 @@ namespace Actias::Runtime
             const auto& libEntry = pLibraries[i];
             const char* pLibName = reinterpret_cast<const char*>(m_pMapped + libEntry.NameAddress);
 
-            String libName = pLibName;
+            FixedString<512> libName = pLibName;
 
             auto isSystemLibrary = false;
             for (const auto& systemLibrary : g_SystemLibraries)

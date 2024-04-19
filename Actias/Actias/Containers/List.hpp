@@ -26,10 +26,9 @@ namespace Actias
             return std::make_tuple(GetAt<I>()...);
         }
 
-        inline static T* Allocate(USize n) noexcept
+        inline T* Allocate(USize n) noexcept
         {
-            auto* allocator = SystemAllocator::Get();
-            return static_cast<T*>(allocator->Allocate(n * sizeof(T), Alignment));
+            return static_cast<T*>(m_Allocator->Allocate(n * sizeof(T), Alignment));
         }
 
         inline void VAllocate(USize n) noexcept
@@ -71,14 +70,14 @@ namespace Actias
             m_End = newEnd;
         }
 
-        inline static void Deallocate(T* pointer) noexcept
+        inline void Deallocate(T* pointer) noexcept
         {
             if (pointer == nullptr)
             {
                 return;
             }
 
-            SystemAllocator::Get()->Deallocate(pointer);
+            m_Allocator->Deallocate(pointer);
         }
 
         inline void VDeallocate() noexcept
@@ -134,6 +133,7 @@ namespace Actias
             T* newEnd   = newBegin + Size();
 
             MoveData(newBegin, m_Begin, Size());
+            Clear();
             VDeallocate();
 
             m_Begin  = newBegin;
@@ -141,14 +141,28 @@ namespace Actias
             m_EndCap = newBegin + newCap;
         }
 
-        T* m_Begin  = nullptr;
-        T* m_End    = nullptr;
-        T* m_EndCap = nullptr;
+        inline void SetAllocatorImpl(IAllocator* allocator)
+        {
+            m_Allocator = allocator ? allocator : SystemAllocator::Get();
+        }
+
+        T* m_Begin              = nullptr;
+        T* m_End                = nullptr;
+        T* m_EndCap             = nullptr;
+        IAllocator* m_Allocator = nullptr;
 
     public:
         ACTIAS_RTTI_Struct(List<T>, "F478A740-263E-4274-A0CC-3789769262E2");
 
-        inline List() = default;
+        inline List()
+            : m_Allocator(SystemAllocator::Get())
+        {
+        }
+
+        inline List(IAllocator* allocator)
+        {
+            SetAllocatorImpl(allocator);
+        }
 
         inline List(List&& other) noexcept
         {
@@ -157,6 +171,7 @@ namespace Actias
 
         inline List(const List& other)
         {
+            m_Allocator = other.m_Allocator;
             Reserve(other.Size());
             for (const auto& v : other)
             {
@@ -178,13 +193,28 @@ namespace Actias
         }
 
         inline List(USize n, const T& x)
+            : m_Allocator(SystemAllocator::Get())
         {
             VAllocate(n);
             ConstructAtEnd(n, x);
         }
 
-        inline List(std::initializer_list<T> list)
+        inline List(IAllocator* allocator, USize n, const T& x)
         {
+            SetAllocatorImpl(allocator);
+            VAllocate(n);
+            ConstructAtEnd(n, x);
+        }
+
+        inline List(std::initializer_list<T> list)
+            : m_Allocator(SystemAllocator::Get())
+        {
+            Assign(list);
+        }
+
+        inline List(IAllocator* allocator, std::initializer_list<T> list)
+        {
+            SetAllocatorImpl(allocator);
             Assign(list);
         }
 
@@ -192,6 +222,36 @@ namespace Actias
         {
             Assign(list);
             return *this;
+        }
+
+        //! \brief Change the allocator used to allocate memory for this list.
+        //!
+        //! This function copies the existing elements to the new memory allocated with the provided allocator.
+        //!
+        //! \param allocator - The new allocator to set.
+        inline void SetAllocator(IAllocator* allocator)
+        {
+            if (allocator == nullptr)
+                allocator = SystemAllocator::Get();
+
+            if (allocator == m_Allocator)
+                return;
+
+            if (Any())
+            {
+                const USize size = Size();
+                const USize cap  = Capacity();
+
+                T* newData = allocator->Allocate(cap, Alignment);
+                MoveData(newData, m_Begin, size);
+                Clear();
+                VDeallocate();
+                m_Begin  = newData;
+                m_End    = newData + size;
+                m_EndCap = newData + cap;
+            }
+
+            m_Allocator = allocator;
         }
 
         //! \brief Assign N copies of X.
@@ -523,6 +583,7 @@ namespace Actias
             std::swap(m_Begin, other.m_Begin);
             std::swap(m_End, other.m_End);
             std::swap(m_EndCap, other.m_EndCap);
+            std::swap(m_Allocator, other.m_Allocator);
         }
 
         //! \brief Set the capacity to be equal to the size. Useful to free wasted memory.
