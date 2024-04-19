@@ -2,7 +2,7 @@
 #include <Actias/System/Window.h>
 #include <limits>
 
-int main()
+extern "C" ACTIAS_EXPORT ActiasResult ACTIAS_ABI ActiasMain()
 {
     ACTIAS_Assert(ActiasInitWindows() == ACTIAS_SUCCESS);
 
@@ -16,4 +16,6 @@ int main()
 
     ActiasDestroyWindow(window);
     ActiasShutdownWindows();
+
+    return ACTIAS_SUCCESS;
 }

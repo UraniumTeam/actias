@@ -6,9 +6,9 @@ if (WIN32)
     endforeach(flag_var)
 endif ()
 
-add_library(HelloWindow SHARED main.cpp)
+add_library(HelloActias SHARED main.cpp)
 
-actias_configure_target(HelloWindow)
+actias_configure_target(HelloActias)
 
-set_target_properties(HelloWindow PROPERTIES FOLDER "Samples")
-target_link_libraries(HelloWindow Actias)
+set_target_properties(HelloActias PROPERTIES FOLDER "Samples")
+target_link_libraries(HelloActias Actias)

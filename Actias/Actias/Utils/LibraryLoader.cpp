@@ -24,14 +24,14 @@ namespace Actias
     {
         String name = libraryName;
 
-        if (!libraryName.EndsWith(".acbl"))
+        if (!libraryName.EndsWith(".acbl") && !libraryName.EndsWith(".acbx"))
         {
             name += ".acbl";
         }
 
         if (!forceNative)
         {
-            auto result = ActiasLoadModule(name.Data(), &m_Handle);
+            const auto result = ActiasLoadModule(name.Data(), &m_Handle);
             if (result == ACTIAS_SUCCESS)
             {
                 m_IsNative = false;
@@ -45,7 +45,12 @@ namespace Actias
             nativeName += ACTIAS_NATIVE_DL_EXTENSION;
         }
 
-        ActiasLoadNativeModule(nativeName.Data(), &m_Handle);
+        const auto nativeResult = ActiasLoadNativeModule(nativeName.Data(), &m_Handle);
+        if (nativeResult != ACTIAS_SUCCESS)
+        {
+            m_Handle = nullptr;
+        }
+
         m_IsNative = true;
     }
 
@@ -54,11 +59,11 @@ namespace Actias
         Release();
     }
 
-    void* LibraryLoader::FindSymbol(StringSlice symbolName)
+    void* LibraryLoader::FindSymbol(StringSlice symbolName) const
     {
         ActiasProc address;
-        auto result = m_IsNative ? ActiasFindNativeSymbolAddress(m_Handle, symbolName.Data(), &address)
-                                 : ActiasFindSymbolAddress(m_Handle, symbolName.Data(), &address);
+        const auto result = m_IsNative ? ActiasFindNativeSymbolAddress(m_Handle, symbolName.Data(), &address)
+                                       : ActiasFindSymbolAddress(m_Handle, symbolName.Data(), &address);
         if (result == ACTIAS_SUCCESS)
         {
             return reinterpret_cast<void*>(address);

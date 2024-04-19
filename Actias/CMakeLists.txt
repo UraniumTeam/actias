@@ -24,6 +24,7 @@ set(SRC
 
     Actias/Memory/IAllocator.hpp
     Actias/Memory/Memory.hpp
+    Actias/Memory/MemoryPool.hpp
     Actias/Memory/Object.hpp
     Actias/Memory/Ptr.hpp
     Actias/Memory/ReferenceCounter.hpp
@@ -31,7 +32,9 @@ set(SRC
 
     Actias/RTTI/RTTI.hpp
 
+    Actias/Strings/FixedString.hpp
     Actias/Strings/String.hpp
+    Actias/Strings/StringBase.hpp
     Actias/Strings/StringSlice.hpp
     Actias/Strings/StringSlice.cpp
     Actias/Strings/Unicode.hpp
@@ -55,6 +58,7 @@ set(SRC_SYSTEM
     Actias/System/CompilerTraits.h
     Actias/System/Core.h
     Actias/System/Memory.h
+    Actias/System/MemoryPool.h
     Actias/System/Mutex.h
     Actias/System/Platform.h
     Actias/System/PlatformTraits.h
