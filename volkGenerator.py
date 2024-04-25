@@ -52,10 +52,10 @@ def edit_c(input_file_c, output_file_c, substrings_to_replace):
 
 
 def main():
-    input_file_h = "ThirdParty/Volk/volk.h"
-    input_file_c = "ThirdParty/Volk/volk.c"
-    output_file_h = "Actias/Actias/System/Platform/Common/volk.h"
-    output_file_c = "Actias/Actias/System/Platform/Common/volk.c"
+    input_file_h = "./ThirdParty/Volk/volk.h"
+    input_file_c = "./ThirdParty/Volk/volk.c"
+    output_file_h = "./Actias/Actias/System/Platform/Common/volk.h"
+    output_file_c = "./Actias/Actias/System/Platform/Common/volk.c"
     substrings_to_replace = []
 
     edit_header(input_file_h, output_file_h, substrings_to_replace)
