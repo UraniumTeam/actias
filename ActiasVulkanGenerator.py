@@ -1,14 +1,10 @@
-import os
 import requests
 import xml.etree.ElementTree as ET
-import textwrap
 
 def fetch_xml_data(url):
     response = requests.get(url)
-    if response.status_code == 200:
-        return response.text
-    else:
-        raise Exception("Failed to fetch XML data")
+    response.raise_for_status()
+    return response.text
 
 def parse_xml(xml_data):
     root = ET.fromstring(xml_data)
@@ -17,36 +13,30 @@ def parse_xml(xml_data):
         proto = command.find('proto')
         if proto is not None:
             return_type_elem = proto.find('type')
-            if return_type_elem is not None:
+            func_name_elem = proto.find('name')
+            if return_type_elem is not None and func_name_elem is not None:
                 return_type = return_type_elem.text.strip()
-                func_name_elem = proto.find('name')
-                if func_name_elem is not None:
-                    func_name = func_name_elem.text.strip()
-                    params = []
-                    for param in command.findall('param'):
-                        param_type_elem = param.find('type')
-                        if param_type_elem is not None:
-                            param_type = param_type_elem.text.strip()
-                            # Check if there's a '*' in the type tail
-                            star = '*' if param_type_elem.tail and '*' in param_type_elem.tail else ''
-                            # Check if there's 'const' in the type tail
-                            const = 'const ' if param_type_elem.tail and 'const' in param_type_elem.tail else ''
-                            param_name_elem = param.find('name')
-                            if param_name_elem is not None:
-                                param_name = param_name_elem.text.strip()
-                                param_text = f"{const}{param_type}{star} {param_name}"
-                                params.append(param_text)
-                    functions.append({'name': func_name, 'return_type': return_type, 'params': params})
+                func_name = func_name_elem.text.strip()
+                params = []
+                for param in command.findall('param'):
+                    param_type_elem = param.find('type')
+                    param_name_elem = param.find('name')
+                    if param_type_elem is not None and param_name_elem is not None:
+                        param_type = param_type_elem.text.strip()
+                        ptr_sign = '*' if param_type_elem.tail and '*' in param_type_elem.tail else ''
+                        const = 'const ' if param_type_elem.tail and 'const' in param_type_elem.tail else ''
+                        param_name = param_name_elem.text.strip()
+                        params.append(f"{const}{param_type}{ptr_sign} {param_name}")
+                functions.append({'name': func_name, 'return_type': return_type, 'params': params})
     return functions
-
 
 def write_to_header_file(header_file_path, functions):
     with open(header_file_path, "w+") as file:
         file.write("#define VK_NO_PROTOTYPES\n#include <vulkan/vulkan.h>\n\n")
         for func in functions:
             params_str = ', '.join(func['params'])
-            func_declaration = f"ACTIAS_SYSTEM_API {func['return_type']} ACTIAS_ABI {func['name']}({params_str});"
-            file.write(func_declaration + '\n\n')
+            func_declaration = f"ACTIAS_SYSTEM_API {func['return_type']} ACTIAS_ABI {func['name']}({params_str});\n"
+            file.write(func_declaration + '\n')
 
 def write_to_source_file(source_file_path, functions):
     with open(source_file_path, "w+") as file:
@@ -72,6 +62,10 @@ def main():
         write_to_header_file(header_file_path, functions)
         write_to_source_file(source_file_path, functions)
         
+    except requests.RequestException as e:
+        print("An error occurred during the request:", e)
+    except ET.ParseError as e:
+        print("An error occurred while parsing XML:", e)
     except Exception as e:
         print("An error occurred:", e)
 
