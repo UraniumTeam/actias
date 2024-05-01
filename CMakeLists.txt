@@ -23,16 +23,20 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-execute_process(
-    COMMAND python volkGenerator.py
-    WORKING_DIRECTORY ${ACTIAS_PROJECT_ROOT}
-)
+find_package(Python REQUIRED COMPONENTS Interpreter Development)
 
-execute_process(
-    COMMAND python ActiasVulkanGenerator.py
-    WORKING_DIRECTORY ${ACTIAS_PROJECT_ROOT}
-)
+if (Python_FOUND)
+    execute_process(
+        COMMAND python volkGenerator.py
+        WORKING_DIRECTORY ${ACTIAS_PROJECT_ROOT}
+    )
 
+    execute_process(
+        COMMAND python ActiasVulkanGenerator.py
+        WORKING_DIRECTORY ${ACTIAS_PROJECT_ROOT}
+    )
+endif ()
+    
 add_subdirectory(Actias)
 add_subdirectory(ActiasRuntime)
 add_subdirectory(ActiasSDK)

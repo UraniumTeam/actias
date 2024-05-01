@@ -42,7 +42,9 @@ def edit_c(input_file_c, output_file_c, substrings_to_replace):
                                     if substring + '_volkImplStub' in line_c and substring != substrings_to_replace[-1]:
                                         line_c = line_c.replace(substring + '_volkImplStub', substring + 'Stub')
                                     if f'PFN_{substring}_volkImpl' in line_c:
-                                        line_c = line_c.replace(f'PFN_{substring}_volkImpl', f'PFN_{substring}')  
+                                        line_c = line_c.replace(f'PFN_{substring}_volkImpl', f'PFN_{substring}')
+                                    if f'"{substring}_volkImpl"':
+                                        line_c = line_c.replace(f'"{substring}_volkImpl"', f'"{substring}"')
                                     break
                     f_out_c.write(line_c)
                 except Exception as e:
