@@ -84,10 +84,21 @@ set(SRC_SYSTEM
 )
 
 if (ACTIAS_BUILD_GUI)
+    find_package(Vulkan QUIET)
+
+    if (Vulkan_INCLUDE_DIRS)
+        set(VULKAN_INCLUDES "${Vulkan_INCLUDE_DIRS}")
+    elseif(DEFINED ENV{VULKAN_SDK})
+        set(VULKAN_INCLUDES "$ENV{VULKAN_SDK}/include")
+    endif()
+
     set(SRC_SYSTEM
         ${SRC_SYSTEM}
         Actias/System/Window.h
-        Actias/System/Platform/Common/Window.c
+        Actias/System/Platform/Common/volk.h
+        Actias/System/Platform/Common/volk.c
+        Actias/System/ActiasVulkan.h
+        Actias/System/ActiasVulkan.c
     )
 endif ()
 
@@ -128,6 +139,10 @@ else ()
 endif ()
 
 add_library(ActiasSystem SHARED ${SRC_SYSTEM})
+
+if(VULKAN_INCLUDES)
+    target_include_directories(ActiasSystem PUBLIC "${VULKAN_INCLUDES}")
+endif()
 
 actias_configure_target(ActiasSystem)
 actias_enable_simd_for_target(ActiasSystem)
