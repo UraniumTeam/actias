@@ -1,6 +1,51 @@
 import requests
 import xml.etree.ElementTree as ET
 
+
+skipped_endings = [
+    "IMG",
+    "AMD",
+    "AMDX",
+    "ARM",
+    "FSL",
+    "BRCM",
+    "NXP",
+    "NV",
+    "NVX",
+    "VIV",
+    "VSI",
+    "KDAB",
+    "ANDROID",
+    "CHROMIUM",
+    "FUCHSIA",
+    "GGP",
+    "GOOGLE",
+    "QCOM",
+    "LUNARG",
+    "NZXT",
+    "SAMSUNG",
+    "SEC",
+    "TIZEN",
+    "RENDERDOC",
+    "NN",
+    "MVK",
+    "KHR",
+    "KHX",
+    "EXT",
+    "MESA",
+    "INTEL",
+    "HUAWEI",
+    "VALVE",
+    "QNX",
+    "JUICE",
+    "FB",
+    "RASTERGRID",
+    "MSFT",
+        
+    "vkGetCommandPoolMemoryConsumption",
+    "vkGetFaultData",
+    ]
+
 def fetch_xml_data(url):
     response = requests.get(url)
     response.raise_for_status()
@@ -32,16 +77,30 @@ def parse_xml(xml_data):
 
 def write_to_header_file(header_file_path, functions):
     with open(header_file_path, "w+") as file:
-        file.write("#pragma once\n#define VK_NO_PROTOTYPES\n#include <vulkan/vulkan.h>\n\n")
+        file.write("#pragma once\n#define VK_NO_PROTOTYPES\n#include <Actias/System/Base.h>\n#include <Actias/System/Platform/Common/volk.h>\n\n")
         for func in functions:
+            do_skip = False
+            for ending in skipped_endings:
+                if func['name'].endswith(ending):
+                    do_skip = True
+                    break
+            if do_skip:
+                continue
             params_str = ', '.join(func['params'])
             func_declaration = f"ACTIAS_SYSTEM_API {func['return_type']} ACTIAS_ABI {func['name']}({params_str});\n"
             file.write(func_declaration + '\n')
 
 def write_to_source_file(source_file_path, functions):
     with open(source_file_path, "w+") as file:
-        file.write("#include <volk.h>\n\n")
+        file.write("#include <Actias/System/ActiasVulkan.h>\n\n")
         for func in functions:
+            do_skip = False
+            for ending in skipped_endings:
+                if func['name'].endswith(ending):
+                    do_skip = True
+                    break
+            if do_skip:
+                continue
             params_str = ', '.join(func['params'])
             func_declaration = f"{func['return_type']} ACTIAS_ABI {func['name']}({params_str})\n"
             file.write(func_declaration)
