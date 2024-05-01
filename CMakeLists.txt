@@ -27,16 +27,21 @@ find_package(Python REQUIRED COMPONENTS Interpreter Development)
 
 if (Python_FOUND)
     execute_process(
-        COMMAND python volkGenerator.py
+        COMMAND python -m pip install -r scripts/requirements.txt
         WORKING_DIRECTORY ${ACTIAS_PROJECT_ROOT}
     )
 
     execute_process(
-        COMMAND python ActiasVulkanGenerator.py
+        COMMAND python scripts/volkGenerator.py
+        WORKING_DIRECTORY ${ACTIAS_PROJECT_ROOT}
+    )
+
+    execute_process(
+        COMMAND python scripts/ActiasVulkanGenerator.py
         WORKING_DIRECTORY ${ACTIAS_PROJECT_ROOT}
     )
 endif ()
-    
+
 add_subdirectory(Actias)
 add_subdirectory(ActiasRuntime)
 add_subdirectory(ActiasSDK)
