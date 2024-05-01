@@ -3,6 +3,7 @@ add_subdirectory(HelloActias)
 
 if (ACTIAS_BUILD_GUI)
     add_subdirectory(HelloWindow)
+    add_subdirectory(HelloVulkan)
 endif ()
 
 add_subdirectory(SDKUsage)

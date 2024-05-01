@@ -1,3 +1,4 @@
+#include <Actias/System/Base.h>
 /* This file is part of volk library; see volk.h for version/license details */
 /* clang-format off */
 #include "volk.h"
