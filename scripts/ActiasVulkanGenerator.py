@@ -54,6 +54,7 @@ def fetch_xml_data(url):
 def parse_xml(xml_data):
     root = ET.fromstring(xml_data)
     functions = []
+    function_names = set()
     for command in root.findall('.//command'):
         proto = command.find('proto')
         if proto is not None:
@@ -62,6 +63,8 @@ def parse_xml(xml_data):
             if return_type_elem is not None and func_name_elem is not None:
                 return_type = return_type_elem.text.strip()
                 func_name = func_name_elem.text.strip()
+                if func_name in function_names:
+                    continue
                 params = []
                 for param in command.findall('param'):
                     param_type_elem = param.find('type')
@@ -71,8 +74,13 @@ def parse_xml(xml_data):
                         ptr_sign = '*' if param_type_elem.tail and '*' in param_type_elem.tail else ''
                         const = 'const ' if param_type_elem.tail and 'const' in param_type_elem.tail else ''
                         param_name = param_name_elem.text.strip()
+                        array = param.find('name').tail
+                        if array and '[' in array and ']' in array:
+                            param_type += '*'
+                            param_name = param.find('name').text.strip()
                         params.append(f"{const}{param_type}{ptr_sign} {param_name}")
                 functions.append({'name': func_name, 'return_type': return_type, 'params': params})
+                function_names.add(func_name)
     return functions
 
 def write_to_header_file(header_file_path, functions):
@@ -105,9 +113,14 @@ def write_to_source_file(source_file_path, functions):
             func_declaration = f"{func['return_type']} ACTIAS_ABI {func['name']}({params_str})\n"
             file.write(func_declaration)
             file.write("{\n")
-            param_names = ', '.join(param.split()[-1] for param in func['params'])
-            file.write(f"    return {func['name']}_volkImpl({param_names});\n")
-            file.write("}\n\n")
+            if f"{func['return_type']}" != "void":
+                param_names = ', '.join(param.split()[-1] for param in func['params'])
+                file.write(f"    return {func['name']}_volkImpl({param_names});\n")
+                file.write("}\n\n")
+            else:
+                param_names = ', '.join(param.split()[-1] for param in func['params'])
+                file.write(f"    {func['name']}_volkImpl({param_names});\n")
+                file.write("}\n\n")
 
 def main():
     xml_url = "https://raw.githubusercontent.com/KhronosGroup/Vulkan-Docs/main/xml/vk.xml"
