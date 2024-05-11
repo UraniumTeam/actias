@@ -27,8 +27,6 @@ ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetPhysicalDeviceImageFormatProperties(V
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateDevice(VkPhysicalDevice physicalDevice, VkDeviceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDevice* pDevice);
 
-ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateDevice(VkPhysicalDevice physicalDevice, VkDeviceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkDevice* pDevice);
-
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkDestroyDevice(VkDevice device, VkAllocationCallbacks* pAllocator);
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkEnumerateInstanceVersion(uint32_t* pApiVersion);
@@ -36,8 +34,6 @@ ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkEnumerateInstanceVersion(uint32_t* pApiV
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkEnumerateInstanceLayerProperties(uint32_t* pPropertyCount, VkLayerProperties* pProperties);
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkEnumerateInstanceExtensionProperties(char* pLayerName, uint32_t* pPropertyCount, VkExtensionProperties* pProperties);
-
-ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkEnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties);
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkEnumerateDeviceLayerProperties(VkPhysicalDevice physicalDevice, uint32_t* pPropertyCount, VkLayerProperties* pProperties);
 
@@ -135,8 +131,6 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI vkDestroyShaderModule(VkDevice device, VkShade
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreatePipelineCache(VkDevice device, VkPipelineCacheCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache);
 
-ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreatePipelineCache(VkDevice device, VkPipelineCacheCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkPipelineCache* pPipelineCache);
-
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkDestroyPipelineCache(VkDevice device, VkPipelineCache pipelineCache, VkAllocationCallbacks* pAllocator);
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetPipelineCacheData(VkDevice device, VkPipelineCache pipelineCache, size_t* pDataSize, void* pData);
@@ -144,10 +138,6 @@ ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetPipelineCacheData(VkDevice device, Vk
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkMergePipelineCaches(VkDevice device, VkPipelineCache dstCache, uint32_t srcCacheCount, VkPipelineCache* pSrcCaches);
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateGraphicsPipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkGraphicsPipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
-
-ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateGraphicsPipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkGraphicsPipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
-
-ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateComputePipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkComputePipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
 
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateComputePipelines(VkDevice device, VkPipelineCache pipelineCache, uint32_t createInfoCount, VkComputePipelineCreateInfo* pCreateInfos, VkAllocationCallbacks* pAllocator, VkPipeline* pPipelines);
 
@@ -213,7 +203,7 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdSetLineWidth(VkCommandBuffer commandBuffe
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdSetDepthBias(VkCommandBuffer commandBuffer, float depthBiasConstantFactor, float depthBiasClamp, float depthBiasSlopeFactor);
 
-ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdSetBlendConstants(VkCommandBuffer commandBuffer, float blendConstants);
+ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdSetBlendConstants(VkCommandBuffer commandBuffer, float* blendConstants);
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdSetDepthBounds(VkCommandBuffer commandBuffer, float minDepthBounds, float maxDepthBounds);
 
