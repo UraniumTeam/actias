@@ -86,6 +86,7 @@ def parse_xml(xml_data):
 def write_to_header_file(header_file_path, functions):
     with open(header_file_path, "w+") as file:
         file.write("#pragma once\n#define VK_NO_PROTOTYPES\n#include <Actias/System/Base.h>\n#include <Actias/System/Platform/Common/volk.h>\n\n")
+        file.write("ACTIAS_BEGIN_C\n\n")
         for func in functions:
             do_skip = False
             for ending in skipped_endings:
@@ -97,6 +98,7 @@ def write_to_header_file(header_file_path, functions):
             params_str = ', '.join(func['params'])
             func_declaration = f"ACTIAS_SYSTEM_API {func['return_type']} ACTIAS_ABI {func['name']}({params_str});\n"
             file.write(func_declaration + '\n')
+        file.write("ACTIAS_END_C\n")
 
 def write_to_source_file(source_file_path, functions):
     with open(source_file_path, "w+") as file:

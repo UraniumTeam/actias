@@ -7,8 +7,13 @@ if (WIN32)
 endif ()
 
 add_library(HelloVulkan SHARED main.cpp)
+add_executable(HelloVulkan_Native main.cpp)
 
 actias_configure_target(HelloVulkan)
+actias_configure_target(HelloVulkan_Native)
 
 set_target_properties(HelloVulkan PROPERTIES FOLDER "Samples")
+set_target_properties(HelloVulkan_Native PROPERTIES FOLDER "Samples")
+
 target_link_libraries(HelloVulkan Actias)
+target_link_libraries(HelloVulkan_Native Actias)
