@@ -3,6 +3,8 @@
 #include <Actias/System/Base.h>
 #include <Actias/System/Platform/Common/volk.h>
 
+ACTIAS_BEGIN_C
+
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateInstance(VkInstanceCreateInfo* pCreateInfo, VkAllocationCallbacks* pAllocator, VkInstance* pInstance);
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkDestroyInstance(VkInstance instance, VkAllocationCallbacks* pAllocator);
@@ -433,3 +435,4 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdBeginRendering(VkCommandBuffer commandBuf
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdEndRendering(VkCommandBuffer commandBuffer);
 
+ACTIAS_END_C

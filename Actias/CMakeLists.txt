@@ -99,6 +99,7 @@ if (ACTIAS_BUILD_GUI)
         Actias/System/Platform/Common/volk.c
         Actias/System/ActiasVulkan.h
         Actias/System/ActiasVulkan.c
+        Actias/System/Platform/Common/Window.c
     )
 endif ()
 
