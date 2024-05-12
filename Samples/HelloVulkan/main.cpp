@@ -10,7 +10,7 @@ extern "C" ACTIAS_EXPORT ActiasResult ACTIAS_ABI ActiasMain()
 
     VkApplicationInfo appInfo{};
     appInfo.sType      = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    appInfo.apiVersion = VK_VERSION_1_1;
+    appInfo.apiVersion = VK_MAKE_API_VERSION(0, 1, 1, 0);
 
     VkInstanceCreateInfo instanceCreateInfo{};
     instanceCreateInfo.sType            = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;

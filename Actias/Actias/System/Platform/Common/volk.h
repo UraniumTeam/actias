@@ -70,7 +70,7 @@ struct VolkDeviceTable;
  *
  * Returns VK_SUCCESS on success and VK_ERROR_INITIALIZATION_FAILED otherwise.
  */
-VkResult ACTIAS_ABI volkInitialize(void);
+VkResult ACTIAS_SYSTEM_API ACTIAS_ABI volkInitialize(void);
 
 /**
  * Initialize library by providing a custom handler to load global symbols.
@@ -78,7 +78,7 @@ VkResult ACTIAS_ABI volkInitialize(void);
  * This function can be used instead of volkInitialize.
  * The handler function pointer will be asked to load global Vulkan symbols which require no instance
  */
-void ACTIAS_ABI volkInitializeCustom(PFN_vkGetInstanceProcAddr handler);
+void ACTIAS_SYSTEM_API ACTIAS_ABI volkInitializeCustom(PFN_vkGetInstanceProcAddr handler);
 
 /**
  * Finalize library by unloading Vulkan loader and resetting global symbols to NULL.
@@ -86,50 +86,50 @@ void ACTIAS_ABI volkInitializeCustom(PFN_vkGetInstanceProcAddr handler);
  * This function does not need to be called on process exit (as loader will be unloaded automatically) or if volkInitialize failed.
  * In general this function is optional to call but may be useful in rare cases eg if volk needs to be reinitialized multiple times.
  */
-void ACTIAS_ABI volkFinalize(void);
+void ACTIAS_SYSTEM_API ACTIAS_ABI volkFinalize(void);
 
 /**
  * Get Vulkan instance version supported by the Vulkan loader, or 0 if Vulkan isn't supported
  *
  * Returns 0 if volkInitialize wasn't called or failed.
  */
-uint32_t ACTIAS_ABI volkGetInstanceVersion(void);
+uint32_t ACTIAS_SYSTEM_API ACTIAS_ABI volkGetInstanceVersion(void);
 
 /**
  * Load global function pointers using application-created VkInstance; call this function after creating the Vulkan instance.
  */
-void ACTIAS_ABI volkLoadInstance(VkInstance instance);
+void ACTIAS_SYSTEM_API ACTIAS_ABI volkLoadInstance(VkInstance instance);
 
 /**
  * Load global function pointers using application-created VkInstance; call this function after creating the Vulkan instance.
  * Skips loading device-based function pointers, requires usage of volkLoadDevice afterwards.
  */
-void ACTIAS_ABI volkLoadInstanceOnly(VkInstance instance);
+void ACTIAS_SYSTEM_API ACTIAS_ABI volkLoadInstanceOnly(VkInstance instance);
 
 /**
  * Load global function pointers using application-created VkDevice; call this function after creating the Vulkan device.
  *
  * Note: this is not suitable for applications that want to use multiple VkDevice objects concurrently.
  */
-void ACTIAS_ABI volkLoadDevice(VkDevice device);
+void ACTIAS_SYSTEM_API ACTIAS_ABI volkLoadDevice(VkDevice device);
 
 /**
  * Return last VkInstance for which global function pointers have been loaded via volkLoadInstance(),
  * or VK_NULL_HANDLE if volkLoadInstance() has not been called.
  */
-VkInstance ACTIAS_ABI volkGetLoadedInstance(void);
+VkInstance ACTIAS_SYSTEM_API ACTIAS_ABI volkGetLoadedInstance(void);
 
 /**
  * Return last VkDevice for which global function pointers have been loaded via volkLoadDevice(),
  * or VK_NULL_HANDLE if volkLoadDevice() has not been called.
  */
-VkDevice ACTIAS_ABI volkGetLoadedDevice(void);
+VkDevice ACTIAS_SYSTEM_API ACTIAS_ABI volkGetLoadedDevice(void);
 
 /**
  * Load function pointers using application-created VkDevice into a table.
  * Application should use function pointers from that table instead of using global function pointers.
  */
-void ACTIAS_ABI volkLoadDeviceTable(struct VolkDeviceTable* table, VkDevice device);
+void ACTIAS_SYSTEM_API ACTIAS_ABI volkLoadDeviceTable(struct VolkDeviceTable* table, VkDevice device);
 
 /**
  * Device-specific function pointer table

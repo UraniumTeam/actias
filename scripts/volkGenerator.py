@@ -6,7 +6,7 @@ def edit_header(input_file_h, output_file_h, substrings_to_replace):
                     parts = line_h.split()
                     if "volk" in line_h or "Volk" in line_h or "typedef" in line_h or '<' in line_h:
                         if parts[1].startswith("volk") and parts[-1].endswith(");"):
-                            parts[1] = parts[1].replace("volk", "ACTIAS_ABI volk")
+                            parts[1] = parts[1].replace("volk", "ACTIAS_SYSTEM_API ACTIAS_ABI volk")
                             f_out_h.write(" ".join(parts) + "\n")
                         else:
                             f_out_h.write(line_h)
