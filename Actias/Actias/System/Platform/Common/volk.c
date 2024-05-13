@@ -58,7 +58,7 @@ static PFN_vkVoidFunction nullProcAddrStub(void* context, const char* name)
 	return NULL;
 }
 
-VkResult volkInitialize(void)
+VkResult ACTIAS_ABI volkInitialize(void)
 {
 #if defined(_WIN32)
 	HMODULE module = LoadLibraryA("vulkan-1.dll");
@@ -103,7 +103,7 @@ VkResult volkInitialize(void)
 	return VK_SUCCESS;
 }
 
-void volkInitializeCustom(PFN_vkGetInstanceProcAddr handler)
+void ACTIAS_ABI volkInitializeCustom(PFN_vkGetInstanceProcAddr handler)
 {
 	vkGetInstanceProcAddr_volkImpl = handler;
 
@@ -111,7 +111,7 @@ void volkInitializeCustom(PFN_vkGetInstanceProcAddr handler)
 	volkGenLoadLoader(NULL, vkGetInstanceProcAddrStub);
 }
 
-void volkFinalize(void)
+void ACTIAS_ABI volkFinalize(void)
 {
 	if (loadedModule)
 	{
@@ -132,7 +132,7 @@ void volkFinalize(void)
 	loadedDevice = VK_NULL_HANDLE;
 }
 
-uint32_t volkGetInstanceVersion(void)
+uint32_t ACTIAS_ABI volkGetInstanceVersion(void)
 {
 #if defined(VK_VERSION_1_1)
 	uint32_t apiVersion = 0;
@@ -146,36 +146,36 @@ uint32_t volkGetInstanceVersion(void)
 	return 0;
 }
 
-void volkLoadInstance(VkInstance instance)
+void ACTIAS_ABI volkLoadInstance(VkInstance instance)
 {
 	loadedInstance = instance;
 	volkGenLoadInstance(instance, vkGetInstanceProcAddrStub);
 	volkGenLoadDevice(instance, vkGetInstanceProcAddrStub);
 }
 
-void volkLoadInstanceOnly(VkInstance instance)
+void ACTIAS_ABI volkLoadInstanceOnly(VkInstance instance)
 {
 	loadedInstance = instance;
 	volkGenLoadInstance(instance, vkGetInstanceProcAddrStub);
 }
 
-VkInstance volkGetLoadedInstance(void)
+VkInstance ACTIAS_ABI volkGetLoadedInstance(void)
 {
 	return loadedInstance;
 }
 
-void volkLoadDevice(VkDevice device)
+void ACTIAS_ABI volkLoadDevice(VkDevice device)
 {
 	loadedDevice = device;
 	volkGenLoadDevice(device, vkGetDeviceProcAddrStub);
 }
 
-VkDevice volkGetLoadedDevice(void)
+VkDevice ACTIAS_ABI volkGetLoadedDevice(void)
 {
 	return loadedDevice;
 }
 
-void volkLoadDeviceTable(struct VolkDeviceTable* table, VkDevice device)
+void ACTIAS_ABI volkLoadDeviceTable(struct VolkDeviceTable* table, VkDevice device)
 {
 	volkGenLoadDeviceTable(table, device, vkGetDeviceProcAddrStub);
 }

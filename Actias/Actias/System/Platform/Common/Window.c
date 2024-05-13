@@ -22,6 +22,7 @@ void ACTIAS_ABI ActiasShutdownWindows()
 ActiasWindow ACTIAS_ABI ActiasCreateWindow(Int32 width, Int32 height, const char* title, ActiasWindowMonitor monitor,
                                            ActiasWindow share)
 {
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     return (ActiasWindow)glfwCreateWindow(width, height, title, (GLFWmonitor*)monitor, (GLFWwindow*)share);
 }
 
@@ -43,4 +44,20 @@ void ACTIAS_ABI ActiasDestroyWindow(ActiasWindow window)
 void ACTIAS_ABI ActiasTerminate()
 {
     glfwTerminate();
+}
+
+VkResult ACTIAS_ABI ActiasCreateWindowSurface(VkInstance instance, ActiasWindow window, const VkAllocationCallbacks* pAllocator,
+                                              VkSurfaceKHR* pSurface)
+{
+    return glfwCreateWindowSurface(instance, (GLFWwindow*)window, pAllocator, pSurface);
+}
+
+void ACTIAS_ABI ActiasGetFramebufferSize(ActiasWindow window, Int32* pWidth, Int32* pHeight)
+{
+    glfwGetFramebufferSize((GLFWwindow*)window, pWidth, pHeight);
+}
+
+const char** ACTIAS_ABI ActiasGetRequiredInstanceExtensions(UInt32* pExtensionCount)
+{
+    return glfwGetRequiredInstanceExtensions(pExtensionCount);
 }

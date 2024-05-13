@@ -46,6 +46,19 @@ skipped_endings = [
     "vkGetFaultData",
     ]
 
+exceptions = [
+    "vkCreateSwapchainKHR",
+    "vkGetSwapchainImagesKHR",
+    "vkDestroySwapchainKHR",
+    "vkDestroySurfaceKHR",
+    "vkAcquireNextImageKHR",
+    "vkQueuePresentKHR",
+    "vkGetPhysicalDeviceSurfaceCapabilitiesKHR",
+    "vkGetPhysicalDeviceSurfacePresentModesKHR",
+    "vkGetPhysicalDeviceSurfaceFormatsKHR",
+    "vkGetPhysicalDeviceSurfaceSupportKHR",
+    ]
+
 def fetch_xml_data(url):
     response = requests.get(url)
     response.raise_for_status()
@@ -90,12 +103,13 @@ def write_to_header_file(header_file_path, functions):
         for func in functions:
             do_skip = False
             for ending in skipped_endings:
-                if func['name'].endswith(ending):
+                if func['name'].endswith(ending) and not func['name'] in exceptions:
                     do_skip = True
                     break
             if do_skip:
                 continue
-            params_str = ', '.join(func['params'])
+            params = list(dict.fromkeys(func['params']))
+            params_str = ', '.join(params)
             func_declaration = f"ACTIAS_SYSTEM_API {func['return_type']} ACTIAS_ABI {func['name']}({params_str});\n"
             file.write(func_declaration + '\n')
         file.write("ACTIAS_END_C\n")
@@ -106,21 +120,22 @@ def write_to_source_file(source_file_path, functions):
         for func in functions:
             do_skip = False
             for ending in skipped_endings:
-                if func['name'].endswith(ending):
+                if func['name'].endswith(ending) and not func['name'] in exceptions:
                     do_skip = True
                     break
             if do_skip:
                 continue
-            params_str = ', '.join(func['params'])
+            params = list(dict.fromkeys(func['params']))
+            params_str = ', '.join(params)
             func_declaration = f"{func['return_type']} ACTIAS_ABI {func['name']}({params_str})\n"
             file.write(func_declaration)
             file.write("{\n")
             if f"{func['return_type']}" != "void":
-                param_names = ', '.join(param.split()[-1] for param in func['params'])
+                param_names = ', '.join(param.split()[-1] for param in params)
                 file.write(f"    return {func['name']}_volkImpl({param_names});\n")
                 file.write("}\n\n")
             else:
-                param_names = ', '.join(param.split()[-1] for param in func['params'])
+                param_names = ', '.join(param.split()[-1] for param in params)
                 file.write(f"    {func['name']}_volkImpl({param_names});\n")
                 file.write("}\n\n")
 
