@@ -283,6 +283,26 @@ ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdEndRenderPass(VkCommandBuffer commandBuff
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkCmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t commandBufferCount, VkCommandBuffer* pCommandBuffers);
 
+ACTIAS_SYSTEM_API void ACTIAS_ABI vkDestroySurfaceKHR(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* pAllocator);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfacePresentModesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkCreateSwapchainKHR(VkDevice device, VkSwapchainCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain);
+
+ACTIAS_SYSTEM_API void ACTIAS_ABI vkDestroySwapchainKHR(VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pAllocator);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkGetSwapchainImagesKHR(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkAcquireNextImageKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex);
+
+ACTIAS_SYSTEM_API VkResult ACTIAS_ABI vkQueuePresentKHR(VkQueue queue, VkPresentInfoKHR* pPresentInfo);
+
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkGetPhysicalDeviceFeatures2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures);
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI vkGetPhysicalDeviceProperties2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceProperties2* pProperties);

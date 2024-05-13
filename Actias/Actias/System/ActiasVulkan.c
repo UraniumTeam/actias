@@ -695,6 +695,56 @@ void ACTIAS_ABI vkCmdExecuteCommands(VkCommandBuffer commandBuffer, uint32_t com
     vkCmdExecuteCommands_volkImpl(commandBuffer, commandBufferCount, pCommandBuffers);
 }
 
+void ACTIAS_ABI vkDestroySurfaceKHR(VkInstance instance, VkSurfaceKHR surface, VkAllocationCallbacks* pAllocator)
+{
+    vkDestroySurfaceKHR_volkImpl(instance, surface, pAllocator);
+}
+
+VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfaceSupportKHR(VkPhysicalDevice physicalDevice, uint32_t queueFamilyIndex, VkSurfaceKHR surface, VkBool32* pSupported)
+{
+    return vkGetPhysicalDeviceSurfaceSupportKHR_volkImpl(physicalDevice, queueFamilyIndex, surface, pSupported);
+}
+
+VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfaceCapabilitiesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, VkSurfaceCapabilitiesKHR* pSurfaceCapabilities)
+{
+    return vkGetPhysicalDeviceSurfaceCapabilitiesKHR_volkImpl(physicalDevice, surface, pSurfaceCapabilities);
+}
+
+VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfaceFormatsKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pSurfaceFormatCount, VkSurfaceFormatKHR* pSurfaceFormats)
+{
+    return vkGetPhysicalDeviceSurfaceFormatsKHR_volkImpl(physicalDevice, surface, pSurfaceFormatCount, pSurfaceFormats);
+}
+
+VkResult ACTIAS_ABI vkGetPhysicalDeviceSurfacePresentModesKHR(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface, uint32_t* pPresentModeCount, VkPresentModeKHR* pPresentModes)
+{
+    return vkGetPhysicalDeviceSurfacePresentModesKHR_volkImpl(physicalDevice, surface, pPresentModeCount, pPresentModes);
+}
+
+VkResult ACTIAS_ABI vkCreateSwapchainKHR(VkDevice device, VkSwapchainCreateInfoKHR* pCreateInfo, VkAllocationCallbacks* pAllocator, VkSwapchainKHR* pSwapchain)
+{
+    return vkCreateSwapchainKHR_volkImpl(device, pCreateInfo, pAllocator, pSwapchain);
+}
+
+void ACTIAS_ABI vkDestroySwapchainKHR(VkDevice device, VkSwapchainKHR swapchain, VkAllocationCallbacks* pAllocator)
+{
+    vkDestroySwapchainKHR_volkImpl(device, swapchain, pAllocator);
+}
+
+VkResult ACTIAS_ABI vkGetSwapchainImagesKHR(VkDevice device, VkSwapchainKHR swapchain, uint32_t* pSwapchainImageCount, VkImage* pSwapchainImages)
+{
+    return vkGetSwapchainImagesKHR_volkImpl(device, swapchain, pSwapchainImageCount, pSwapchainImages);
+}
+
+VkResult ACTIAS_ABI vkAcquireNextImageKHR(VkDevice device, VkSwapchainKHR swapchain, uint64_t timeout, VkSemaphore semaphore, VkFence fence, uint32_t* pImageIndex)
+{
+    return vkAcquireNextImageKHR_volkImpl(device, swapchain, timeout, semaphore, fence, pImageIndex);
+}
+
+VkResult ACTIAS_ABI vkQueuePresentKHR(VkQueue queue, VkPresentInfoKHR* pPresentInfo)
+{
+    return vkQueuePresentKHR_volkImpl(queue, pPresentInfo);
+}
+
 void ACTIAS_ABI vkGetPhysicalDeviceFeatures2(VkPhysicalDevice physicalDevice, VkPhysicalDeviceFeatures2* pFeatures)
 {
     vkGetPhysicalDeviceFeatures2_volkImpl(physicalDevice, pFeatures);

@@ -6,7 +6,8 @@ def edit_header(input_file_h, output_file_h, substrings_to_replace):
                     parts = line_h.split()
                     if "volk" in line_h or "Volk" in line_h or "typedef" in line_h or '<' in line_h:
                         if parts[1].startswith("volk") and parts[-1].endswith(");"):
-                            parts[1] = parts[1].replace("volk", "ACTIAS_SYSTEM_API ACTIAS_ABI volk")
+                            parts[0] = "ACTIAS_SYSTEM_API " + parts[0]
+                            parts[1] = parts[1].replace("volk", "ACTIAS_ABI volk")
                             f_out_h.write(" ".join(parts) + "\n")
                         else:
                             f_out_h.write(line_h)
@@ -35,7 +36,11 @@ def edit_c(input_file_c, output_file_c, substrings_to_replace):
             substrings_to_replace.sort(key=len, reverse=True)
             for line_c in f_in_c:
                 try:
-                    if not line_c.strip().endswith(("_volkImpl", "_volkImplStub")):
+                    parts = line_c.split()
+                    if len(parts) >= 2 and parts[1].startswith("volk"):
+                        parts[0] += ' ACTIAS_ABI'
+                        line_c = ' '.join(parts) + '\n'
+                    elif not line_c.strip().endswith(("_volkImpl", "_volkImplStub")):
                         for substring in substrings_to_replace:
                             if substring in line_c:
                                 longer_substrings = [s for s in substrings_to_replace if len(s) > len(substring)]
