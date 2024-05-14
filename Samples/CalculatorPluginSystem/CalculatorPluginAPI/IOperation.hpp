@@ -3,7 +3,7 @@
 
 ACTIAS_BEGIN_C
 
-typedef Float64 (ACTIAS_ABI *CalculatorOperationCallback)(Float64, Float64);
+typedef Float64(ACTIAS_ABI* CalculatorOperationCallback)(Float64, Float64);
 
 typedef struct CalculatorOperation
 {
