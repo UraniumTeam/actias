@@ -54,8 +54,9 @@ The next 2 bytes are zeros.
 | 0 | UInt64 | EntryPointAddress | Address of the entry point. |
 | 8 | UInt16 | TargetArch | The target arch type, see [Architecture Types](#architecture-types). |
 | 10 | UInt16 | SectionCount | The number of sections in the file. |
-| 12 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags](#attribute-flags). |
-| 16 | UInt32 | SDKVersion | The version of the Actias SDK that built this file. |
+| 12 | UInt32 | RelocationBlockCount | The numer of relocation blocks in the file, see [Relocation Table](#relocations-table). |
+| 16 | UInt32 | AttributeFlags | File attribute flags, see [Attribute Flags](#attribute-flags). |
+| 20 | UInt32 | SDKVersion | The version of the Actias SDK that built this file. |
 
 #### Architecture Types
 
@@ -75,7 +76,7 @@ The next 2 bytes are zeros.
 ### Section Headers
 
 The section headers describe every code and data section. There must be exactly SectionCount (see
-[Headers](#headers)) section headers (44 bytes each).
+[Headers](#headers)) section headers (36 bytes each).
 
 | Offset | Type | Field | Description|
 |-------:|-----:|:------|:-----------|
@@ -83,8 +84,7 @@ The section headers describe every code and data section. There must be exactly 
 | 8 | UInt64 | Address | Address of the section when loaded. |
 | 16 | UInt64 | RawSize | Size of raw section data. |
 | 24 | UInt64 | Size | Size of the section when loaded. |
-| 32 | UInt64 | RelocationsAddress | Address of the relocations block, see [Relocations Table](#relocations-table). |
-| 40 | UInt32 | SectionFlags | The section flags, see [Section Flags](#section-flags). |
+| 32 | UInt32 | SectionFlags | The section flags, see [Section Flags](#section-flags). |
 
 #### Section Flags
 
@@ -118,7 +118,7 @@ Each relocation table block starts with a header:
 |-------:|-----:|:------|:-----------|
 | 0 | UInt64 | BaseAddress | Base address for relocations in the block. |
 
-A relocation entry is stored in a UInt16, offset is specified in bits.
+A relocation entry is stored in a UInt16. Each relocation table block ends with a null entry.
 
 | Offset (bits) | Length | Field | Description|
 |--------------:|-------:|:------|:-----------|
