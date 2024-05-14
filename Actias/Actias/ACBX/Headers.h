@@ -50,6 +50,7 @@ typedef struct ACBXFileInformationHeader
     UInt64 EntryPointAddress;            //!< Address of the entry point.
     UInt16 TargetArch;                   //!< The target arch type.
     UInt16 SectionCount;                 //!< The number of sections in the file.
+    UInt32 RelocationBlockCount;         //!< The number of relocation blocks in the file.
     UInt32 AttributeFlags;               //!< File attribute flags.
     UInt32 SDKVersion;                   //!< The version of the Actias SDK that built this file.
 } ACBXFileInformationHeader;
@@ -72,12 +73,11 @@ typedef enum ACBXSectionFlagBits
 //! \see ACBXSectionFlagBits
 typedef struct ACBXSectionHeader
 {
-    UInt64 RawAddress;         //!< Address of the section in the file.
-    UInt64 Address;            //!< Address of the section when loaded.
-    UInt64 RawSize;            //!< Size of raw section data.
-    UInt64 Size;               //!< Size of the section when loaded.
-    UInt64 RelocationsAddress; //!< Address of the relocations block, see Relocations Table.
-    UInt32 SectionFlags;       //!< The section flags, see ACBXSectionFlagBits.
+    UInt64 RawAddress;   //!< Address of the section in the file.
+    UInt64 Address;      //!< Address of the section when loaded.
+    UInt64 RawSize;      //!< Size of raw section data.
+    UInt64 Size;         //!< Size of the section when loaded.
+    UInt32 SectionFlags; //!< The section flags, see ACBXSectionFlagBits.
 } ACBXSectionHeader;
 
 //! \brief ACBX file export table header.
@@ -133,14 +133,23 @@ typedef struct ACBXRelocationBlockHeader
     UInt64 BaseAddress; //!< Base address for relocations in the block.
 } ACBXRelocationBlockHeader;
 
+//! \brief ACBX file relocation flags.
+//!
+//! \see ACBXRelocationEntry
+typedef enum ACBXRelocationFlagBits
+{
+    ACBX_RELOCATION_NULL = 0x0, //!< The relocation is for null-termination.
+    ACBX_RELOCATION_USED = 0x1, //!< The relocation is used.
+} ACBXRelocationFlagBits;
+
 //! \brief Create a value for EntryData field of ACBXRelocationEntry.
 //!
-//! \param flags - The relocation flags (reserved, must be 0).
+//! \param flags - The relocation flags, see ACBXRelocationFlagBits.
 //! \param offset - The offset of the relocation, an address relative
 //!     to the base address, specified in ACBXRelocationBlockHeader::BaseAddress.
 //!
 //! \see ACBXRelocationEntry
-#define ACBX_CreateRelocationEntry(flags, offset) ((flags)&0xf) | (((offset)&0xfff) << 4)
+#define ACBX_CreateRelocationEntry(flags, offset) ((flags) & 0xf) | (((offset) & 0xfff) << 4)
 
 //! \brief ACBX file relocation entry.
 //!
@@ -153,5 +162,8 @@ typedef struct ACBXRelocationEntry
 {
     UInt16 EntryData; //!< Relocation entry data, created with ACBX_CreateRelocationEntry.
 } ACBXRelocationEntry;
+
+#define ACBX_GetRelocationFlags(entry) ((*(UInt16*)entry) & 0xf)
+#define ACBX_GetRelocationOffset(entry) ((*(UInt16*)entry) >> 4)
 
 ACTIAS_END_C
