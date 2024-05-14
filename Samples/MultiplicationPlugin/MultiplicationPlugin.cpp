@@ -25,11 +25,6 @@ extern "C" ACTIAS_EXPORT OperationCollection ACTIAS_ABI GetCalculatorOperations(
     return result;
 }
 
-// Currently the version with classes doesn't work
-// TODO: fix virtual tables
-
-#if 0
-
 class MultiplyOperation final : public Object<IOperation>
 {
 public:
@@ -37,7 +32,7 @@ public:
 
     Actias::StringSlice GetName() const override
     {
-        return ac_nameof(*this);
+        return "MultiplyOperation";
     }
 
     Float64 Calculate(Float64 lhs, Float64 rhs) override
@@ -53,7 +48,7 @@ public:
 
     Actias::StringSlice GetName() const override
     {
-        return ac_nameof(*this);
+        return "DivideOperation";
     }
 
     Float64 Calculate(Float64 lhs, Float64 rhs) override
@@ -96,5 +91,3 @@ extern "C" ACTIAS_EXPORT ICalculatorPlugin* ACTIAS_ABI CreateCalculatorPlugin()
     SystemAllocator allocator;
     return AllocateObjectEx<MultiplicationPlugin>(&allocator);
 }
-
-#endif
