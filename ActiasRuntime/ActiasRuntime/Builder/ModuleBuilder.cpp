@@ -93,6 +93,30 @@ namespace Actias::Runtime
             return left->Address < right->Address;
         });
 
+        for (USize i = 0; i < m_pFileInfoHeader->RelocationBlockCount; ++i)
+        {
+            if (pointer + sizeof(ACBXRelocationBlockHeader) - pRawData > static_cast<SSize>(rawSize))
+            {
+                return Err(ResultCode::InsufficientSize);
+            }
+
+            const auto* pHeader     = reinterpret_cast<ACBXRelocationBlockHeader*>(pointer);
+            const auto* pRelocation = reinterpret_cast<const ACBXRelocationEntry*>(pHeader + 1);
+
+            pointer += sizeof(ACBXRelocationBlockHeader);
+            while (pRelocation->EntryData)
+            {
+                const USize offset = ACBX_GetRelocationOffset(pRelocation);
+                m_Relocations.Push(pHeader->BaseAddress + offset);
+
+                ++pRelocation;
+
+                pointer += sizeof(ACBXRelocationEntry);
+            }
+
+            pointer = AlignUpPtr(pointer + sizeof(ACBXRelocationEntry), ACBX_FILE_ALIGNMENT);
+        }
+
         const auto entrySize = AlignUp(sizeof(ACBXExportTableEntry), ACBX_FILE_ALIGNMENT);
 
         pointer = pRawData + m_pExportHeader->Address;
@@ -138,6 +162,13 @@ namespace Actias::Runtime
 
             auto* pRawSection = &m_RawData[section->RawAddress];
             ActiasCopyMemory(m_pMapped + section->Address, pRawSection, section->RawSize);
+        }
+
+        for (UInt64 reloc : m_Relocations)
+        {
+            UInt64& address = *reinterpret_cast<UInt64*>(m_pMapped + reloc + sectionBaseAddress);
+            address += reinterpret_cast<UInt64>(m_pMapped) + sectionBaseAddress;
+            ACTIAS_Assert(*reinterpret_cast<Byte*>(address) == *reinterpret_cast<Byte*>(address));
         }
 
         ModuleInfo moduleInfo{};

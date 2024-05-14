@@ -216,6 +216,12 @@ namespace Actias::SDK::PE
             return va.ToPointer<ImportDescriptor>(imageHandle);
         }
 
+        [[nodiscard]] inline BaseRelocation* GetBaseRelocations(ActiasHandle imageHandle) noexcept
+        {
+            auto va = GetDirectoryEntry(DirectoryEntryID::BaseReloc);
+            return va.ToPointer<BaseRelocation>(imageHandle);
+        }
+
         [[nodiscard]] inline bool Is64Bit() const noexcept
         {
             return GetArchPointerSize() == ArchPointerSize::Arch64Bit;
