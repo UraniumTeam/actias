@@ -26,14 +26,12 @@ static Test g_Test{};
 static ActiasResult EntryPoint()
 {
     const char message[] = "Hello, World!\n";
-    Write("*", 1);
 
     List<char> msg;
-    Write("*", 1);
+    msg.Reserve(100);
     for (char c : message)
     {
         msg.Push(c);
-        Write("p", 1);
     }
     msg.Push(0);
 
