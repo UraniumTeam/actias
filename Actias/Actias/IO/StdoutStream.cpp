@@ -1,8 +1,13 @@
 #include <Actias/IO/StdoutStream.hpp>
-#include <iostream>
 
 namespace Actias::IO
 {
+    StdoutStream::StdoutStream()
+    {
+        const ActiasResult result = ActiasGetStdFileHandle(ACTIAS_STDOUT, &m_StreamHandle);
+        ACTIAS_Assert(result == ACTIAS_SUCCESS, "Unable to open STDOUT stream");
+    }
+
     bool StdoutStream::IsOpen() const
     {
         return true;
@@ -11,13 +16,18 @@ namespace Actias::IO
     Result<USize, ResultCode> StdoutStream::WriteFromBuffer(const void* buffer, USize size)
     {
         ACTIAS_Assert(buffer, "Buffer was nullptr");
-        std::cout << StringSlice(static_cast<const char*>(buffer), size);
-        return 0;
+
+        USize bytesWritten;
+        const ActiasResult result = ActiasWrite(m_StreamHandle, buffer, size, &bytesWritten);
+        if (result == ACTIAS_SUCCESS)
+            return bytesWritten;
+
+        return static_cast<ResultCode>(result);
     }
 
     StringSlice StdoutStream::GetName() const
     {
-        return "stdout";
+        return "STDOUT";
     }
 
     void StdoutStream::Close() {}
