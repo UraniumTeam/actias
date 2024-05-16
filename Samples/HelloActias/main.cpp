@@ -5,6 +5,13 @@
 
 using namespace Actias;
 
+// TODO: move somewhere, is needed for compatibility
+void* memcpy(void* dst, const void* src, size_t size)
+{
+    ActiasInlineCopyMemory(dst, src, size);
+    return dst;
+}
+
 static ActiasResult Write(const char* message, USize length)
 {
     Ptr stream = AllocateObject<IO::StdoutStream>();
@@ -28,7 +35,6 @@ static ActiasResult EntryPoint()
     const char message[] = "Hello, World!\n";
 
     List<char> msg;
-    msg.Reserve(100);
     for (char c : message)
     {
         msg.Push(c);
