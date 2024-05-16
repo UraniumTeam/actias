@@ -1,6 +1,7 @@
 // Code adapted from https://vulkan-tutorial.com
 
 #include <Actias/Containers/List.hpp>
+#include <Actias/Strings/String.hpp>
 #include <Actias/System/ActiasVulkan.h>
 #include <Actias/System/Assert.h>
 #include <Actias/System/Window.h>
@@ -23,6 +24,7 @@ const UInt32 HEIGHT = 600;
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 using Actias::List;
+using Actias::StringSlice;
 
 const List<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
@@ -199,7 +201,7 @@ private:
 
         if (enableValidationLayers && !checkValidationLayerSupport())
         {
-            throw std::runtime_error("validation layers requested, but not available!");
+            //    throw std::runtime_error("validation layers requested, but not available!");
         }
 
         VkApplicationInfo appInfo{};
@@ -236,7 +238,7 @@ private:
 
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create instance!");
+            //    throw std::runtime_error("failed to create instance!");
         }
 
         volkLoadInstance(instance);
@@ -263,7 +265,7 @@ private:
 
         if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to set up debug messenger!");
+            //    throw std::runtime_error("failed to set up debug messenger!");
         }
     }
 
@@ -271,7 +273,7 @@ private:
     {
         if (ActiasCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create window surface!");
+            //    throw std::runtime_error("failed to create window surface!");
         }
     }
 
@@ -282,7 +284,7 @@ private:
 
         if (deviceCount == 0)
         {
-            throw std::runtime_error("failed to find GPUs with Vulkan support!");
+            //    throw std::runtime_error("failed to find GPUs with Vulkan support!");
         }
 
         List<VkPhysicalDevice> devices;
@@ -300,7 +302,7 @@ private:
 
         if (physicalDevice == VK_NULL_HANDLE)
         {
-            throw std::runtime_error("failed to find a suitable GPU!");
+            //    throw std::runtime_error("failed to find a suitable GPU!");
         }
     }
 
@@ -347,7 +349,7 @@ private:
 
         if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create logical device!");
+            //    throw std::runtime_error("failed to create logical device!");
         }
 
         volkLoadDevice(device);
@@ -404,7 +406,7 @@ private:
 
         if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create swap chain!");
+            //    throw std::runtime_error("failed to create swap chain!");
         }
 
         vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
@@ -438,7 +440,7 @@ private:
 
             if (vkCreateImageView(device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS)
             {
-                throw std::runtime_error("failed to create image views!");
+                //    throw std::runtime_error("failed to create image views!");
             }
         }
     }
@@ -483,7 +485,7 @@ private:
 
         if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create render pass!");
+            //    throw std::runtime_error("failed to create render pass!");
         }
     }
 
@@ -568,7 +570,7 @@ private:
 
         if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create pipeline layout!");
+            //    throw std::runtime_error("failed to create pipeline layout!");
         }
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -589,7 +591,7 @@ private:
 
         if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create graphics pipeline!");
+            //    throw std::runtime_error("failed to create graphics pipeline!");
         }
 
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
@@ -615,7 +617,7 @@ private:
 
             if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS)
             {
-                throw std::runtime_error("failed to create framebuffer!");
+                //    throw std::runtime_error("failed to create framebuffer!");
             }
         }
     }
@@ -631,7 +633,7 @@ private:
 
         if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create command pool!");
+            //    throw std::runtime_error("failed to create command pool!");
         }
     }
 
@@ -647,7 +649,7 @@ private:
 
         if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.Data()) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to allocate command buffers!");
+            //    throw std::runtime_error("failed to allocate command buffers!");
         }
     }
 
@@ -658,7 +660,7 @@ private:
 
         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to begin recording command buffer!");
+            //    throw std::runtime_error("failed to begin recording command buffer!");
         }
 
         VkRenderPassBeginInfo renderPassInfo{};
@@ -696,7 +698,7 @@ private:
 
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to record command buffer!");
+            //    throw std::runtime_error("failed to record command buffer!");
         }
     }
 
@@ -719,7 +721,7 @@ private:
                 || vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS
                 || vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS)
             {
-                throw std::runtime_error("failed to create synchronization objects for a frame!");
+                //    throw std::runtime_error("failed to create synchronization objects for a frame!");
             }
         }
     }
@@ -753,7 +755,7 @@ private:
 
         if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to submit draw command buffer!");
+            //    throw std::runtime_error("failed to submit draw command buffer!");
         }
 
         VkPresentInfoKHR presentInfo{};
@@ -783,7 +785,7 @@ private:
         VkShaderModule shaderModule;
         if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
         {
-            throw std::runtime_error("failed to create shader module!");
+            //    throw std::runtime_error("failed to create shader module!");
         }
 
         return shaderModule;
@@ -890,7 +892,7 @@ private:
         availableExtensions.Resize(extensionCount);
         vkEnumerateDeviceExtensionProperties(dev, nullptr, &extensionCount, availableExtensions.Data());
 
-        std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+        std::set<StringSlice> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
         for (const auto& extension : availableExtensions)
         {
@@ -986,13 +988,13 @@ private:
         return true;
     }
 
-    static List<char> readFile(const std::string& filename)
+    static List<char> readFile(const StringSlice& filename)
     {
-        std::ifstream file(filename, std::ios::ate | std::ios::binary);
+        std::ifstream file(filename.Data(), std::ios::ate | std::ios::binary);
 
         if (!file.is_open())
         {
-            throw std::runtime_error("failed to open file!");
+            //    throw std::runtime_error("failed to open file!");
         }
 
         size_t fileSize = (size_t)file.tellg();
