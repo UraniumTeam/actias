@@ -21,13 +21,33 @@
 
 ACTIAS_BEGIN_C
 
-//! \brief Initialize Actias runtime.
+//! \brief Initialize Actias runtime, usually only called by the ActiasStartMain function.
+//!
+//! \param moduleHandle - Handle of the currently executing module, can be null if running as a native module.
 //!
 //! This function is not thread safe, it must be called once from the main thread
 //! when the program is loaded.
 //!
+//! Note that this function can only be called from the module that should be initialized,
+//! so providing a moduleHandle of a different module as the parameter is undefined behavior.
+//!
 //! \return ActiasResult that indicates the status of the operation.
-ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasInit(void);
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasInit(ActiasHandle moduleHandle);
+
+//! \brief Shutdown Actias runtime, usually only called by the ActiasStartMain function.
+//!
+//! \return ActiasResult that indicates the status of the operation.
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasShutdown();
+
+//! \brief Try to get the handle of the currently running Actias module.
+//!
+//! This function may fail if the Actias runtime was not initialized or if the current
+//! module is running as a native executable (the return value is ACTIAS_FAIL_NOT_SUPPORTED is this case).
+//!
+//! \param pHandle - A pointer to the variable that receives the resulting handle.
+//!
+//! \return ActiasResult that indicates the status of the operation.
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasGetCurrentModule(ActiasHandle* pHandle);
 
 //! \brief Load a dynamic module (OS-native only).
 //!

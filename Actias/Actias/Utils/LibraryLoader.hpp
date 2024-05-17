@@ -36,6 +36,11 @@ namespace Actias
 
         ~LibraryLoader();
 
+        [[nodiscard]] inline ActiasHandle GetHandle() const noexcept
+        {
+            return m_Handle;
+        }
+
         [[nodiscard]] inline bool IsNative() const noexcept
         {
             return m_IsNative;

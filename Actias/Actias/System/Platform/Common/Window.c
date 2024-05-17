@@ -41,11 +41,6 @@ void ACTIAS_ABI ActiasDestroyWindow(ActiasWindow window)
     glfwDestroyWindow((GLFWwindow*)window);
 }
 
-void ACTIAS_ABI ActiasTerminate()
-{
-    glfwTerminate();
-}
-
 VkResult ACTIAS_ABI ActiasCreateWindowSurface(VkInstance instance, ActiasWindow window, const VkAllocationCallbacks* pAllocator,
                                               VkSurfaceKHR* pSurface)
 {
