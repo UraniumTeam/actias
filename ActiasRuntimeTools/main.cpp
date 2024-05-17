@@ -25,7 +25,7 @@ typedef ExecutableParseError ACTIAS_ABI ActiasLoadNativeExecutableProc(INativeEx
                                                                        const ActiasNativeExecutableLoadInfo* pLoadInfo);
 
 typedef void ACTIAS_ABI ActiasBuildExecutableProc(IBlob** ppExecutableData, const ActiasExecutableBuildInfo* pBuildInfo);
-typedef ActiasResult ACTIAS_ABI ActiasMainProc();
+typedef ActiasResult ACTIAS_ABI ActiasStartMainProc(ActiasHandle);
 
 static int Build(StringSlice executable, bool library)
 {
@@ -80,8 +80,14 @@ static int Run(StringSlice executableName)
     ACTIAS_Assert(loader);
     ACTIAS_Assert(!loader.IsNative() && "We should only run an ACBX here");
 
-    const auto mainFunc = loader.FindFunction<ActiasMainProc>("ActiasMain");
-    return mainFunc() == ACTIAS_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
+    const auto mainFunc           = loader.FindFunction<ActiasStartMainProc>("ActiasStartMain");
+    const ActiasResult mainResult = mainFunc(loader.GetHandle());
+    if (mainResult == ACTIAS_NO_USER_ENTRY_POINT_FOUND)
+    {
+        std::cerr << "No user defined entry point found. Did you forget to define an ActiasMain?" << std::endl;
+    }
+
+    return mainResult == ACTIAS_SUCCESS ? EXIT_SUCCESS : EXIT_FAILURE;
 }
 
 int main(int argc, char** argv)
@@ -90,7 +96,7 @@ int main(int argc, char** argv)
 
     const std::vector<std::string> args{ argv + 1, argv + argc };
 
-    if (ActiasInit() != ACTIAS_SUCCESS)
+    if (ActiasInit(nullptr) != ACTIAS_SUCCESS)
     {
         std::cerr << "Failed to initialize the Actias Runtime" << std::endl;
         return EXIT_FAILURE;

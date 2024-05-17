@@ -20,8 +20,6 @@ ACTIAS_SYSTEM_API ActiasBool ActiasWindowShouldClose(ActiasWindow window);
 
 ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasDestroyWindow(ActiasWindow window);
 
-ACTIAS_SYSTEM_API void ACTIAS_ABI ActiasTerminate();
-
 ACTIAS_SYSTEM_API VkResult ACTIAS_ABI ActiasCreateWindowSurface(VkInstance instance, ActiasWindow window,
                                                                 const VkAllocationCallbacks* pAllocator, VkSurfaceKHR* pSurface);
 

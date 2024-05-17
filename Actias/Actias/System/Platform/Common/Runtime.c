@@ -2,6 +2,7 @@
 #include <Actias/System/Runtime.h>
 
 static ActiasHandle g_CurrentRuntimeModule = NULL;
+static ActiasHandle g_CurrentActiasModule  = NULL;
 
 inline static ActiasResult LoadRuntimeProc(char* procName, ActiasProc* pAddress)
 {
@@ -13,14 +14,42 @@ inline static ActiasResult LoadRuntimeProc(char* procName, ActiasProc* pAddress)
     return ActiasFindNativeSymbolAddress(g_CurrentRuntimeModule, procName, pAddress);
 }
 
-ActiasResult ACTIAS_ABI ActiasInit(void)
+ActiasResult ACTIAS_ABI ActiasInit(ActiasHandle moduleHandle)
 {
     if (g_CurrentRuntimeModule)
     {
         return ACTIAS_FAIL_RT_INITIALIZED;
     }
 
+    g_CurrentActiasModule = moduleHandle;
     return ActiasLoadNativeModule("./ActiasRuntime" ACTIAS_NATIVE_DL_EXTENSION, &g_CurrentRuntimeModule);
+}
+
+ActiasResult ACTIAS_ABI ActiasShutdown()
+{
+    ActiasResult result    = ActiasUnloadNativeModule(g_CurrentRuntimeModule);
+    g_CurrentActiasModule  = NULL;
+    g_CurrentRuntimeModule = NULL;
+    return result;
+}
+
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasGetCurrentModule(ActiasHandle* pHandle)
+{
+    if (g_CurrentActiasModule)
+    {
+        if (!pHandle)
+            return ACTIAS_FAIL_INVALID_ARGUMENT;
+
+        *pHandle = g_CurrentActiasModule;
+        return ACTIAS_SUCCESS;
+    }
+
+    if (g_CurrentRuntimeModule == NULL)
+    {
+        return ACTIAS_FAIL_RT_NOT_INITIALIZED;
+    }
+
+    return ACTIAS_FAIL_NOT_SUPPORTED;
 }
 
 ActiasResult ACTIAS_ABI ActiasLoadModuleEx(const ACBXLoaderRunInfo* pRunInfo, ActiasHandle* pModuleHandle)

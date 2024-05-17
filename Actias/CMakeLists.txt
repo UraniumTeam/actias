@@ -5,6 +5,7 @@ set(SRC
     Actias/Base/Base.hpp
     Actias/Base/Byte.hpp
     Actias/Base/Flags.hpp
+    Actias/Base/StartMain.cpp
 
     Actias/Containers/ArraySlice.hpp
     Actias/Containers/HeapArray.hpp
@@ -13,6 +14,8 @@ set(SRC
 
     Actias/IO/BaseIO.hpp
     Actias/IO/BaseIO.cpp
+    Actias/IO/Console.hpp
+    Actias/IO/Console.cpp
     Actias/IO/FileHandle.hpp
     Actias/IO/FileHandle.cpp
     Actias/IO/IStream.hpp

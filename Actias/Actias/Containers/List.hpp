@@ -92,7 +92,7 @@ namespace Actias
         {
             if constexpr (std::is_trivially_copyable_v<T>)
             {
-                memcpy(dest, src, count * sizeof(T));
+                ActiasCopyMemory(dest, src, count * sizeof(T));
             }
             else
             {
