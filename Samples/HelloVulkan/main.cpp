@@ -6,6 +6,8 @@
 #include <Actias/System/Assert.h>
 #include <Actias/System/Window.h>
 
+#include <Actias/IO/FileHandle.hpp>
+#include <Actias/System/Streams.h>
 #include <algorithm>
 #include <cstdint>
 #include <cstdlib>
@@ -18,13 +20,15 @@
 #include <stdexcept>
 #include <vector>
 
+using namespace Actias::IO;
+
 const UInt32 WIDTH  = 800;
 const UInt32 HEIGHT = 600;
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
 using Actias::List;
-using Actias::StringSlice;
+using Actias::String;
 
 const List<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
 
@@ -192,7 +196,6 @@ private:
         vkDestroyInstance(instance, nullptr);
 
         ActiasDestroyWindow(window);
-        ActiasTerminate();
     }
 
     void createInstance()
@@ -892,7 +895,7 @@ private:
         availableExtensions.Resize(extensionCount);
         vkEnumerateDeviceExtensionProperties(dev, nullptr, &extensionCount, availableExtensions.Data());
 
-        std::set<StringSlice> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+        std::set<String> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
         for (const auto& extension : availableExtensions)
         {
@@ -988,23 +991,23 @@ private:
         return true;
     }
 
-    static List<char> readFile(const StringSlice& filename)
+    static List<char> readFile(const String& filename)
     {
-        std::ifstream file(filename.Data(), std::ios::ate | std::ios::binary);
+        FileHandle file{};
+        file.Open(filename.Data(), OpenMode::ReadWrite);
 
-        if (!file.is_open())
+        if (!file.IsOpen())
         {
             //    throw std::runtime_error("failed to open file!");
         }
 
-        size_t fileSize = (size_t)file.tellg();
+        size_t fileSize = (size_t)file.Tell().Unwrap();
         List<char> buffer;
         buffer.Resize(fileSize);
+        file.Seek(0, SeekMode::Current);
+        file.Read(buffer.Data(), fileSize);
 
-        file.seekg(0);
-        file.read(buffer.Data(), fileSize);
-
-        file.close();
+        file.Close();
 
         return buffer;
     }

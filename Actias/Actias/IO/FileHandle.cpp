@@ -1,5 +1,6 @@
 #include <Actias/Containers/IBlob.hpp>
 #include <Actias/IO/FileHandle.hpp>
+#include <Actias/System/Streams.h>
 
 #if ACTIAS_WINDOWS
 #    include <direct.h>
@@ -43,7 +44,7 @@ namespace Actias::IO
 
         Close();
         GenFileOpenMode(openMode);
-        m_Handle = fopen(fileName.Data(), m_OpenModeString);
+        m_Handle = (FILE*)ActiasOpen(fileName.Data(), (ActiasFlags)std::atoi(m_OpenModeString));
         if (m_Handle)
         {
             m_FileName = fileName;
@@ -131,7 +132,7 @@ namespace Actias::IO
     Result<USize, ResultCode> FileHandle::Read(void* buffer, USize size)
     {
         ACTIAS_Guard(IsOpen(), ResultCode::NotOpen);
-        auto result = fread(buffer, 1, size, m_Handle);
+        auto result = ActiasRead((ActiasHandle)m_Handle, buffer, size, NULL);
         if (result == 0 && ferror(m_Handle))
         {
             return Err(Internal::GetResultCode(errno));
@@ -144,7 +145,7 @@ namespace Actias::IO
     {
         ACTIAS_Guard(IsOpen(), ResultCode::NotOpen);
         ACTIAS_Guard(IsWriteAllowed(GetOpenMode()), ResultCode::WriteNotAllowed);
-        auto result = fwrite(buffer, 1, size, m_Handle);
+        auto result = ActiasWrite((ActiasHandle)m_Handle, buffer, size, NULL);
         if (result == 0 && ferror(m_Handle))
         {
             return Err(Internal::GetResultCode(errno));
