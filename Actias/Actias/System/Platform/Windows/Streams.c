@@ -46,7 +46,7 @@ ActiasHandle ACTIAS_ABI ActiasOpen(const char* filename, ActiasFlags protection)
         return NULL;
     }
 
-    return (ActiasHandle)(handle);
+    return (ActiasHandle)((USize)handle);
 }
 
 ActiasResult ACTIAS_ABI ActiasRead(ActiasHandle fileHandle, void* pBuffer, USize byteCount, USize* pBytesRead)
