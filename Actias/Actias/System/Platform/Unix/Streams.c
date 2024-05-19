@@ -12,6 +12,33 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* p
     return ACTIAS_SUCCESS;
 }
 
+ActiasHandle ACTIAS_ABI ActiasOpen(const char* filename, ActiasFlags protection)
+{
+    USize result = open(filename, protection);
+    if (result == -1)
+    {
+        return NULL;
+    }
+
+    return (ActiasHandle)result;
+}
+
+ActiasResult ACTIAS_ABI ActiasRead(ActiasHandle fileHandle, void* pBuffer, USize byteCount, USize* pBytesRead)
+{
+    ssize_t result = sys_read((int)((USize)fileHandle), pBuffer, byteCount);
+    if (result == -1)
+    {
+        return ACTIAS_FAIL_UNKNOWN;
+    }
+
+    if (pBytesRead)
+    {
+        *pBytesRead = (USize)result;
+    }
+
+    return ACTIAS_SUCCESS;
+}
+
 ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, const void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
     ssize_t result = sys_write((int)((USize)fileHandle), pBuffer, byteCount);

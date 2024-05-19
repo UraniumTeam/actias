@@ -37,6 +37,36 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* p
     return ACTIAS_SUCCESS;
 }
 
+ActiasHandle ACTIAS_ABI ActiasOpen(const char* filename, ActiasFlags protection)
+{
+    OFSTRUCT fileInfo = { 0 };
+    HFILE handle      = OpenFile(filename, &fileInfo, protection);
+    if (handle == HFILE_ERROR)
+    {
+        return NULL;
+    }
+
+    return (ActiasHandle)(handle);
+}
+
+ActiasResult ACTIAS_ABI ActiasRead(ActiasHandle fileHandle, void* pBuffer, USize byteCount, USize* pBytesRead)
+{
+    DWORD bytesRead;
+    BOOL result = ReadFile((HANDLE)fileHandle, pBuffer, (DWORD)byteCount, &bytesRead, NULL);
+
+    if (result == FALSE)
+    {
+        return ACTIAS_FAIL_UNKNOWN;
+    }
+
+    if (pBytesRead)
+    {
+        *pBytesRead = (USize)bytesRead;
+    }
+
+    return ACTIAS_SUCCESS;
+}
+
 ActiasResult ACTIAS_ABI ActiasWrite(ActiasHandle fileHandle, const void* pBuffer, USize byteCount, USize* pBytesWritten)
 {
     DWORD bytesWritten;

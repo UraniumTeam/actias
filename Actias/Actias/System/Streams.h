@@ -39,6 +39,25 @@ enum ActiasStandardDescriptorValues
 //! \return ActiasResult that indicates the status of the operation.
 ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* pHandle);
 
+//! \brief Opens a file with the specified filename and flags.
+//!
+//! \param filename - The name of the file to open.
+//! \param flags - The flags specifying the mode of opening the file.
+//!
+//! \return If successful, returns a file handle. On failure, returns NULL.
+ACTIAS_SYSTEM_API ActiasHandle ACTIAS_ABI ActiasOpen(const char* filename, ActiasFlags flags);
+
+//! \brief Read to a file handle.
+//!
+//! \param fileHandle - The file handle to read to.
+//! \param pBuffer - A pointer to the buffer with the data to be read.
+//! \param byteCount - The number of bytes to be read.
+//! \param pBytesRead - A pointer to the variable that receives the number of bytes read, can be NULL.
+//!
+//! \return ActiasResult that indicates the status of the operation.
+ACTIAS_SYSTEM_API ActiasResult ACTIAS_ABI ActiasRead(ActiasHandle fileHandle, void* pBuffer, USize byteCount,
+                                                     USize* pBytesRead);
+
 //! \brief Write to a file handle.
 //!
 //! \param fileHandle - The file handle to write to.
