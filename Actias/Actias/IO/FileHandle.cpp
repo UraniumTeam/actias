@@ -4,13 +4,9 @@
 
 #if ACTIAS_WINDOWS
 #    include <direct.h>
-#    define ACTIAS_SEEK_64 _fseeki64
-#    define ACTIAS_TELL_64 _ftelli64
 #else
 #    include <sys/stat.h>
 #    include <unistd.h>
-#    define ACTIAS_SEEK_64 fseek
-#    define ACTIAS_TELL_64 ftell
 #endif
 
 namespace Actias::IO
@@ -43,8 +39,7 @@ namespace Actias::IO
         }
 
         Close();
-        GenFileOpenMode(openMode);
-        m_Handle = (FILE*)ActiasOpen(fileName.Data(), (ActiasFlags)std::atoi(m_OpenModeString));
+        ActiasOpenFile(fileName.Data(), static_cast<ActiasFlags>(openMode), &m_Handle);
         if (m_Handle)
         {
             m_FileName = fileName;
@@ -59,63 +54,19 @@ namespace Actias::IO
     {
         if (IsOpen())
         {
-            fclose(m_Handle);
+            ActiasCloseFile(m_Handle);
             m_Handle   = nullptr;
             m_OpenMode = OpenMode::None;
             m_FileName.Clear();
         }
     }
 
-    void FileHandle::GenFileOpenMode(OpenMode openMode)
-    {
-        SSize index = 0;
-        switch (openMode)
-        {
-        case OpenMode::ReadOnly:
-            m_OpenModeString[index++] = 'r';
-            break;
-        case OpenMode::Append:
-            m_OpenModeString[index++] = 'a';
-            break;
-        case OpenMode::WriteOnly:
-        case OpenMode::Create:
-        case OpenMode::CreateNew:
-            m_OpenModeString[index++] = 'w';
-            break;
-        case OpenMode::ReadWrite:
-            m_OpenModeString[index++] = 'r';
-            m_OpenModeString[index++] = '+';
-            break;
-        case OpenMode::Truncate:
-            m_OpenModeString[index++] = 'w';
-            m_OpenModeString[index++] = '+';
-            break;
-        default:
-            ACTIAS_Unreachable("Invalid FileOpenMode");
-        }
-
-        m_OpenModeString[index] = 'b';
-    }
-
     VoidResult<ResultCode> FileHandle::Seek(SSize offset, SeekMode seekMode)
     {
         ACTIAS_Guard(IsOpen(), ResultCode::NotOpen);
 
-        int origin = 0;
-        switch (seekMode)
-        {
-        case SeekMode::Begin:
-            origin = SEEK_SET;
-            break;
-        case SeekMode::End:
-            origin = SEEK_END;
-            break;
-        case SeekMode::Current:
-            origin = SEEK_CUR;
-            break;
-        }
-
-        if (ACTIAS_SEEK_64(m_Handle, offset, origin))
+        ActiasResult result = ActiasSeekFile(m_Handle, offset, static_cast<ActiasFileSeekModeBits>(seekMode));
+        if (result == ACTIAS_FAIL_UNKNOWN)
         {
             return Err(ResultCode::InvalidSeek);
         }
@@ -126,17 +77,19 @@ namespace Actias::IO
     Result<USize, ResultCode> FileHandle::Tell() const
     {
         ACTIAS_Guard(IsOpen(), ResultCode::NotOpen);
-        return ACTIAS_TELL_64(m_Handle);
+        USize position;
+        ActiasTellFile(m_Handle, &position);
+
+        return position;
     }
 
     Result<USize, ResultCode> FileHandle::Read(void* buffer, USize size)
     {
         ACTIAS_Guard(IsOpen(), ResultCode::NotOpen);
-        auto result = ActiasRead((ActiasHandle)m_Handle, buffer, size, NULL);
-        if (result == 0 && ferror(m_Handle))
-        {
-            return Err(Internal::GetResultCode(errno));
-        }
+        USize bytesRead;
+        auto result = ActiasReadFile((ActiasHandle)m_Handle, buffer, size, &bytesRead);
+        if (result == ACTIAS_SUCCESS)
+            return bytesRead;
 
         return result;
     }
@@ -145,8 +98,8 @@ namespace Actias::IO
     {
         ACTIAS_Guard(IsOpen(), ResultCode::NotOpen);
         ACTIAS_Guard(IsWriteAllowed(GetOpenMode()), ResultCode::WriteNotAllowed);
-        auto result = ActiasWrite((ActiasHandle)m_Handle, buffer, size, NULL);
-        if (result == 0 && ferror(m_Handle))
+        ActiasResult result = ActiasWriteFile(m_Handle, buffer, size, NULL);
+        if (result == ACTIAS_FAIL_UNKNOWN)
         {
             return Err(Internal::GetResultCode(errno));
         }
@@ -157,7 +110,8 @@ namespace Actias::IO
     VoidResult<ResultCode> FileHandle::Flush()
     {
         ACTIAS_Guard(IsOpen(), ResultCode::NotOpen);
-        fflush(m_Handle);
+        ActiasFlushFile(m_Handle);
+
         return OK();
     }
 

@@ -20,7 +20,7 @@
 #include <stdexcept>
 #include <vector>
 
-using namespace Actias::IO;
+using namespace Actias;
 
 const UInt32 WIDTH  = 800;
 const UInt32 HEIGHT = 600;
@@ -494,8 +494,8 @@ private:
 
     void createGraphicsPipeline()
     {
-        auto vertShaderCode = readFile("../../Samples/HelloVulkan/shader.vert.spv");
-        auto fragShaderCode = readFile("../../Samples/HelloVulkan/shader.frag.spv");
+        const auto vertShaderCode = IO::File::ReadAllBytes("../../Samples/HelloVulkan/shader.vert.spv").Unwrap();
+        const auto fragShaderCode = IO::File::ReadAllBytes("../../Samples/HelloVulkan/shader.frag.spv").Unwrap();
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -778,7 +778,7 @@ private:
         currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
     }
 
-    VkShaderModule createShaderModule(const List<char>& code)
+    VkShaderModule createShaderModule(const List<Byte>& code)
     {
         VkShaderModuleCreateInfo createInfo{};
         createInfo.sType    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -989,27 +989,6 @@ private:
         }
 
         return true;
-    }
-
-    static List<char> readFile(const String& filename)
-    {
-        FileHandle file{};
-        file.Open(filename.Data(), OpenMode::ReadWrite);
-
-        if (!file.IsOpen())
-        {
-            //    throw std::runtime_error("failed to open file!");
-        }
-
-        size_t fileSize = (size_t)file.Tell().Unwrap();
-        List<char> buffer;
-        buffer.Resize(fileSize);
-        file.Seek(0, SeekMode::Current);
-        file.Read(buffer.Data(), fileSize);
-
-        file.Close();
-
-        return buffer;
     }
 
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT,

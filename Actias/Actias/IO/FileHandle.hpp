@@ -110,13 +110,10 @@ namespace Actias::IO
     //! \brief Represents a file handle.
     class FileHandle final : public Object<IObject>
     {
-        FILE* m_Handle;
+        ActiasHandle m_Handle;
         String m_FileName{};
 
-        char m_OpenModeString[8]{};
         OpenMode m_OpenMode = OpenMode::None;
-
-        void GenFileOpenMode(OpenMode openMode);
 
     public:
         ACTIAS_RTTI_Class(FileHandle, "58D19D75-CE53-4B11-B151-F82583B3EAD8");
