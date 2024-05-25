@@ -8,7 +8,7 @@ namespace Actias::IO::Console
         const ActiasResult stdoutResult = ActiasGetStdFileHandle(ACTIAS_STDOUT, &stdoutHandle);
         ACTIAS_Assert(stdoutResult == ACTIAS_SUCCESS);
 
-        const ActiasResult writeResult = ActiasWrite(stdoutHandle, str.Data(), str.Size(), nullptr);
+        const ActiasResult writeResult = ActiasWriteFile(stdoutHandle, str.Data(), str.Size(), nullptr);
         ACTIAS_Assert(writeResult == ACTIAS_SUCCESS);
     }
 
@@ -18,9 +18,9 @@ namespace Actias::IO::Console
         const ActiasResult stdoutResult = ActiasGetStdFileHandle(ACTIAS_STDOUT, &stdoutHandle);
         ACTIAS_Assert(stdoutResult == ACTIAS_SUCCESS);
 
-        ActiasResult writeResult = ActiasWrite(stdoutHandle, str.Data(), str.Size(), nullptr);
+        ActiasResult writeResult = ActiasWriteFile(stdoutHandle, str.Data(), str.Size(), nullptr);
         ACTIAS_Assert(writeResult == ACTIAS_SUCCESS);
-        writeResult = ActiasWrite(stdoutHandle, "\n", 1, nullptr);
+        writeResult = ActiasWriteFile(stdoutHandle, "\n", 1, nullptr);
         ACTIAS_Assert(writeResult == ACTIAS_SUCCESS);
     }
 } // namespace Actias::IO::Console

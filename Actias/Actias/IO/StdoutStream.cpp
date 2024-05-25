@@ -18,11 +18,11 @@ namespace Actias::IO
         ACTIAS_Assert(buffer, "Buffer was nullptr");
 
         USize bytesWritten;
-        const ActiasResult result = ActiasWrite(m_StreamHandle, buffer, size, &bytesWritten);
+        const ActiasResult result = ActiasWriteFile(m_StreamHandle, buffer, size, &bytesWritten);
         if (result == ACTIAS_SUCCESS)
             return bytesWritten;
 
-        return static_cast<ResultCode>(result);
+        return result;
     }
 
     StringSlice StdoutStream::GetName() const
