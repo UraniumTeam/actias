@@ -41,7 +41,9 @@ static void DoStaticInitialization()
 }
 
 #else
-#    error not implemented
+
+static void DoStaticInitialization() {}
+
 #endif
 
 //
