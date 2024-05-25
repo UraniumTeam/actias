@@ -176,7 +176,7 @@ namespace Actias::IO
             const ActiasResult result = ActiasRemoveFile(Path{ fileName }.Data());
             if (result != ACTIAS_SUCCESS)
             {
-                return static_cast<ResultCode>(result);
+                return Err(static_cast<ResultCode>(result));
             }
 
             return OK{};

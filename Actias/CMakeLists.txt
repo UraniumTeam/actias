@@ -147,6 +147,7 @@ else ()
         Actias/System/Platform/Unix/Runtime.c
         Actias/System/Platform/Unix/Streams.c
         Actias/System/Platform/Unix/Threading.c
+        Actias/System/Platform/Unix/Time.c
     )
 endif ()
 

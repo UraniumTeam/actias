@@ -1,6 +1,31 @@
 #include <Actias/System/Platform/Unix/linux_syscall_support.h>
 #include <Actias/System/Streams.h>
 
+inline static USize ACTIAS_ABI ActiasConvertFileOpenFlags(ActiasFlags flags)
+{
+    switch (flags)
+    {
+    case ACTIAS_FILE_OPEN_MODE_NONE:
+        return 0;
+    case ACTIAS_FILE_OPEN_MODE_READ_ONLY:
+        return O_RDONLY;
+    case ACTIAS_FILE_OPEN_MODE_WRITE_ONLY:
+        return O_WRONLY;
+    case ACTIAS_FILE_OPEN_MODE_APPEND:
+        return O_APPEND;
+    case ACTIAS_FILE_OPEN_MODE_CREATE:
+        return O_CREAT;
+    case ACTIAS_FILE_OPEN_MODE_CREATE_NEW:
+        return O_CREAT; //!
+    case ACTIAS_FILE_OPEN_MODE_TRUNCATE:
+        return O_TRUNC;
+    case ACTIAS_FILE_OPEN_MODE_READ_WRITE:
+        return O_RDWR;
+    default:
+        return 0;
+    }
+}
+
 ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* pHandle)
 {
     if (descriptor < ACTIAS_STD_DESCRIPTOR_MIN || descriptor > ACTIAS_STD_DESCRIPTOR_MAX)
@@ -12,34 +37,9 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* p
     return ACTIAS_SUCCESS;
 }
 
-inline USize ACTIAS_ABI ActiasConvertFileOpenFlags(ActiasFlags flags)
+ActiasResult ACTIAS_ABI ActiasOpenFile(const char* filePath, ActiasFileOpenMode openMode, ActiasHandle* pHandle)
 {
-    switch (flags)
-    {
-    case ACTIAS_FILE_OPEN_NONE:
-        return 0;
-    case ACTIAS_FILE_OPEN_READ_ONLY:
-        return O_RDONLY;
-    case ACTIAS_FILE_OPEN_WRITE_ONLY:
-        return O_WRONLY;
-    case ACTIAS_FILE_OPEN_APPEND:
-        return O_APPEND;
-    case ACTIAS_FILE_OPEN_CREATE:
-        return O_CREAT;
-    case ACTIAS_FILE_OPEN_CREATE_NEW:
-        return O_CREAT; //!
-    case ACTIAS_FILE_OPEN_TRUNCATE:
-        return O_TRUNC;
-    case ACTIAS_FILE_OPEN_READ_WRITE:
-        return O_RDWR;
-    default:
-        return 0;
-    }
-}
-
-ActiasResult ACTIAS_ABI ActiasOpenFile(const char* filename, ActiasFlags protection, ActiasHandle* pHandle)
-{
-    USize result = sys_open(filename, ActiasConvertFileOpenFlags(protection), 0);
+    USize result = sys_open(filePath, ActiasConvertFileOpenFlags(openMode), 0);
     if (result == -1)
     {
         *pHandle = NULL;
@@ -94,9 +94,9 @@ ActiasResult ACTIAS_ABI ActiasWriteFile(ActiasHandle fileHandle, const void* pBu
     return ACTIAS_SUCCESS;
 }
 
-ActiasResult ACTIAS_ABI ActiasSeekFile(ActiasHandle fileHandle, USize offset, ActiasFileSeekModeBits seekMode)
+ActiasResult ACTIAS_ABI ActiasSeekFile(ActiasHandle fileHandle, USize offset, ActiasFileSeekMode seekMode)
 {
-    USize result = lseek((int)((USize)fileHandle), offset, seekMode);
+    ssize_t result = sys_lseek((int)((USize)fileHandle), offset, seekMode);
     if (result == -1)
     {
         return ACTIAS_FAIL_UNKNOWN;
@@ -105,26 +105,37 @@ ActiasResult ACTIAS_ABI ActiasSeekFile(ActiasHandle fileHandle, USize offset, Ac
     return ACTIAS_SUCCESS;
 }
 
-ActiasResult ACTIAS_ABI ActiasTellFile(ActiasHandle fileHandle, USize* position)
+ActiasResult ACTIAS_ABI ActiasTellFile(ActiasHandle fileHandle, USize* pPosition)
 {
-    USize result = lseek((int)((USize)fileHandle), 0, SEEK_CUR);
+    ssize_t result = sys_lseek((int)((USize)fileHandle), 0, SEEK_CUR);
     if (result == -1)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
 
-    *position = result;
-
+    *pPosition = (USize)result;
     return ACTIAS_SUCCESS;
 }
 
-ActiasResult ACTIAS_ABI ActiasFlushFile(ActiasHandle fileHandle)
+ActiasResult ACTIAS_ABI ActiasGetFileStats(ActiasHandle fileHandle, ActiasFileStats* pResult)
 {
-    USize result = fsync((int)((USize)fileHandle));
-    if (result == -1)
+    struct kernel_stat kernelStat;
+    if (sys_fstat((int)((USize)fileHandle), &kernelStat) == -1)
     {
         return ACTIAS_FAIL_UNKNOWN;
     }
 
+    pResult->ByteSize = (USize)kernelStat.st_size;
+
+    // Time of last status change since we don't have a better option here.
+    pResult->CreationTimeUTC         = kernelStat.st_ctime_;
+    pResult->LastModificationTimeUTC = kernelStat.st_mtime_;
+    pResult->LastAccessTimeUTC       = kernelStat.st_atime_;
     return ACTIAS_SUCCESS;
+}
+
+ActiasResult ACTIAS_ABI ActiasRemoveFile(const char* filePath)
+{
+    // TODO
+    return ACTIAS_FAIL_NOT_SUPPORTED;
 }
