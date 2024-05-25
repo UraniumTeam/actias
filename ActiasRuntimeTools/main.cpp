@@ -1,4 +1,4 @@
-#include <Actias/IO/FileHandle.hpp>
+#include <Actias/IO/FileSystem.hpp>
 #include <Actias/System/Memory.h>
 #include <Actias/System/Runtime.h>
 #include <Actias/Utils/LibraryLoader.hpp>
@@ -30,7 +30,7 @@ typedef ActiasResult ACTIAS_ABI ActiasStartMainProc(ActiasHandle);
 static int Build(StringSlice executable, bool library)
 {
     const LibraryLoader loader{ "ActiasSDK", true };
-    const auto executableRead = File::ReadAllBytes(executable);
+    const auto executableRead = FileSystem::ReadAllBytes(executable);
 
     if (!executableRead)
     {
@@ -63,7 +63,7 @@ static int Build(StringSlice executable, bool library)
 
     const StringSlice outputPath{ executable.begin(), executable.FindFirstOf('.') };
     const char* extension  = library ? ".acbl" : ".acbx";
-    const auto writeResult = File::WriteBlob(String{ outputPath } + extension, pExecutableData.Get(), OpenMode::Create);
+    const auto writeResult = FileSystem::WriteBlob(String{ outputPath } + extension, pExecutableData.Get(), OpenMode::Create);
 
     if (writeResult.IsErr())
     {

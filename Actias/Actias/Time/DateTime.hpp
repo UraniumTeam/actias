@@ -1,122 +1,160 @@
 #pragma once
 #include <Actias/RTTI/RTTI.hpp>
+#include <Actias/Strings/FixedString.hpp>
 #include <Actias/Strings/String.hpp>
 #include <Actias/Time/TimeSpan.hpp>
 
 namespace Actias
 {
-    //! \brief Represents date and time.
-    class DateTime
+    enum class DateTimeFormatKind
     {
-        tm m_Data;
+        ISO8601,
+        Short,
+        Long,
+    };
 
-        inline DateTime(const tm& data)
-            : m_Data(data)
+    namespace Internal
+    {
+        class DateTimeBase
         {
-        }
+            friend struct DateTimeConvert;
 
-        inline time_t MakeTime() const
+        protected:
+            ActiasDateTimeInfo m_Data;
+
+            inline DateTimeBase(ActiasDateTimeInfo data)
+                : m_Data(data)
+            {
+            }
+
+        public:
+            [[nodiscard]] inline Int32 Year() const
+            {
+                return m_Data.Year + 1900;
+            }
+
+            [[nodiscard]] inline Int32 Month() const
+            {
+                return m_Data.Month;
+            }
+
+            [[nodiscard]] inline Int32 Day() const
+            {
+                return m_Data.Day;
+            }
+
+            [[nodiscard]] inline Int32 DayOfWeek() const
+            {
+                return m_Data.DayOfWeek;
+            }
+
+            [[nodiscard]] inline Int32 Hour() const
+            {
+                return m_Data.Hour;
+            }
+
+            [[nodiscard]] inline Int32 Minute() const
+            {
+                return m_Data.Minute;
+            }
+
+            [[nodiscard]] inline Int32 Second() const
+            {
+                return m_Data.Second;
+            }
+
+            FixStr128 ToString(DateTimeFormatKind formatKind) const;
+        };
+    } // namespace Internal
+
+    //! \brief Represents date and time in UTC.
+    class UTCDateTime final : public Internal::DateTimeBase
+    {
+        friend struct DateTimeConvert;
+
+        inline UTCDateTime(ActiasDateTimeInfo data)
+            : DateTimeBase(data)
         {
-            auto copy = m_Data;
-            return mktime(&copy);
         }
 
     public:
-        ACTIAS_RTTI_Class(DateTime, "9927EE14-F009-464A-A067-4E4CB7AFE56C");
+        ACTIAS_RTTI_Struct(UTCDateTime, "9927EE14-F009-464A-A067-4E4CB7AFE56C");
 
-        inline time_t Ticks() const
+        [[nodiscard]] inline ActiasTime UnixTime() const
         {
-            return MakeTime();
+            return ActiasComposeTime(&m_Data);
         }
 
-        inline Int32 Year() const
+        [[nodiscard]] inline static UTCDateTime FromUnixTime(ActiasTime time)
         {
-            return m_Data.tm_year + 1900;
+            ActiasDateTimeInfo decomposed;
+            ActiasDecomposeTime(time, &decomposed);
+            return UTCDateTime{ decomposed };
         }
 
-        inline Int32 Day() const
+        [[nodiscard]] inline static UTCDateTime Now()
         {
-            return m_Data.tm_mday;
+            return FromUnixTime(ActiasGetCurrentTimeUTC());
         }
 
-        inline Int32 DayOfWeek() const
+        [[nodiscard]] inline friend TimeSpan operator-(const UTCDateTime& lhs, const UTCDateTime& rhs)
         {
-            return m_Data.tm_wday;
-        }
-
-        inline Int32 DayOfYear() const
-        {
-            return m_Data.tm_yday + 1;
-        }
-
-        inline Int32 Hour() const
-        {
-            return m_Data.tm_hour;
-        }
-
-        inline Int32 Minute() const
-        {
-            return m_Data.tm_min;
-        }
-
-        inline Int32 Second() const
-        {
-            auto s = m_Data.tm_sec;
-            if (s == 60)
-                return 0;
-            return s;
-        }
-
-        void Format(std::ostream& stream, const char* format = "[%m/%d/%Y %T]") const;
-
-        String ToString(const char* format = "[%m/%d/%Y %T]") const;
-
-        inline static DateTime CreateLocal(time_t time)
-        {
-            tm data;
-#if ACTIAS_WINDOWS
-            ::localtime_s(&data, &time);
-#else
-            ::localtime_r(&time, &data);
-#endif
-            return DateTime(data);
-        }
-
-        inline static DateTime CreateUtc(time_t time)
-        {
-            tm data;
-#if ACTIAS_WINDOWS
-            ::gmtime_s(&data, &time);
-#else
-            ::gmtime_r(&time, &data);
-#endif
-            return DateTime(data);
-        }
-
-        inline static DateTime Now()
-        {
-            time_t now;
-            time(&now);
-            return CreateLocal(now);
-        }
-
-        inline static DateTime UtcNow()
-        {
-            time_t now;
-            time(&now);
-            return CreateUtc(now);
-        }
-
-        inline TimeSpan operator-(const DateTime& other) const
-        {
-            time_t diff = static_cast<time_t>(difftime(MakeTime(), other.MakeTime()));
-            return TimeSpan::FromSeconds(diff);
+            return TimeSpan::FromUnixTime(ActiasComposeTime(&lhs.m_Data) - ActiasComposeTime(&rhs.m_Data));
         }
     };
 
-    inline std::ostream& operator<<(std::ostream& stream, const DateTime& time)
+    class LocalDateTime final : public Internal::DateTimeBase
     {
-        time.Format(stream);
-        return stream;
-    }
+        friend struct DateTimeConvert;
+
+        inline LocalDateTime(ActiasDateTimeInfo data)
+            : DateTimeBase(data)
+        {
+        }
+
+    public:
+        ACTIAS_RTTI_Struct(LocalDateTime, "7D309125-A8C2-4FCB-BDCF-CCDA5DAF775D");
+
+        [[nodiscard]] inline ActiasTime UnixTime() const
+        {
+            ActiasDateTimeInfo utc;
+            ActiasConvertLocalTimeToUTC(&m_Data, &utc);
+            return ActiasComposeTime(&utc);
+        }
+
+        [[nodiscard]] inline static LocalDateTime FromUnixTime(ActiasTime time)
+        {
+            ActiasDateTimeInfo decomposed, local;
+            ActiasDecomposeTime(time, &decomposed);
+            ActiasConvertUTCToLocalTime(&decomposed, &local);
+            return LocalDateTime{ local };
+        }
+
+        [[nodiscard]] inline static LocalDateTime Now()
+        {
+            return FromUnixTime(ActiasGetCurrentTimeUTC());
+        }
+
+        [[nodiscard]] inline friend TimeSpan operator-(const LocalDateTime& lhs, const LocalDateTime& rhs)
+        {
+            return TimeSpan::FromUnixTime(ActiasComposeTime(&lhs.m_Data) - ActiasComposeTime(&rhs.m_Data));
+        }
+    };
+
+    struct DateTimeConvert
+    {
+        [[nodiscard]] inline static UTCDateTime ToUTC(const LocalDateTime& localDateTime)
+        {
+            UTCDateTime result{ ActiasDateTimeInfo{ 0 } };
+            ActiasConvertLocalTimeToUTC(&localDateTime.m_Data, &result.m_Data);
+            return result;
+        }
+
+        [[nodiscard]] inline static LocalDateTime ToLocal(const UTCDateTime& utcDateTime)
+        {
+            LocalDateTime result{ ActiasDateTimeInfo{ 0 } };
+            ActiasConvertUTCToLocalTime(&utcDateTime.m_Data, &result.m_Data);
+            return result;
+        }
+    };
 } // namespace Actias

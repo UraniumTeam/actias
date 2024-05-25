@@ -14,10 +14,11 @@ set(SRC
 
     Actias/IO/BaseIO.hpp
     Actias/IO/BaseIO.cpp
+    Actias/IO/BufferedStream.hpp
     Actias/IO/Console.hpp
     Actias/IO/Console.cpp
-    Actias/IO/FileHandle.hpp
-    Actias/IO/FileHandle.cpp
+    Actias/IO/FileSystem.hpp
+    Actias/IO/FileSystem.cpp
     Actias/IO/IStream.hpp
     Actias/IO/FileStream.hpp
     Actias/IO/FileStream.cpp
@@ -63,12 +64,15 @@ set(SRC_SYSTEM
     Actias/System/Memory.h
     Actias/System/MemoryPool.h
     Actias/System/Mutex.h
+    Actias/System/Path.h
     Actias/System/Platform.h
     Actias/System/PlatformTraits.h
     Actias/System/Result.h
     Actias/System/Runtime.h
     Actias/System/Streams.h
     Actias/System/Threading.h
+    Actias/System/Time.h
+    Actias/System/Unicode.h
 
     Actias/System/Platform/Common/AtomicImpl.h
     Actias/System/Platform/Common/AtomicImpl8.h
@@ -81,9 +85,11 @@ set(SRC_SYSTEM
     Actias/System/Platform/Common/InlineCopyMemory.h
     Actias/System/Platform/Common/InlineSetMemory.h
     Actias/System/Platform/Common/Memory.c
+    Actias/System/Platform/Common/Path.c
     Actias/System/Platform/Common/Runtime.c
     Actias/System/Platform/Common/RuntimeDef.h
     Actias/System/Platform/Common/SetMemory.c
+    Actias/System/Platform/Common/Time.c
 )
 
 if (ACTIAS_BUILD_GUI)
@@ -125,9 +131,11 @@ if (ACTIAS_WINDOWS)
         Actias/System/Platform/Windows/Core.c
         Actias/System/Platform/Windows/Memory.c
         Actias/System/Platform/Windows/Mutex.c
+        Actias/System/Platform/Windows/Path.c
         Actias/System/Platform/Windows/Runtime.c
         Actias/System/Platform/Windows/Streams.c
         Actias/System/Platform/Windows/Threading.c
+        Actias/System/Platform/Windows/Time.c
         Actias/System/Platform/Windows/WinHeaders.h
     )
 else ()

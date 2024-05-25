@@ -36,14 +36,14 @@ namespace Actias::IO
     //! \brief File or stream open mode.
     enum class OpenMode
     {
-        None      = ACTIAS_FILE_OPEN_NONE,       //!< None mode.
-        ReadOnly  = ACTIAS_FILE_OPEN_READ_ONLY,  //!< Read only open mode.
-        WriteOnly = ACTIAS_FILE_OPEN_WRITE_ONLY, //!< Write only open mode.
-        Append    = ACTIAS_FILE_OPEN_APPEND,     //!< Append open mode.
-        Create    = ACTIAS_FILE_OPEN_CREATE,     //!< Create (new or rewrite existing) open mode.
-        CreateNew = ACTIAS_FILE_OPEN_CREATE_NEW, //!< Create (new only) open mode.
-        Truncate  = ACTIAS_FILE_OPEN_TRUNCATE,   //!< Truncate open mode.
-        ReadWrite = ACTIAS_FILE_OPEN_READ_WRITE, //!< Read and write open mode.
+        None      = ACTIAS_FILE_OPEN_MODE_NONE,       //!< None mode.
+        ReadOnly  = ACTIAS_FILE_OPEN_MODE_READ_ONLY,  //!< Read only open mode.
+        WriteOnly = ACTIAS_FILE_OPEN_MODE_WRITE_ONLY, //!< Write only open mode.
+        Append    = ACTIAS_FILE_OPEN_MODE_APPEND,     //!< Append open mode.
+        Create    = ACTIAS_FILE_OPEN_MODE_CREATE,     //!< Create (new or rewrite existing) open mode.
+        CreateNew = ACTIAS_FILE_OPEN_MODE_CREATE_NEW, //!< Create (new only) open mode.
+        Truncate  = ACTIAS_FILE_OPEN_MODE_TRUNCATE,   //!< Truncate open mode.
+        ReadWrite = ACTIAS_FILE_OPEN_MODE_READ_WRITE, //!< Read and write open mode.
     };
 
     //! \brief Check if writing is allowed with the specified open mode.
@@ -83,8 +83,8 @@ namespace Actias::IO
     //! \brief Seek mode.
     enum class SeekMode
     {
-        Begin,   //!< Begin seek mode.
-        Current, //!< Current seek mode
-        End,     //!< End seek mode.
+        Begin   = ACTIAS_FILE_SEEK_MODE_BEGIN,   //!< Begin seek mode.
+        Current = ACTIAS_FILE_SEEK_MODE_CURRENT, //!< Current seek mode
+        End     = ACTIAS_FILE_SEEK_MODE_END,     //!< End seek mode.
     };
 } // namespace Actias::IO
