@@ -140,6 +140,13 @@ namespace Actias
             return Compare(lhs, rhs, ByteLength(lhs), ByteLength(rhs));
         }
 
+        [[nodiscard]] inline static TChar* Copy(TChar* dst, USize dstSize, const TChar* src, USize srcSize)
+        {
+            const USize actualSize = dstSize < srcSize ? dstSize : srcSize;
+            ActiasCopyMemory(dst, src, actualSize);
+            return dst + actualSize;
+        }
+
         [[nodiscard]] inline static TCodepoint CodepointAt(const TChar* str, USize size, USize index)
         {
             const TChar* begin = str;
@@ -226,6 +233,38 @@ namespace Actias
             }
 
             return result.m_Iter;
+        }
+    };
+
+    struct StrConvert final
+    {
+        [[nodiscard]] inline static TChar* Decimal(TChar* str, USize size, UInt64 value, Int32 minLength = -1)
+        {
+            TChar* begin = str;
+            do
+            {
+                if (size-- == 0)
+                    break;
+
+                UInt64 digit = value % 10;
+                value /= 10;
+
+                *str++ = '0' + static_cast<TChar>(digit);
+                --minLength;
+            }
+            while (value || minLength > 0);
+
+            TChar* end = str;
+            *str--     = 0;
+
+            while (begin < str)
+            {
+                char temp = *str;
+                *str--    = *begin;
+                *begin++  = temp;
+            }
+
+            return end;
         }
     };
 

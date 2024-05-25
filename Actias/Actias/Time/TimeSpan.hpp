@@ -1,60 +1,60 @@
 #pragma once
 #include <Actias/Base/Base.hpp>
 #include <Actias/System/Platform.h>
-#include <ctime>
-#include <ostream>
-#include <sstream>
+#include <Actias/System/Time.h>
 
 namespace Actias
 {
     //! \brief Represents a time span: an interval between two instances of DateTime.
-    class TimeSpan
+    class TimeSpan final
     {
-        tm m_Data;
+        ActiasDateTimeInfo m_Data;
 
-        inline explicit TimeSpan(time_t time)
+        inline explicit TimeSpan(ActiasTime time)
         {
-            m_Data = *localtime(&time);
+            ActiasDecomposeTime(time, &m_Data);
         }
 
     public:
-        ACTIAS_RTTI_Class(TimeSpan, "F42DAA6C-53F3-4AA5-9971-9783D8754F6C");
+        ACTIAS_RTTI_Struct(TimeSpan, "F42DAA6C-53F3-4AA5-9971-9783D8754F6C");
 
-        [[nodiscard]] inline Int32 Years() const
+        [[nodiscard]] inline ActiasTime UnixTime() const
         {
-            return m_Data.tm_year;
+            ActiasDateTimeInfo copy = m_Data;
+            return ActiasComposeTime(&copy);
         }
 
-        [[nodiscard]] inline Int32 Days() const
+        [[nodiscard]] inline Int32 Year() const
         {
-            return m_Data.tm_mday;
+            return m_Data.Year;
         }
 
-        [[nodiscard]] inline Int32 Hours() const
+        [[nodiscard]] inline Int32 Day() const
         {
-            return m_Data.tm_hour;
+            return m_Data.Day;
         }
 
-        [[nodiscard]] inline Int32 Minutes() const
+        [[nodiscard]] inline Int32 DayOfWeek() const
         {
-            return m_Data.tm_min;
+            return m_Data.DayOfWeek;
         }
 
-        [[nodiscard]] inline Int32 Seconds() const
+        [[nodiscard]] inline Int32 Hour() const
         {
-            auto s = m_Data.tm_sec;
-            if (s == 60)
-                return 0;
-            return s;
+            return m_Data.Hour;
         }
 
-        [[nodiscard]] inline Int64 TotalSeconds() const
+        [[nodiscard]] inline Int32 Minute() const
         {
-            auto copy = m_Data;
-            return mktime(&copy);
+            return m_Data.Minute;
         }
 
-        [[nodiscard]] inline static TimeSpan FromSeconds(time_t seconds)
+        [[nodiscard]] inline Int32 Second() const
+        {
+            return m_Data.Second;
+        }
+
+        [[nodiscard]] inline static TimeSpan FromUnixTime(ActiasTime seconds)
         {
             return TimeSpan(seconds);
         }
