@@ -6,8 +6,10 @@ set(SRC
     Actias/Base/Byte.hpp
     Actias/Base/Flags.hpp
     Actias/Base/StartMain.cpp
+    Actias/Base/wyhash.h
 
     Actias/Containers/ArraySlice.hpp
+    Actias/Containers/HashSet.hpp
     Actias/Containers/HeapArray.hpp
     Actias/Containers/IBlob.hpp
     Actias/Containers/List.hpp

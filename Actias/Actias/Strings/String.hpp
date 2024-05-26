@@ -630,8 +630,7 @@ namespace std
     {
         inline size_t operator()(const Actias::String& str) const noexcept
         {
-            std::hash<std::string_view> hasher;
-            return hasher(std::string_view(str.Data(), str.Size()));
+            return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
 } // namespace std
