@@ -19,6 +19,11 @@ set(SRC
     ActiasSDK/Platform/Windows/Parser/PEModuleBuffer.cpp
     ActiasSDK/Platform/Windows/PortableExecutable.hpp
     ActiasSDK/Platform/Windows/PortableExecutable.cpp
+
+    ActiasSDK/Platform/Unix/Parser/ELFHeader.hpp
+    ActiasSDK/Platform/Unix/Parser/ELFHeader.cpp
+    ActiasSDK/Platform/Unix/ExecutableLinkableFormat.hpp
+    ActiasSDK/Platform/Unix/ExecutableLinkableFormat.cpp
 )
 
 add_library(ActiasSDK SHARED ${SRC})
