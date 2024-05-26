@@ -1,5 +1,7 @@
 #include <Actias/Utils/Result.hpp>
 #include <ActiasSDK/Platform/NativeExecutableFactory.hpp>
+#include <ActiasSDK/Platform/Unix/ExecutableLinkableFormat.hpp>
+#include <ActiasSDK/Platform/Unix/Parser/ELFHeader.hpp>
 #include <ActiasSDK/Platform/Windows/Parser/NTHeader.hpp>
 #include <ActiasSDK/Platform/Windows/PortableExecutable.hpp>
 
@@ -10,6 +12,11 @@ namespace Actias::SDK
         if (PE::IsWindowsPEFile(rawBuffer))
         {
             return PE::PortableExecutable::Load(rawBuffer);
+        }
+
+        if (ELF::IsUnixELFFile(rawBuffer))
+        {
+            return ELF::ExecutableLinkableFormat::Load(rawBuffer);
         }
 
         return Err(ExecutableParseError::UnknownExecutableFormat);
