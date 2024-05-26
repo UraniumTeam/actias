@@ -147,6 +147,11 @@ namespace Actias
             return dst + actualSize;
         }
 
+        [[nodiscard]] inline static UInt64 Hash(const TChar* str, USize size) noexcept
+        {
+            return wyhash(str, size, 0, _wyp);
+        }
+
         [[nodiscard]] inline static TCodepoint CodepointAt(const TChar* str, USize size, USize index)
         {
             const TChar* begin = str;

@@ -356,7 +356,7 @@ namespace Actias
     using FixStr64  = FixedString<64>;
     using FixStr128 = FixedString<128>;
     using FixStr256 = FixedString<256>;
-    using FixStr512 = FixedString<256>;
+    using FixStr512 = FixedString<512>;
 
     using FixStr = FixStr256;
 } // namespace Actias
@@ -368,8 +368,7 @@ namespace std
     {
         inline size_t operator()(const Actias::FixedString<TCapacity>& str) const noexcept
         {
-            std::hash<std::string_view> hasher;
-            return hasher(std::string_view(str.Data(), str.Size()));
+            return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
 } // namespace std

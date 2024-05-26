@@ -1,4 +1,5 @@
 #pragma once
+#include <Actias/Base/wyhash.h>
 #include <Actias/System/Assert.h>
 #include <Actias/System/Platform.h>
 #include <atomic>
@@ -56,6 +57,7 @@ namespace Actias
         template<class T>
         inline constexpr SVWrapper TypeNameImpl()
         {
+            // TODO: we can't use RTTI in ACBX modules because of this std::string_view
 #if ACTIAS_COMPILER_MSVC
             std::string_view fn = __FUNCSIG__;
             fn.remove_prefix(fn.find_first_of("<") + 1);
@@ -112,8 +114,8 @@ namespace Actias
 
     //! \brief Align up an integer.
     //!
-    //! \param x     - Value to align.
-    //! \tparam A         - Alignment to use.
+    //! \param x  - Value to align.
+    //! \tparam A - Alignment to use.
     template<UInt32 A, class T>
     inline constexpr T AlignUp(T x)
     {
@@ -142,8 +144,8 @@ namespace Actias
 
     //! \brief Align down an integer.
     //!
-    //! \param x     - Value to align.
-    //! \tparam A         - Alignment to use.
+    //! \param x  - Value to align.
+    //! \tparam A - Alignment to use.
     template<UInt32 A, class T>
     inline constexpr T AlignDown(T x)
     {
@@ -168,8 +170,8 @@ namespace Actias
     //!
     //! \tparam Args - Types of values.
     //!
-    //! \param [in,out] seed - Initial hash value to combine with.
-    //! \param [in]     args - The values to calculate hash of.
+    //! \param seed - Initial hash value to combine with.
+    //! \param args - The values to calculate hash of.
     template<typename T, typename... Args>
     inline void HashCombine(std::size_t& seed, const T& value, const Args&... args)
     {
