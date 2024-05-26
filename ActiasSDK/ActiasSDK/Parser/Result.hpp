@@ -12,7 +12,9 @@ namespace Actias::SDK
         InvalidDOSHeader = -3,
         InvalidNTHeader  = -4,
 
-        SectionOutOfBounds = -5,
+        InvalidELFHeader = -5,
+
+        SectionOutOfBounds = -6,
     };
 
     inline const char* ExecutableParseErrorTypeToString(ExecutableParseError type)
@@ -27,6 +29,7 @@ namespace Actias::SDK
             ACTIAS_ENUM_STRING_ENTRY(UnknownExecutableFormat);
             ACTIAS_ENUM_STRING_ENTRY(InvalidDOSHeader);
             ACTIAS_ENUM_STRING_ENTRY(InvalidNTHeader);
+            ACTIAS_ENUM_STRING_ENTRY(InvalidELFHeader);
             ACTIAS_ENUM_STRING_ENTRY(SectionOutOfBounds);
         default:
             return "<Unknown>";
