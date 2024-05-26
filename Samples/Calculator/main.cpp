@@ -54,7 +54,7 @@ typedef OperationCollection ACTIAS_ABI GetCalculatorOperationsProc();
 
 int main()
 {
-    if (ActiasInit() < 0)
+    if (ActiasInit(nullptr) < 0)
     {
         std::cerr << "Failed to initialize the Runtime!" << std::endl;
         return EXIT_FAILURE;
