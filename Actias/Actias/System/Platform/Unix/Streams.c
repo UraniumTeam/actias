@@ -12,13 +12,13 @@ inline static USize ACTIAS_ABI ActiasConvertFileOpenFlags(ActiasFlags flags)
     case ACTIAS_FILE_OPEN_MODE_WRITE_ONLY:
         return O_WRONLY;
     case ACTIAS_FILE_OPEN_MODE_APPEND:
-        return O_APPEND;
+        return O_APPEND | O_RDWR;
     case ACTIAS_FILE_OPEN_MODE_CREATE:
-        return O_CREAT;
+        return O_CREAT | O_TRUNC | O_WRONLY;
     case ACTIAS_FILE_OPEN_MODE_CREATE_NEW:
-        return O_CREAT; //!
+        return O_CREAT | O_WRONLY;
     case ACTIAS_FILE_OPEN_MODE_TRUNCATE:
-        return O_TRUNC;
+        return O_TRUNC | O_WRONLY;
     case ACTIAS_FILE_OPEN_MODE_READ_WRITE:
         return O_RDWR;
     default:

@@ -1,4 +1,4 @@
-#include <Actias/IO/FileHandle.hpp>
+#include <Actias/IO/FileSystem.hpp>
 #include <Actias/System/Runtime.h>
 #include <ActiasSDK/Driver/ExecutableBuilder.hpp>
 #include <ActiasSDK/Platform/INativeExecutable.hpp>
@@ -12,7 +12,7 @@ using namespace Actias::SDK;
 
 int main()
 {
-    if (ActiasInit() < 0)
+    if (ActiasInit(nullptr) < 0)
     {
         std::cerr << "Failed to initialize the Runtime!" << std::endl;
         return EXIT_FAILURE;
