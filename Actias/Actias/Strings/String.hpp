@@ -241,7 +241,7 @@ namespace Actias
         }
 
         inline String(const TChar* str) noexcept
-            : String(str, TCharTraits::length(str))
+            : String(str, Str::ByteLength(str))
         {
         }
 
@@ -432,7 +432,7 @@ namespace Actias
 
         inline String& Append(const TChar* str)
         {
-            return Append(str, std::char_traits<TChar>::length(str));
+            return Append(str, Str::ByteLength(str));
         }
 
         inline String& operator+=(StringSlice str)
@@ -630,4 +630,4 @@ namespace Actias
             return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
-} // namespace std
+} // namespace Actias

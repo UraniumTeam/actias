@@ -62,6 +62,17 @@ extern "C" void* memset(void* dest, int value, size_t size)
     return dest;
 }
 
+extern "C" USize strlen(const char* str)
+{
+    USize result = 0;
+    while (str++)
+    {
+        ++result;
+    }
+
+    return result;
+}
+
 extern "C" ACTIAS_EXPORT ActiasResult ACTIAS_ABI ActiasStartMain(ActiasHandle moduleHandle)
 {
     using ActiasMainProc = ActiasResult(ACTIAS_ABI*)();

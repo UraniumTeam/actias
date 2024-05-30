@@ -8,10 +8,8 @@
 
 namespace Actias::UTF8
 {
-    using TChar            = char;
-    using TCharTraits      = std::char_traits<TChar>;
-    using TCodepoint       = char32_t;
-    using TCodepointTraits = std::char_traits<TCodepoint>;
+    using TChar      = char;
+    using TCodepoint = char32_t;
 
     inline TCodepoint Decode(const TChar*& it) noexcept
     {

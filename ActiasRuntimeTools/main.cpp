@@ -1,3 +1,4 @@
+#include <Actias/IO/Console.hpp>
 #include <Actias/IO/FileSystem.hpp>
 #include <Actias/System/Memory.h>
 #include <Actias/System/Runtime.h>
@@ -67,7 +68,8 @@ static int Build(StringSlice executable, bool library)
 
     if (writeResult.IsErr())
     {
-        std::cerr << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
+        IO::Console::WriteErr("Error writing ACBX file: ");
+        IO::Console::WriteLineErr(IO::GetResultDesc(writeResult.UnwrapErr()));
         return EXIT_FAILURE;
     }
 
