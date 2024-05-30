@@ -6,7 +6,8 @@
 #include <Actias/System/Assert.h>
 #include <Actias/System/Window.h>
 
-#include <Actias/IO/FileHandle.hpp>
+#include <Actias/Containers/HashSet.hpp>
+#include <Actias/IO/FileSystem.hpp>
 #include <Actias/System/Streams.h>
 #include <algorithm>
 #include <cstdint>
@@ -314,7 +315,7 @@ private:
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
         List<VkDeviceQueueCreateInfo> queueCreateInfos;
-        std::set<UInt32> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+        HashSet<UInt32> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
 
         float queuePriority = 1.0f;
         for (UInt32 queueFamily : uniqueQueueFamilies)
@@ -494,8 +495,8 @@ private:
 
     void createGraphicsPipeline()
     {
-        const auto vertShaderCode = IO::File::ReadAllBytes("../../Samples/HelloVulkan/shader.vert.spv").Unwrap();
-        const auto fragShaderCode = IO::File::ReadAllBytes("../../Samples/HelloVulkan/shader.frag.spv").Unwrap();
+        const auto vertShaderCode = IO::FileSystem::ReadAllBytes("../../Samples/HelloVulkan/shader.vert.spv").Unwrap();
+        const auto fragShaderCode = IO::FileSystem::ReadAllBytes("../../Samples/HelloVulkan/shader.frag.spv").Unwrap();
 
         VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
         VkShaderModule fragShaderModule = createShaderModule(fragShaderCode);
@@ -895,14 +896,14 @@ private:
         availableExtensions.Resize(extensionCount);
         vkEnumerateDeviceExtensionProperties(dev, nullptr, &extensionCount, availableExtensions.Data());
 
-        std::set<String> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+        HashSet<String> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
         for (const auto& extension : availableExtensions)
         {
-            requiredExtensions.erase(extension.extensionName);
+            requiredExtensions.Erase(extension.extensionName);
         }
 
-        return requiredExtensions.empty();
+        return requiredExtensions.Empty();
     }
 
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice dev)
