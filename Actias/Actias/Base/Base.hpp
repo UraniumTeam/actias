@@ -1,5 +1,5 @@
 #pragma once
-#include <Actias/Base/wyhash.h>
+#include <Actias/Base/Hash.hpp>
 #include <Actias/System/Assert.h>
 #include <Actias/System/Platform.h>
 #include <atomic>
@@ -162,38 +162,6 @@ namespace Actias
         auto typeBitCount = sizeof(T) * 8;
         auto mask         = bitCount == typeBitCount ? static_cast<T>(-1) : ((1 << bitCount) - 1);
         return static_cast<T>(mask << leftShift);
-    }
-
-    inline void HashCombine(std::size_t& /* seed */) {}
-
-    //! \brief Combine hashes of specified values with seed.
-    //!
-    //! \tparam Args - Types of values.
-    //!
-    //! \param seed - Initial hash value to combine with.
-    //! \param args - The values to calculate hash of.
-    template<typename T, typename... Args>
-    inline void HashCombine(std::size_t& seed, const T& value, const Args&... args)
-    {
-        std::hash<T> hasher;
-        seed ^= hasher(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        HashCombine(seed, args...);
-    }
-
-    //! \brief Define std::hash<> for a type.
-#define ACTIAS_MAKE_HASHABLE(TypeName, Template, ...)                                                                            \
-    namespace std                                                                                                                \
-    {                                                                                                                            \
-        template<Template>                                                                                                       \
-        struct hash<TypeName>                                                                                                    \
-        {                                                                                                                        \
-            inline size_t operator()(const TypeName& value) const noexcept                                                       \
-            {                                                                                                                    \
-                size_t seed = 0;                                                                                                 \
-                ::Actias::HashCombine(seed, __VA_ARGS__);                                                                        \
-                return seed;                                                                                                     \
-            }                                                                                                                    \
-        };                                                                                                                       \
     }
 
 #if __cpp_lib_assume_aligned

@@ -98,19 +98,18 @@ namespace Actias
         }
 
         inline HashSet(std::initializer_list<T> initList)
-            : m_ElementPool(TElementsInPage)
+            : HashSet()
         {
-            m_Buckets.Resize(TBucketCount);
             for (const auto& element : initList)
             {
                 Add(element);
             }
         }
 
-        inline HashSet(const char* const* first, const char* const* last)
-            : m_ElementPool(TElementsInPage)
+        template<class TIter>
+        inline HashSet(const TIter& first, const TIter& last)
+            : HashSet()
         {
-            m_Buckets.Resize(TBucketCount);
             for (auto i = first; i != last; ++i)
             {
                 Add(*i);
@@ -132,7 +131,7 @@ namespace Actias
 
         inline bool Add(const T& element)
         {
-            const USize hash        = std::hash<T>{}(element);
+            const USize hash        = Hash<T>{}(element);
             const USize bucketIndex = hash % m_Buckets.Size();
 
             Element* pCurrent = m_Buckets[bucketIndex];
@@ -153,7 +152,7 @@ namespace Actias
 
         inline bool Add(T&& element)
         {
-            const USize hash        = std::hash<T>{}(element);
+            const USize hash        = Hash<T>{}(element);
             const USize bucketIndex = hash % m_Buckets.Size();
 
             Element* pCurrent = m_Buckets[bucketIndex];
@@ -174,7 +173,7 @@ namespace Actias
 
         inline bool Erase(const T& element)
         {
-            const USize hash        = std::hash<T>{}(element);
+            const USize hash        = Hash<T>{}(element);
             const USize bucketIndex = hash % m_Buckets.Size();
 
             Element* pCurrent = m_Buckets[bucketIndex];
@@ -192,6 +191,7 @@ namespace Actias
                     {
                         m_Buckets[bucketIndex] = pCurrent->pNext;
                     }
+
                     m_ElementPool.Delete(pCurrent);
                     return true;
                 }
@@ -203,9 +203,9 @@ namespace Actias
             return false;
         }
 
-        [[nodiscard]] inline bool Contains(const T& element)
+        [[nodiscard]] inline bool Contains(const T& element) const
         {
-            const USize hash        = std::hash<T>{}(element);
+            const USize hash        = Hash<T>{}(element);
             const USize bucketIndex = hash % m_Buckets.Size();
 
             Element* pCurrent = m_Buckets[bucketIndex];
@@ -248,6 +248,5 @@ namespace Actias
         {
             return Size() == 0;
         }
-
     };
 } // namespace Actias

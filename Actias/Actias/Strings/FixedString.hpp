@@ -359,16 +359,13 @@ namespace Actias
     using FixStr512 = FixedString<512>;
 
     using FixStr = FixStr256;
-} // namespace Actias
 
-namespace std
-{
     template<USize TCapacity>
-    struct hash<Actias::FixedString<TCapacity>>
+    struct Hash<Actias::FixedString<TCapacity>>
     {
         inline size_t operator()(const Actias::FixedString<TCapacity>& str) const noexcept
         {
             return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
-} // namespace std
+} // namespace Actias

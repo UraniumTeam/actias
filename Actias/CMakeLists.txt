@@ -5,6 +5,7 @@ set(SRC
     Actias/Base/Base.hpp
     Actias/Base/Byte.hpp
     Actias/Base/Flags.hpp
+    Actias/Base/Hash.hpp
     Actias/Base/StartMain.cpp
     Actias/Base/wyhash.h
 

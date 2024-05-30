@@ -1,25 +1,14 @@
 // Code adapted from https://vulkan-tutorial.com
 
+#include <Actias/Containers/HashSet.hpp>
 #include <Actias/Containers/List.hpp>
+#include <Actias/IO/Console.hpp>
+#include <Actias/IO/FileSystem.hpp>
 #include <Actias/Strings/String.hpp>
 #include <Actias/System/ActiasVulkan.h>
 #include <Actias/System/Assert.h>
-#include <Actias/System/Window.h>
-
-#include <Actias/Containers/HashSet.hpp>
-#include <Actias/IO/FileSystem.hpp>
 #include <Actias/System/Streams.h>
-#include <algorithm>
-#include <cstdint>
-#include <cstdlib>
-#include <cstring>
-#include <fstream>
-#include <iostream>
-#include <limits>
-#include <optional>
-#include <set>
-#include <stdexcept>
-#include <vector>
+#include <Actias/System/Window.h>
 
 using namespace Actias;
 
@@ -67,12 +56,14 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
 
 struct QueueFamilyIndices
 {
-    std::optional<UInt32> graphicsFamily;
-    std::optional<UInt32> presentFamily;
+    UInt32 graphicsFamily : 31;
+    UInt32 graphicsFamilyHasValue : 1;
+    UInt32 presentFamily : 31;
+    UInt32 presentFamilyHasValue : 1;
 
-    bool isComplete()
+    bool isComplete() const
     {
-        return graphicsFamily.has_value() && presentFamily.has_value();
+        return graphicsFamilyHasValue && presentFamilyHasValue;
     }
 };
 
@@ -205,7 +196,8 @@ private:
 
         if (enableValidationLayers && !checkValidationLayerSupport())
         {
-            //    throw std::runtime_error("validation layers requested, but not available!");
+            IO::Console::WriteLineErr("validation layers requested, but not available!");
+            ACTIAS_Assert(false);
         }
 
         VkApplicationInfo appInfo{};
@@ -242,7 +234,8 @@ private:
 
         if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create instance!");
+            IO::Console::WriteLineErr("failed to create instance!");
+            ACTIAS_Assert(false);
         }
 
         volkLoadInstance(instance);
@@ -269,7 +262,8 @@ private:
 
         if (CreateDebugUtilsMessengerEXT(instance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to set up debug messenger!");
+            IO::Console::WriteLineErr("failed to set up debug messenger!");
+            ACTIAS_Assert(false);
         }
     }
 
@@ -277,7 +271,8 @@ private:
     {
         if (ActiasCreateWindowSurface(instance, window, nullptr, &surface) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create window surface!");
+            IO::Console::WriteLineErr("failed to create window surface!");
+            ACTIAS_Assert(false);
         }
     }
 
@@ -288,7 +283,8 @@ private:
 
         if (deviceCount == 0)
         {
-            //    throw std::runtime_error("failed to find GPUs with Vulkan support!");
+            IO::Console::WriteLineErr("failed to find GPUs with Vulkan support!");
+            ACTIAS_Assert(false);
         }
 
         List<VkPhysicalDevice> devices;
@@ -306,7 +302,8 @@ private:
 
         if (physicalDevice == VK_NULL_HANDLE)
         {
-            //    throw std::runtime_error("failed to find a suitable GPU!");
+            IO::Console::WriteLineErr("failed to find a suitable GPU!");
+            ACTIAS_Assert(false);
         }
     }
 
@@ -315,7 +312,7 @@ private:
         QueueFamilyIndices indices = findQueueFamilies(physicalDevice);
 
         List<VkDeviceQueueCreateInfo> queueCreateInfos;
-        HashSet<UInt32> uniqueQueueFamilies = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+        HashSet<UInt32> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
 
         float queuePriority = 1.0f;
         for (UInt32 queueFamily : uniqueQueueFamilies)
@@ -353,13 +350,14 @@ private:
 
         if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create logical device!");
+            IO::Console::WriteLineErr("failed to create logical device!");
+            ACTIAS_Assert(false);
         }
 
         volkLoadDevice(device);
 
-        vkGetDeviceQueue(device, indices.graphicsFamily.value(), 0, &graphicsQueue);
-        vkGetDeviceQueue(device, indices.presentFamily.value(), 0, &presentQueue);
+        vkGetDeviceQueue(device, indices.graphicsFamily, 0, &graphicsQueue);
+        vkGetDeviceQueue(device, indices.presentFamily, 0, &presentQueue);
     }
 
     void createSwapChain()
@@ -388,7 +386,7 @@ private:
         createInfo.imageUsage       = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
         QueueFamilyIndices indices  = findQueueFamilies(physicalDevice);
-        UInt32 queueFamilyIndices[] = { indices.graphicsFamily.value(), indices.presentFamily.value() };
+        UInt32 queueFamilyIndices[] = { indices.graphicsFamily, indices.presentFamily };
 
         if (indices.graphicsFamily != indices.presentFamily)
         {
@@ -410,7 +408,8 @@ private:
 
         if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create swap chain!");
+            IO::Console::WriteLineErr("failed to create swap chain!");
+            ACTIAS_Assert(false);
         }
 
         vkGetSwapchainImagesKHR(device, swapChain, &imageCount, nullptr);
@@ -444,7 +443,8 @@ private:
 
             if (vkCreateImageView(device, &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS)
             {
-                //    throw std::runtime_error("failed to create image views!");
+                IO::Console::WriteLineErr("failed to create image views!");
+                ACTIAS_Assert(false);
             }
         }
     }
@@ -489,7 +489,8 @@ private:
 
         if (vkCreateRenderPass(device, &renderPassInfo, nullptr, &renderPass) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create render pass!");
+            IO::Console::WriteLineErr("failed to create render pass!");
+            ACTIAS_Assert(false);
         }
     }
 
@@ -574,7 +575,8 @@ private:
 
         if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create pipeline layout!");
+            IO::Console::WriteLineErr("failed to create pipeline layout!");
+            ACTIAS_Assert(false);
         }
 
         VkGraphicsPipelineCreateInfo pipelineInfo{};
@@ -595,7 +597,8 @@ private:
 
         if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create graphics pipeline!");
+            IO::Console::WriteLineErr("failed to create graphics pipeline!");
+            ACTIAS_Assert(false);
         }
 
         vkDestroyShaderModule(device, fragShaderModule, nullptr);
@@ -621,7 +624,8 @@ private:
 
             if (vkCreateFramebuffer(device, &framebufferInfo, nullptr, &swapChainFramebuffers[i]) != VK_SUCCESS)
             {
-                //    throw std::runtime_error("failed to create framebuffer!");
+                IO::Console::WriteLineErr("failed to create framebuffer!");
+                ACTIAS_Assert(false);
             }
         }
     }
@@ -633,11 +637,12 @@ private:
         VkCommandPoolCreateInfo poolInfo{};
         poolInfo.sType            = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         poolInfo.flags            = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-        poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+        poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily;
 
         if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create command pool!");
+            IO::Console::WriteLineErr("failed to create command pool!");
+            ACTIAS_Assert(false);
         }
     }
 
@@ -653,7 +658,8 @@ private:
 
         if (vkAllocateCommandBuffers(device, &allocInfo, commandBuffers.Data()) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to allocate command buffers!");
+            IO::Console::WriteLineErr("failed to allocate command buffers!");
+            ACTIAS_Assert(false);
         }
     }
 
@@ -664,7 +670,8 @@ private:
 
         if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to begin recording command buffer!");
+            IO::Console::WriteLineErr("failed to begin recording command buffer!");
+            ACTIAS_Assert(false);
         }
 
         VkRenderPassBeginInfo renderPassInfo{};
@@ -702,7 +709,8 @@ private:
 
         if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to record command buffer!");
+            IO::Console::WriteLineErr("failed to record command buffer!");
+            ACTIAS_Assert(false);
         }
     }
 
@@ -725,7 +733,8 @@ private:
                 || vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS
                 || vkCreateFence(device, &fenceInfo, nullptr, &inFlightFences[i]) != VK_SUCCESS)
             {
-                //    throw std::runtime_error("failed to create synchronization objects for a frame!");
+                IO::Console::WriteLineErr("failed to create synchronization objects for a frame!");
+                ACTIAS_Assert(false);
             }
         }
     }
@@ -759,7 +768,8 @@ private:
 
         if (vkQueueSubmit(graphicsQueue, 1, &submitInfo, inFlightFences[currentFrame]) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to submit draw command buffer!");
+            IO::Console::WriteLineErr("failed to submit draw command buffer!");
+            ACTIAS_Assert(false);
         }
 
         VkPresentInfoKHR presentInfo{};
@@ -789,7 +799,8 @@ private:
         VkShaderModule shaderModule;
         if (vkCreateShaderModule(device, &createInfo, nullptr, &shaderModule) != VK_SUCCESS)
         {
-            //    throw std::runtime_error("failed to create shader module!");
+            IO::Console::WriteLineErr("failed to create shader module!");
+            ACTIAS_Assert(false);
         }
 
         return shaderModule;
@@ -908,7 +919,7 @@ private:
 
     QueueFamilyIndices findQueueFamilies(VkPhysicalDevice dev)
     {
-        QueueFamilyIndices indices;
+        QueueFamilyIndices indices = { 0 };
 
         UInt32 queueFamilyCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(dev, &queueFamilyCount, nullptr);
@@ -922,7 +933,8 @@ private:
         {
             if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
             {
-                indices.graphicsFamily = i;
+                indices.graphicsFamily         = i;
+                indices.graphicsFamilyHasValue = true;
             }
 
             VkBool32 presentSupport = false;
@@ -930,7 +942,8 @@ private:
 
             if (presentSupport)
             {
-                indices.presentFamily = i;
+                indices.presentFamily         = i;
+                indices.presentFamilyHasValue = true;
             }
 
             if (indices.isComplete())
@@ -995,8 +1008,8 @@ private:
     static VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT, VkDebugUtilsMessageTypeFlagsEXT,
                                                         const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void*)
     {
-        std::cerr << "validation layer: " << pCallbackData->pMessage << std::endl;
-
+        IO::Console::WriteErr("validation layer: ");
+        IO::Console::WriteLineErr(pCallbackData->pMessage);
         return VK_FALSE;
     }
 };
@@ -1004,16 +1017,7 @@ private:
 int main()
 {
     HelloTriangleApplication app;
-
-    try
-    {
-        app.run();
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
-    }
+    app.run();
 
     return EXIT_SUCCESS;
 }

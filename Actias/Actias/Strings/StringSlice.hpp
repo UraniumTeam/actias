@@ -434,21 +434,13 @@ namespace Actias
             return UUID::TryParse(str.Data(), result, false) ? ParseErrorCode::None : ParseErrorCode::InvalidSyntax;
         }
     };
-} // namespace Actias
-
-namespace std
-{
-    inline ostream& operator<<(ostream& stream, Actias::StringSlice str)
-    {
-        return stream << std::string_view(str.Data(), str.Size());
-    }
 
     template<>
-    struct hash<Actias::StringSlice>
+    struct Hash<Actias::StringSlice>
     {
         inline size_t operator()(const Actias::StringSlice& str) const noexcept
         {
             return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
-} // namespace std
+} // namespace Actias

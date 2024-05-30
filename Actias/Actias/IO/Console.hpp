@@ -6,4 +6,7 @@ namespace Actias::IO::Console
 {
     void Write(StringSlice str);
     void WriteLine(StringSlice str);
+
+    void WriteErr(StringSlice str);
+    void WriteLineErr(StringSlice str);
 } // namespace Actias::IO::Console
