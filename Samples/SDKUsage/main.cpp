@@ -19,7 +19,7 @@ int main()
     }
 
 #if ACTIAS_WINDOWS
-    auto dllRead = File::ReadAllBytes("TestLibrary.dll");
+    auto dllRead = FileSystem::ReadAllBytes("TestLibrary.dll");
 
     if (!dllRead)
     {
@@ -48,7 +48,7 @@ int main()
     Ptr<IBlob> pExecutableData;
     ActiasBuildExecutable(&pExecutableData, &buildInfo);
 
-    auto writeResult = File::WriteBlob("TestLibrary.acbl", pExecutableData.Get(), OpenMode::Create);
+    auto writeResult = FileSystem::WriteBlob("TestLibrary.acbl", pExecutableData.Get(), OpenMode::Create);
     if (writeResult.IsErr())
     {
         std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;

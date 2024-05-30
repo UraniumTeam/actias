@@ -97,6 +97,26 @@ namespace Actias
             m_Buckets.Resize(TBucketCount);
         }
 
+        inline HashSet(std::initializer_list<T> initList)
+            : m_ElementPool(TElementsInPage)
+        {
+            m_Buckets.Resize(TBucketCount);
+            for (const auto& element : initList)
+            {
+                Add(element);
+            }
+        }
+
+        inline HashSet(const char* const* first, const char* const* last)
+            : m_ElementPool(TElementsInPage)
+        {
+            m_Buckets.Resize(TBucketCount);
+            for (auto i = first; i != last; ++i)
+            {
+                Add(*i);
+            }
+        }
+
         inline ~HashSet()
         {
             for (Element* pBucket : m_Buckets)
@@ -152,6 +172,37 @@ namespace Actias
             return true;
         }
 
+        inline bool Erase(const T& element)
+        {
+            const USize hash        = std::hash<T>{}(element);
+            const USize bucketIndex = hash % m_Buckets.Size();
+
+            Element* pCurrent = m_Buckets[bucketIndex];
+            Element* pPrev    = nullptr;
+
+            while (pCurrent)
+            {
+                if (pCurrent->Value == element)
+                {
+                    if (pPrev)
+                    {
+                        pPrev->pNext = pCurrent->pNext;
+                    }
+                    else
+                    {
+                        m_Buckets[bucketIndex] = pCurrent->pNext;
+                    }
+                    m_ElementPool.Delete(pCurrent);
+                    return true;
+                }
+
+                pPrev    = pCurrent;
+                pCurrent = pCurrent->pNext;
+            }
+
+            return false;
+        }
+
         [[nodiscard]] inline bool Contains(const T& element)
         {
             const USize hash        = std::hash<T>{}(element);
@@ -192,5 +243,11 @@ namespace Actias
         {
             return Iterator{ this, 0, nullptr };
         }
+
+        [[nodiscard]] inline bool Empty() const
+        {
+            return Size() == 0;
+        }
+
     };
 } // namespace Actias
