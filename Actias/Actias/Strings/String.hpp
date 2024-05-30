@@ -621,12 +621,9 @@ namespace Actias
             return ParseErrorCode::None;
         }
     };
-} // namespace Actias
 
-namespace std
-{
     template<>
-    struct hash<Actias::String>
+    struct Hash<Actias::String>
     {
         inline size_t operator()(const Actias::String& str) const noexcept
         {
