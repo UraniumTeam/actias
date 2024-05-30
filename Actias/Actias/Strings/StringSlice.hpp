@@ -175,7 +175,7 @@ namespace Actias
 
         inline constexpr StringSlice(const TChar* data) noexcept
             : m_Data(data)
-            , m_Size(data == nullptr ? 0 : std::char_traits<TChar>::length(data))
+            , m_Size(data == nullptr ? 0 : Str::ByteLength(data))
         {
         }
 

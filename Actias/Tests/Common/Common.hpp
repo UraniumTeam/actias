@@ -62,17 +62,14 @@ public:
     }
 };
 
-namespace std
+template<>
+struct Actias::Hash<MockObject> final
 {
-    template<>
-    struct hash<MockObject> final
+    inline size_t operator()(const MockObject& value) const
     {
-        inline size_t operator()(const MockObject& value) const
-        {
-            return value.GetHash();
-        }
-    };
-} // namespace std
+        return value.GetHash();
+    }
+};
 
 class TestAllocator : public Actias::IAllocator
 {

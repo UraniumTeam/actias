@@ -25,7 +25,7 @@ namespace Actias::Runtime::Kernel
 
     class Impl
     {
-        std::unordered_map<FixStr512, ModuleInfo*> m_ModuleMap;
+        std::unordered_map<FixStr512, ModuleInfo*, Hash<FixStr512>> m_ModuleMap;
 
     public:
         inline LockScope AquireLock()

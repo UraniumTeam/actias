@@ -20,9 +20,8 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
 using Actias::List;
 using Actias::String;
 
-const List<const char*> validationLayers = { "VK_LAYER_KHRONOS_validation" };
-
-const List<const char*> deviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+const char* validationLayers[] = { "VK_LAYER_KHRONOS_validation" };
+const char* deviceExtensions[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 #ifdef NDEBUG
 const bool enableValidationLayers = false;
@@ -79,6 +78,7 @@ class HelloTriangleApplication
 public:
     void run()
     {
+        IO::Console::WriteLine("Staring Hello Vulkan...");
         initWindow();
         initVulkan();
         mainLoop();
@@ -219,8 +219,8 @@ private:
         VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
         if (enableValidationLayers)
         {
-            createInfo.enabledLayerCount   = static_cast<UInt32>(validationLayers.Size());
-            createInfo.ppEnabledLayerNames = validationLayers.Data();
+            createInfo.enabledLayerCount   = static_cast<UInt32>(std::size(validationLayers));
+            createInfo.ppEnabledLayerNames = validationLayers;
 
             populateDebugMessengerCreateInfo(debugCreateInfo);
             createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*)&debugCreateInfo;
@@ -335,13 +335,13 @@ private:
 
         createInfo.pEnabledFeatures = &deviceFeatures;
 
-        createInfo.enabledExtensionCount   = static_cast<UInt32>(deviceExtensions.Size());
-        createInfo.ppEnabledExtensionNames = deviceExtensions.Data();
+        createInfo.enabledExtensionCount   = static_cast<UInt32>(std::size(deviceExtensions));
+        createInfo.ppEnabledExtensionNames = deviceExtensions;
 
         if (enableValidationLayers)
         {
-            createInfo.enabledLayerCount   = static_cast<UInt32>(validationLayers.Size());
-            createInfo.ppEnabledLayerNames = validationLayers.Data();
+            createInfo.enabledLayerCount   = static_cast<UInt32>(std::size(validationLayers));
+            createInfo.ppEnabledLayerNames = validationLayers;
         }
         else
         {
@@ -907,7 +907,7 @@ private:
         availableExtensions.Resize(extensionCount);
         vkEnumerateDeviceExtensionProperties(dev, nullptr, &extensionCount, availableExtensions.Data());
 
-        HashSet<String> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+        HashSet<String> requiredExtensions(std::begin(deviceExtensions), std::end(deviceExtensions));
 
         for (const auto& extension : availableExtensions)
         {
@@ -989,7 +989,7 @@ private:
 
             for (const auto& layerProperties : availableLayers)
             {
-                if (strcmp(layerName, layerProperties.layerName) == 0)
+                if (Str::ByteCompare(layerName, layerProperties.layerName) == 0)
                 {
                     layerFound = true;
                     break;

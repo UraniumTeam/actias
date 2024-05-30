@@ -51,7 +51,7 @@ namespace Actias
         }
 
         inline FixedString(const TChar* str) noexcept
-            : FixedString(str, TCharTraits::length(str))
+            : FixedString(str, Str::ByteLength(str))
         {
         }
 
@@ -173,7 +173,7 @@ namespace Actias
 
         inline FixedString& Append(const TChar* str)
         {
-            return Append(str, std::char_traits<TChar>::length(str));
+            return Append(str, Str::ByteLength(str));
         }
 
         inline FixedString& operator+=(StringSlice str)

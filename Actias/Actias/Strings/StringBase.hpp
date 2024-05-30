@@ -5,9 +5,7 @@
 namespace Actias
 {
     using UTF8::TChar;
-    using UTF8::TCharTraits;
     using UTF8::TCodepoint;
-    using UTF8::TCodepointTraits;
 
     class Str;
     class String;
@@ -110,9 +108,9 @@ namespace Actias
         using Iter = Internal::StrIterator;
 
     public:
-        [[nodiscard]] inline static USize ByteLength(const TChar* str) noexcept
+        [[nodiscard]] inline constexpr static USize ByteLength(const TChar* str) noexcept
         {
-            return strlen(str);
+            return __builtin_strlen(str);
         }
 
         [[nodiscard]] inline static USize Length(const TChar* str, USize byteSize) noexcept
@@ -127,7 +125,15 @@ namespace Actias
 
         [[nodiscard]] inline static Int32 ByteCompare(const TChar* lhs, const TChar* rhs) noexcept
         {
-            return strcmp(lhs, rhs);
+            while (*lhs == *rhs++)
+            {
+                if (*lhs++ == 0)
+                {
+                    return 0;
+                }
+            }
+
+            return (*reinterpret_cast<const UInt8*>(lhs) - *reinterpret_cast<const UInt8*>(--rhs));
         }
 
         [[nodiscard]] inline static Int32 Compare(const TChar* lhs, const TChar* rhs, size_t length1, size_t length2) noexcept
