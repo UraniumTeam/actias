@@ -1,3 +1,4 @@
+#include <Actias/IO/Console.hpp>
 #include <Actias/IO/FileSystem.hpp>
 #include <Actias/System/Runtime.h>
 #include <ActiasSDK/Driver/ExecutableBuilder.hpp>
@@ -51,7 +52,8 @@ int main()
     auto writeResult = FileSystem::WriteBlob("TestLibrary.acbl", pExecutableData.Get(), OpenMode::Create);
     if (writeResult.IsErr())
     {
-        std::cout << "Error writing ACBX file: " << IO::GetResultDesc(writeResult.UnwrapErr()) << std::endl;
+        IO::Console::WriteErr("Error writing ACBX file: ");
+        IO::Console::WriteLineErr(IO::GetResultDesc(writeResult.UnwrapErr()));
         return EXIT_FAILURE;
     }
 #endif

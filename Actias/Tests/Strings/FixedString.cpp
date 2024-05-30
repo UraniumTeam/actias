@@ -33,7 +33,7 @@ TEST(FixedStr, Length)
 
 TEST(FixedStr, CodepointAt)
 {
-    const char* utf8 = u8"qЯwgЫЧ";
+    const char* utf8 = "qЯwgЫЧ";
     ASSERT_TRUE(UTF8::Valid(utf8));
 
     FixStr str = utf8;

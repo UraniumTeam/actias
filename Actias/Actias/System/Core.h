@@ -19,6 +19,7 @@
 #include <Actias/System/Base.h>
 #include <Actias/System/Platform/Common/InlineCopyMemory.h>
 #include <Actias/System/Platform/Common/InlineSetMemory.h>
+#include <Actias/System/Platform/Common/InlineStringLength.h>
 #include <Actias/System/Result.h>
 
 ACTIAS_BEGIN_C

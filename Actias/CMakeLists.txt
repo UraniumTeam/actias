@@ -87,6 +87,7 @@ set(SRC_SYSTEM
     Actias/System/Platform/Common/Core.c
     Actias/System/Platform/Common/InlineCopyMemory.h
     Actias/System/Platform/Common/InlineSetMemory.h
+    Actias/System/Platform/Common/InlineStringLength.h
     Actias/System/Platform/Common/Memory.c
     Actias/System/Platform/Common/Path.c
     Actias/System/Platform/Common/Runtime.c
