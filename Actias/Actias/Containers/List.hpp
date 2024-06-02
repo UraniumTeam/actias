@@ -1,7 +1,6 @@
 #pragma once
 #include <Actias/Memory/Memory.hpp>
 #include <algorithm>
-#include <tuple>
 
 namespace Actias
 {
@@ -13,18 +12,6 @@ namespace Actias
     class List final
     {
         inline static constexpr USize Alignment = 16;
-
-        template<USize I>
-        [[nodiscard]] inline const T& GetAt() const
-        {
-            return m_Begin[I];
-        }
-
-        template<USize... I>
-        [[nodiscard]] inline auto AsTupleImpl(std::index_sequence<I...>) const
-        {
-            return std::make_tuple(GetAt<I>()...);
-        }
 
         inline T* Allocate(USize n) noexcept
         {
@@ -92,7 +79,7 @@ namespace Actias
         {
             if constexpr (std::is_trivially_copyable_v<T>)
             {
-                memcpy(dest, src, count * sizeof(T));
+                ActiasCopyMemory(dest, src, count * sizeof(T));
             }
             else
             {
@@ -105,7 +92,8 @@ namespace Actias
 
         [[nodiscard]] inline USize Recommend(USize newSize) const noexcept
         {
-            return std::max(2 * Capacity(), newSize);
+            const USize twiceCap = 2 * Capacity();
+            return twiceCap > newSize ? twiceCap : newSize;
         }
 
         inline void AppendImpl(USize n, bool shrink = false)
@@ -523,18 +511,19 @@ namespace Actias
         inline void RemoveAt(USize index)
         {
             ACTIAS_Assert(index < Size() && "Invalid index");
-            if constexpr (std::is_trivially_copyable_v<T>)
+            // TODO: memmove is not implemented
+            // if constexpr (std::is_trivially_copyable_v<T>)
+            // {
+            //     memmove(m_Begin + index, m_Begin + index + 1, Size() - index - 1);
+            // }
+            // else
+            // {
+            auto size = Size();
+            for (USize i = index; i < size - 1; ++i)
             {
-                memmove(m_Begin + index, m_Begin + index + 1, Size() - index - 1);
+                m_Begin[i] = m_Begin[i + 1];
             }
-            else
-            {
-                auto size = Size();
-                for (USize i = index; i < size - 1; ++i)
-                {
-                    m_Begin[i] = m_Begin[i + 1];
-                }
-            }
+            // }
 
             DestructAtEnd(m_End - 1);
         }
@@ -545,7 +534,7 @@ namespace Actias
             ACTIAS_Assert(index < Size() && "Invalid index");
             if (index < Size() - 1)
             {
-                std::swap(m_Begin[index], m_Begin[Size() - 1]);
+                Actias::Swap(m_Begin[index], m_Begin[Size() - 1]);
             }
 
             DestructAtEnd(m_End - 1);
@@ -580,10 +569,10 @@ namespace Actias
         //! \bried Swap two lists.
         inline void Swap(List<T>& other)
         {
-            std::swap(m_Begin, other.m_Begin);
-            std::swap(m_End, other.m_End);
-            std::swap(m_EndCap, other.m_EndCap);
-            std::swap(m_Allocator, other.m_Allocator);
+            Actias::Swap(m_Begin, other.m_Begin);
+            Actias::Swap(m_End, other.m_End);
+            Actias::Swap(m_EndCap, other.m_EndCap);
+            Actias::Swap(m_Allocator, other.m_Allocator);
         }
 
         //! \brief Set the capacity to be equal to the size. Useful to free wasted memory.
@@ -723,14 +712,6 @@ namespace Actias
         [[nodiscard]] inline const T* Data() const noexcept
         {
             return m_Begin;
-        }
-
-        //! \brief Convert a list to a tuple that contains all of its elements. Asserts that `I == Size()`.
-        template<USize I>
-        [[nodiscard]] inline auto AsTuple() const
-        {
-            ACTIAS_Assert(I == Size() && "Tuple size must match List size");
-            return AsTupleImpl(std::make_index_sequence<I>{});
         }
 
         //! \brief Get the pointer to the first element of the container and reset.

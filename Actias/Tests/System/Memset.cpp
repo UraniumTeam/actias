@@ -13,8 +13,8 @@ using FMemset = decltype(ActiasSetMemory);
 
 inline void TestMemset(USize bufferSize, FMemset* proc, UInt32 count = 1)
 {
-    const auto time = Actias::DateTime::UtcNow();
-    srand(static_cast<unsigned int>(time.Ticks()));
+    const auto time = Actias::UTCDateTime::Now();
+    srand(static_cast<unsigned int>(time.UnixTime()));
 
     UInt8 value = rand() % 0xFF;
     UInt8 guard = rand() % 0xFF;

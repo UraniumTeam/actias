@@ -29,12 +29,13 @@ namespace Actias::SDK::PE
 
         void ACTIAS_ABI CreateInformationHeader(ACBXFileInformationHeader* pHeader) override;
         void ACTIAS_ABI CreateSectionHeader(UInt32 sectionID, ACBXSectionHeader* pHeader) override;
+        void ACTIAS_ABI CreateRelocationBlocks(IBlobAllocator* pAllocator) override;
         void ACTIAS_ABI CreateExportTableHeader(ACBXExportTableHeader* pHeader) override;
         void ACTIAS_ABI CreateExportTableEntry(UInt64 entryID, ACBXExportTableEntry* pEntry,
-                                               ISymbolNameAllocator* pNameAllocator) override;
+                                               IBlobAllocator* pNameAllocator) override;
         void ACTIAS_ABI CreateImportTableHeader(ACBXImportTableHeader* pHeader) override;
         void ACTIAS_ABI CreateImportTableLibraryHeader(UInt64 libraryID, ACBXImportTableEntry* pEntry,
-                                                       ISymbolNameAllocator* pNameAllocator) override;
+                                                       IBlobAllocator* pNameAllocator) override;
         void ACTIAS_ABI CopySection(UInt32 sectionID, Byte* pDestination) override;
     };
 } // namespace Actias::SDK::PE

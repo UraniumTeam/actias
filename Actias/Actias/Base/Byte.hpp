@@ -1,6 +1,5 @@
 #pragma once
 #include <Actias/Base/Flags.hpp>
-#include <iomanip>
 
 namespace Actias
 {
@@ -23,11 +22,5 @@ namespace Actias
     inline std::enable_if_t<std::is_integral_v<T> || std::is_void_v<T>, const Byte*> ac_byte_cast(const T* ptr)
     {
         return reinterpret_cast<const Byte*>(ptr);
-    }
-
-    template<class TOStream>
-    inline TOStream& operator<<(TOStream& stream, Byte byte)
-    {
-        return stream << "0x" << std::setfill('0') << std::setw(2) << std::right << std::hex << static_cast<Int32>(byte);
     }
 } // namespace Actias

@@ -58,14 +58,14 @@ namespace Actias::SDK
         }
     };
 
-    class SymbolNameAllocator : public ISymbolNameAllocator
+    class BlobAllocator : public IBlobAllocator
     {
         // TODO: optimize this by allocating larger blocks of memory from the blob builder
         //   to group multiple name allocations
         BlobBuilder* m_pBlobBuilder;
 
     public:
-        inline SymbolNameAllocator(BlobBuilder* pBlobBuilder)
+        inline BlobAllocator(BlobBuilder* pBlobBuilder)
             : m_pBlobBuilder(pBlobBuilder)
         {
         }
@@ -104,14 +104,15 @@ extern "C" void ACTIAS_ABI ActiasBuildExecutable(IBlob** ppExecutableData, const
         pNative->CreateSectionHeader(i, pSectionHeader);
     }
 
-    SymbolNameAllocator nameAllocator(&builder);
+    BlobAllocator blobAllocator(&builder);
+    pNative->CreateRelocationBlocks(&blobAllocator);
 
     pExportHeader->Address = builder.NextAddress();
 
     auto* pExportTable = builder.Allocate<ACBXExportTableEntry>(pExportHeader->EntryCount);
     for (UInt64 i = 0; i < pExportHeader->EntryCount; ++i)
     {
-        pNative->CreateExportTableEntry(i, pExportTable + i, &nameAllocator);
+        pNative->CreateExportTableEntry(i, pExportTable + i, &blobAllocator);
     }
 
     if (pImportHeader->EntryCount > 0)
@@ -121,7 +122,7 @@ extern "C" void ACTIAS_ABI ActiasBuildExecutable(IBlob** ppExecutableData, const
         auto* pLibraryEntries = builder.Allocate<ACBXImportTableEntry>(pImportHeader->EntryCount);
         for (UInt64 i = 0; i < pImportHeader->EntryCount; ++i)
         {
-            pNative->CreateImportTableLibraryHeader(i, pLibraryEntries + i, &nameAllocator);
+            pNative->CreateImportTableLibraryHeader(i, pLibraryEntries + i, &blobAllocator);
         }
     }
 
