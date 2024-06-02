@@ -29,7 +29,7 @@ namespace Actias
 
         public:
             using iterator_category = std::bidirectional_iterator_tag;
-            using difference_type   = std::ptrdiff_t;
+            using difference_type   = SSize;
             using value_type        = TCodepoint;
             using pointer           = const TCodepoint*;
             using reference         = const TCodepoint&;

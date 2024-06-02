@@ -318,7 +318,7 @@ namespace Actias
             return m_pEnd;
         }
 
-        inline operator ArraySlice<std::add_const_t<T>>() const noexcept // NOLINT(google-explicit-constructor)
+        inline operator ArraySlice<std::add_const_t<T>>() const noexcept
         {
             return { Data(), Data() + Length() };
         }
@@ -334,8 +334,5 @@ namespace Actias
         }
     };
 
-#define ACTIAS_AllocateOnStack(type, size) ::Actias::ArraySlice<type>(static_cast<type*>(alloca(size)), size)
-#define ACTIAS_AllocateOnStackOrPool(type, size, threshold, pool, ownedArray)                                                    \
-    size > threshold;                                                                                                            \
-    auto ownedArray = size > threshold ? pool->Rent(size) : ACTIAS_AllocateOnStack(type, size)
+#define ACTIAS_StackAllocArraySlice(type, size) ::Actias::ArraySlice<type>(ACTIAS_StackAlloc(type, size), size)
 } // namespace Actias
