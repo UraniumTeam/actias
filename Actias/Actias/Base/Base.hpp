@@ -164,6 +164,23 @@ namespace Actias
         return static_cast<T>(mask << leftShift);
     }
 
+    template<class T>
+    inline void Swap(T& lhs, T& rhs)
+    {
+        T temp{ std::move(lhs) };
+        lhs = std::move(rhs);
+        rhs = std::move(temp);
+    }
+
+    template<class T, USize N>
+    inline void Swap(T (&a)[N], T (&b)[N])
+    {
+        for (USize i = 0; i < N; ++i)
+        {
+            Swap(a[i], b[i]);
+        }
+    }
+
 #if __cpp_lib_assume_aligned
 #    define ACTIAS_AssumeAligned(align, value) std::assume_aligned<align>(value)
 #else

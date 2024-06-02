@@ -2,6 +2,7 @@
 #include <Actias/Base/Base.hpp>
 #include <Actias/Memory/IAllocator.hpp>
 #include <Actias/RTTI/RTTI.hpp>
+#include <Actias/System/Atomic.h>
 
 namespace Actias
 {
@@ -25,22 +26,14 @@ namespace Actias
     //! \code{.cpp}
     //!     class MyObject : Object<IObject> {};
     //!
-    //!     ReferenceCounter* rc = malloc(sizeof(ReferenceCounter) + sizeof(MyObject));
+    //!     ReferenceCounter* rc = ActiasAlloc(sizeof(ReferenceCounter) + sizeof(MyObject));
     //!     MyObject* obj        = rc + sizeof(ReferenceCounter);
     //!     // ...
-    //!     free(rc); // frees memory of both the counter and the object.
-    //! \endcode
-    //!
-    //! This layout is used for better locality and performance: it groups two allocations into one.
-    //! The internal reference counting system also supports copying shared pointers using their raw pointers:
-    //! \code{.cpp}
-    //!     Ptr<MyObject> pObj1 = AllocateObject<MyObject>(); // refcount = 1
-    //!     Ptr<MyObject> pObj2 = pObj1;                      // refcount = 2 <-- Valid for std::shared_ptr too
-    //!     Ptr<MyObject> pObj3 = pObj1.Get();                // refcount = 3 <-- Also valid here!
+    //!     ActiasFree(rc); // frees memory of both the counter and the object.
     //! \endcode
     class ReferenceCounter final
     {
-        std::atomic<Int32> m_StrongRefCount;
+        ActiasAtomic32 m_StrongRefCount = { 0 };
         mutable IAllocator* m_pAllocator;
 
     public:
@@ -53,8 +46,7 @@ namespace Actias
         //!
         //! \param pAllocator - The allocator to use to free memory.
         inline explicit ReferenceCounter(IAllocator* pAllocator)
-            : m_StrongRefCount(0)
-            , m_pAllocator(pAllocator)
+            : m_pAllocator(pAllocator)
         {
         }
 
@@ -63,7 +55,7 @@ namespace Actias
         //! \return The new (incremented) number of strong references.
         inline UInt32 AddStrongRef()
         {
-            return ++m_StrongRefCount;
+            return ActiasAtomicFetchAdd32(&m_StrongRefCount, 1) + 1;
         }
 
         //! \brief Remove a strong reference from the counter.
@@ -78,7 +70,7 @@ namespace Actias
         template<class F>
         inline UInt32 ReleaseStrongRef(F&& destroyCallback)
         {
-            UInt32 refCount = --m_StrongRefCount; 
+            UInt32 refCount = ActiasAtomicFetchAdd32(&m_StrongRefCount, -1) - 1;
             if (refCount == 0)
             {
                 destroyCallback();
@@ -91,7 +83,7 @@ namespace Actias
         //! \brief Get number of strong references.
         inline UInt32 GetStrongRefCount() const
         {
-            return m_StrongRefCount;
+            return ActiasAtomicLoad32Relaxed(&m_StrongRefCount);
         }
     };
 } // namespace Actias

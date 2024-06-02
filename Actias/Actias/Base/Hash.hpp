@@ -29,17 +29,4 @@ namespace Actias
         seed ^= hasher(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
         HashCombine(seed, args...);
     }
-
-    //! \brief Define Actias::Hash<T> for a type.
-#define ACTIAS_MAKE_HASHABLE(TypeName, Template, ...)                                                                            \
-    template<Template>                                                                                                           \
-    struct Hash<TypeName>                                                                                                        \
-    {                                                                                                                            \
-        inline UInt64 operator()(const TypeName& value) const noexcept                                                           \
-        {                                                                                                                        \
-            UInt64 seed = 0;                                                                                                     \
-            ::Actias::HashCombine(seed, __VA_ARGS__);                                                                            \
-            return seed;                                                                                                         \
-        }                                                                                                                        \
-    };
 } // namespace Actias
