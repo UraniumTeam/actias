@@ -1,4 +1,5 @@
 #pragma once
+#include <Actias/Base/Hash.hpp>
 #include <Actias/System/Assert.h>
 #include <Actias/System/Platform.h>
 #include <atomic>
@@ -56,6 +57,7 @@ namespace Actias
         template<class T>
         inline constexpr SVWrapper TypeNameImpl()
         {
+            // TODO: we can't use RTTI in ACBX modules because of this std::string_view
 #if ACTIAS_COMPILER_MSVC
             std::string_view fn = __FUNCSIG__;
             fn.remove_prefix(fn.find_first_of("<") + 1);
@@ -112,8 +114,8 @@ namespace Actias
 
     //! \brief Align up an integer.
     //!
-    //! \param x     - Value to align.
-    //! \tparam A         - Alignment to use.
+    //! \param x  - Value to align.
+    //! \tparam A - Alignment to use.
     template<UInt32 A, class T>
     inline constexpr T AlignUp(T x)
     {
@@ -142,8 +144,8 @@ namespace Actias
 
     //! \brief Align down an integer.
     //!
-    //! \param x     - Value to align.
-    //! \tparam A         - Alignment to use.
+    //! \param x  - Value to align.
+    //! \tparam A - Alignment to use.
     template<UInt32 A, class T>
     inline constexpr T AlignDown(T x)
     {
@@ -162,36 +164,21 @@ namespace Actias
         return static_cast<T>(mask << leftShift);
     }
 
-    inline void HashCombine(std::size_t& /* seed */) {}
-
-    //! \brief Combine hashes of specified values with seed.
-    //!
-    //! \tparam Args - Types of values.
-    //!
-    //! \param [in,out] seed - Initial hash value to combine with.
-    //! \param [in]     args - The values to calculate hash of.
-    template<typename T, typename... Args>
-    inline void HashCombine(std::size_t& seed, const T& value, const Args&... args)
+    template<class T>
+    inline void Swap(T& lhs, T& rhs)
     {
-        std::hash<T> hasher;
-        seed ^= hasher(value) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-        HashCombine(seed, args...);
+        T temp{ std::move(lhs) };
+        lhs = std::move(rhs);
+        rhs = std::move(temp);
     }
 
-    //! \brief Define std::hash<> for a type.
-#define ACTIAS_MAKE_HASHABLE(TypeName, Template, ...)                                                                            \
-    namespace std                                                                                                                \
-    {                                                                                                                            \
-        template<Template>                                                                                                       \
-        struct hash<TypeName>                                                                                                    \
-        {                                                                                                                        \
-            inline size_t operator()(const TypeName& value) const noexcept                                                       \
-            {                                                                                                                    \
-                size_t seed = 0;                                                                                                 \
-                ::Actias::HashCombine(seed, __VA_ARGS__);                                                                        \
-                return seed;                                                                                                     \
-            }                                                                                                                    \
-        };                                                                                                                       \
+    template<class T, USize N>
+    inline void Swap(T (&a)[N], T (&b)[N])
+    {
+        for (USize i = 0; i < N; ++i)
+        {
+            Swap(a[i], b[i]);
+        }
     }
 
 #if __cpp_lib_assume_aligned

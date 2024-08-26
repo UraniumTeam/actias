@@ -1,5 +1,6 @@
 #pragma once
 #include <Actias/Strings/StringSlice.hpp>
+#include <Actias/System/Streams.h>
 #include <Actias/Utils/Result.hpp>
 
 namespace Actias::IO
@@ -35,14 +36,14 @@ namespace Actias::IO
     //! \brief File or stream open mode.
     enum class OpenMode
     {
-        None,      //!< None mode.
-        ReadOnly,  //!< Read only open mode.
-        WriteOnly, //!< Write only open mode.
-        Append,    //!< Append open mode.
-        Create,    //!< Create (new or rewrite existing) open mode.
-        CreateNew, //!< Create (new only) open mode.
-        Truncate,  //!< Truncate open mode.
-        ReadWrite  //!< Read and write open mode.
+        None      = ACTIAS_FILE_OPEN_MODE_NONE,       //!< None mode.
+        ReadOnly  = ACTIAS_FILE_OPEN_MODE_READ_ONLY,  //!< Read only open mode.
+        WriteOnly = ACTIAS_FILE_OPEN_MODE_WRITE_ONLY, //!< Write only open mode.
+        Append    = ACTIAS_FILE_OPEN_MODE_APPEND,     //!< Append open mode.
+        Create    = ACTIAS_FILE_OPEN_MODE_CREATE,     //!< Create (new or rewrite existing) open mode.
+        CreateNew = ACTIAS_FILE_OPEN_MODE_CREATE_NEW, //!< Create (new only) open mode.
+        Truncate  = ACTIAS_FILE_OPEN_MODE_TRUNCATE,   //!< Truncate open mode.
+        ReadWrite = ACTIAS_FILE_OPEN_MODE_READ_WRITE, //!< Read and write open mode.
     };
 
     //! \brief Check if writing is allowed with the specified open mode.
@@ -82,8 +83,8 @@ namespace Actias::IO
     //! \brief Seek mode.
     enum class SeekMode
     {
-        Begin,  //!< Begin seek mode.
-        End,    //!< End seek mode.
-        Current //!< Current seek mode.
+        Begin   = ACTIAS_FILE_SEEK_MODE_BEGIN,   //!< Begin seek mode.
+        Current = ACTIAS_FILE_SEEK_MODE_CURRENT, //!< Current seek mode
+        End     = ACTIAS_FILE_SEEK_MODE_END,     //!< End seek mode.
     };
 } // namespace Actias::IO

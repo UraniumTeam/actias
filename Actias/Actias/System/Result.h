@@ -33,7 +33,8 @@ enum ActiasResultValues
     ACTIAS_FAIL_INVALID_ARGUMENT      = -5, //!< Argument value has not been accepted.
     ACTIAS_FAIL_ARGUMENT_OUT_OF_RANGE = -6, //!< Argument value is outside the allowable range of values.
 
-    ACTIAS_TIMEOUT = 1, //!< Operation timed out.
+    ACTIAS_TIMEOUT                   = 1, //!< Operation timed out.
+    ACTIAS_NO_USER_ENTRY_POINT_FOUND = 2, //!< User-defined entry point function (ActiasMain) not found.
 
     // IO results
 

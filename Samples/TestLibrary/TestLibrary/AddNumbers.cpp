@@ -24,6 +24,6 @@ extern "C"
 
         ActiasHandle hStdout;
         ActiasGetStdFileHandle(ACTIAS_STDOUT, &hStdout);
-        ActiasWrite(hStdout, pMessage, 14, nullptr);
+        ActiasWriteFile(hStdout, pMessage, 14, nullptr);
     }
 }

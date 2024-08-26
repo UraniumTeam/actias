@@ -14,8 +14,8 @@ using FMemcpy = decltype(ActiasCopyMemory);
 
 inline void TestMemcopy(USize bufferSize, FMemcpy* proc, UInt32 count = 1)
 {
-    const auto time = Actias::DateTime::UtcNow();
-    srand(static_cast<unsigned int>(time.Ticks()));
+    const auto time = Actias::UTCDateTime::Now();
+    srand(static_cast<unsigned int>(time.UnixTime()));
 
     for (USize i = 0; i < bufferSize; ++i)
     {

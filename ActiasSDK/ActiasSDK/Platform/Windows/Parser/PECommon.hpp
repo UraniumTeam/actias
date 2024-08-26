@@ -74,5 +74,10 @@ namespace Actias::SDK::PE
             auto* bytes = reinterpret_cast<Byte*>(pImageBuffer) + Value;
             return reinterpret_cast<T*>(bytes);
         }
+
+        inline explicit operator bool() const noexcept
+        {
+            return Value;
+        }
     };
 } // namespace Actias::SDK::PE

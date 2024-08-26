@@ -12,7 +12,7 @@ ActiasResult ACTIAS_ABI RunMain(void*)
     auto fileHandleResult = ActiasGetStdFileHandle(ACTIAS_STDOUT, &handle);
     ACTIAS_Assert(fileHandleResult == ACTIAS_SUCCESS);
 
-    auto writeResult = ActiasWrite(handle, message, sizeof(message), nullptr);
+    auto writeResult = ActiasWriteFile(handle, message, sizeof(message), nullptr);
     ACTIAS_Assert(writeResult == ACTIAS_SUCCESS);
 
     return ACTIAS_SUCCESS;

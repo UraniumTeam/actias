@@ -51,7 +51,7 @@ namespace Actias
         }
 
         inline FixedString(const TChar* str) noexcept
-            : FixedString(str, TCharTraits::length(str))
+            : FixedString(str, Str::ByteLength(str))
         {
         }
 
@@ -173,7 +173,7 @@ namespace Actias
 
         inline FixedString& Append(const TChar* str)
         {
-            return Append(str, std::char_traits<TChar>::length(str));
+            return Append(str, Str::ByteLength(str));
         }
 
         inline FixedString& operator+=(StringSlice str)
@@ -356,20 +356,16 @@ namespace Actias
     using FixStr64  = FixedString<64>;
     using FixStr128 = FixedString<128>;
     using FixStr256 = FixedString<256>;
-    using FixStr512 = FixedString<256>;
+    using FixStr512 = FixedString<512>;
 
     using FixStr = FixStr256;
-} // namespace Actias
 
-namespace std
-{
     template<USize TCapacity>
-    struct hash<Actias::FixedString<TCapacity>>
+    struct Hash<Actias::FixedString<TCapacity>>
     {
         inline size_t operator()(const Actias::FixedString<TCapacity>& str) const noexcept
         {
-            std::hash<std::string_view> hasher;
-            return hasher(std::string_view(str.Data(), str.Size()));
+            return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
-} // namespace std
+} // namespace Actias

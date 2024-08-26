@@ -241,7 +241,7 @@ namespace Actias
         }
 
         inline String(const TChar* str) noexcept
-            : String(str, TCharTraits::length(str))
+            : String(str, Str::ByteLength(str))
         {
         }
 
@@ -432,7 +432,7 @@ namespace Actias
 
         inline String& Append(const TChar* str)
         {
-            return Append(str, std::char_traits<TChar>::length(str));
+            return Append(str, Str::ByteLength(str));
         }
 
         inline String& operator+=(StringSlice str)
@@ -621,17 +621,13 @@ namespace Actias
             return ParseErrorCode::None;
         }
     };
-} // namespace Actias
 
-namespace std
-{
     template<>
-    struct hash<Actias::String>
+    struct Hash<Actias::String>
     {
         inline size_t operator()(const Actias::String& str) const noexcept
         {
-            std::hash<std::string_view> hasher;
-            return hasher(std::string_view(str.Data(), str.Size()));
+            return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
-} // namespace std
+} // namespace Actias

@@ -23,6 +23,11 @@ namespace Actias::SDK
         //! \param pHeader - A pointer to the variable that receives the header data, address is already filled.
         virtual void ACTIAS_ABI CreateSectionHeader(UInt32 sectionID, ACBXSectionHeader* pHeader) = 0;
 
+        //! \brief Retrieve native executable relocation blocks and write them to ACBX relocation blocks.
+        //!
+        //! \param pAllocator - An allocator used to allocate the blocks.
+        virtual void ACTIAS_ABI CreateRelocationBlocks(IBlobAllocator* pAllocator) = 0;
+
         //! \brief Retrieve native executable export symbol table and write it to an ACBX export table header.
         //!
         //! \param pHeader - A pointer to the variable that receives the header data, address is already filled.
@@ -34,7 +39,7 @@ namespace Actias::SDK
         //! \param pEntry - A pointer to the variable that receives the entry data.
         //! \param pNameAllocator - An allocator used to allocate strings for symbol names.
         virtual void ACTIAS_ABI CreateExportTableEntry(UInt64 entryID, ACBXExportTableEntry* pEntry,
-                                                       ISymbolNameAllocator* pNameAllocator) = 0;
+                                                       IBlobAllocator* pNameAllocator) = 0;
 
         //! \brief Retrieve native executable import table and write it to an ACBX import table header.
         //!
@@ -47,7 +52,7 @@ namespace Actias::SDK
         //! \param pEntry - A pointer to the variable that receives the entry data.
         //! \param pNameAllocator - An allocator used to allocate strings for library names.
         virtual void ACTIAS_ABI CreateImportTableLibraryHeader(UInt64 libraryID, ACBXImportTableEntry* pEntry,
-                                                               ISymbolNameAllocator* pNameAllocator) = 0;
+                                                               IBlobAllocator* pNameAllocator) = 0;
 
         //! \brief Copy raw section data from a native executable.
         //!

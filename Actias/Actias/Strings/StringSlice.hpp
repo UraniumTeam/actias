@@ -175,7 +175,7 @@ namespace Actias
 
         inline constexpr StringSlice(const TChar* data) noexcept
             : m_Data(data)
-            , m_Size(data == nullptr ? 0 : std::char_traits<TChar>::length(data))
+            , m_Size(data == nullptr ? 0 : Str::ByteLength(data))
         {
         }
 
@@ -434,22 +434,13 @@ namespace Actias
             return UUID::TryParse(str.Data(), result, false) ? ParseErrorCode::None : ParseErrorCode::InvalidSyntax;
         }
     };
-} // namespace Actias
-
-namespace std
-{
-    inline ostream& operator<<(ostream& stream, Actias::StringSlice str)
-    {
-        return stream << std::string_view(str.Data(), str.Size());
-    }
 
     template<>
-    struct hash<Actias::StringSlice>
+    struct Hash<Actias::StringSlice>
     {
         inline size_t operator()(const Actias::StringSlice& str) const noexcept
         {
-            std::hash<std::string_view> hasher;
-            return hasher(std::string_view(str.Data(), str.Size()));
+            return Actias::Str::Hash(str.Data(), str.Size());
         }
     };
-} // namespace std
+} // namespace Actias

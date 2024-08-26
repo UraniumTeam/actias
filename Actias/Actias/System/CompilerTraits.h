@@ -89,6 +89,8 @@ ACTIAS_END_C
 
 #define ACTIAS_Unused(param) (void)(param)
 
+#define ACTIAS_StackAlloc(type, arraySize) (type*)alloca((arraySize) * sizeof(type))
+
 #if defined __clang__
 #    define ACTIAS_COMPILER_CLANG 1
 

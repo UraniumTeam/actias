@@ -40,4 +40,10 @@ namespace Actias::SDK::PE
         UInt16 Hint;
         char Name[1];
     };
+
+    struct BaseRelocation
+    {
+        PEVirtualAddress VirtualAddress;
+        UInt32 SizeOfBlock;
+    };
 } // namespace Actias::SDK::PE

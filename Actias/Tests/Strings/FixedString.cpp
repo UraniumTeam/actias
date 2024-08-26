@@ -33,13 +33,13 @@ TEST(FixedStr, Length)
 
 TEST(FixedStr, CodepointAt)
 {
-    const char* utf8 = u8"qßwgÛ×";
+    const char* utf8 = "qÐ¯wgÐ«Ð§";
     ASSERT_TRUE(UTF8::Valid(utf8));
 
     FixStr str = utf8;
     EXPECT_EQ(str.CodePointAt(0), L'q');
     EXPECT_EQ(str.CodePointAt(3), L'g');
-    // EXPECT_EQ(str.CodePointAt(4), L'Û');
+    // EXPECT_EQ(str.CodePointAt(4), L'Ð«');
 }
 
 TEST(FixedStr, Equals)
