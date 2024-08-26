@@ -33,8 +33,8 @@ public:
 
     MockObject(MockObject&& other) noexcept
     {
-        m_Mock       = other.m_Mock;
-        other.m_Mock = nullptr;
+        m_Mock = other.m_Mock;
+        other.m_Mock.reset();
         m_Mock->Move();
     }
 
@@ -45,9 +45,32 @@ public:
             m_Mock->Destruct();
         }
     }
+
+    USize GetHash() const
+    {
+        return reinterpret_cast<USize>(m_Mock.get());
+    }
+
+    inline friend bool operator==(const MockObject& lhs, const MockObject& rhs)
+    {
+        return lhs.m_Mock == rhs.m_Mock;
+    }
+
+    inline friend bool operator!=(const MockObject& lhs, const MockObject& rhs)
+    {
+        return lhs.m_Mock != rhs.m_Mock;
+    }
+};
+
+template<>
+struct Actias::Hash<MockObject> final
+{
+    inline size_t operator()(const MockObject& value) const
+    {
+        return value.GetHash();
+    }
 };
 
 class TestAllocator : public Actias::IAllocator
 {
-
 };

@@ -3,7 +3,7 @@
 
 namespace Actias::SDK
 {
-    class ISymbolNameAllocator
+    class IBlobAllocator
     {
     public:
         virtual void* Allocate(USize byteSize, UInt64& address) = 0;

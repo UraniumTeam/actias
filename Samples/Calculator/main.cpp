@@ -1,5 +1,6 @@
 #include "BasicPlugin.hpp"
 #include <Actias/Containers/ArraySlice.hpp>
+#include <Actias/IO/Console.hpp>
 #include <Actias/System/Runtime.h>
 #include <Actias/Utils/LibraryLoader.hpp>
 #include <filesystem>
@@ -54,7 +55,7 @@ typedef OperationCollection ACTIAS_ABI GetCalculatorOperationsProc();
 
 int main()
 {
-    if (ActiasInit() < 0)
+    if (ActiasInit(nullptr) < 0)
     {
         std::cerr << "Failed to initialize the Runtime!" << std::endl;
         return EXIT_FAILURE;
@@ -95,7 +96,8 @@ int main()
 
     for (USize i = 0; i < operations.Size(); ++i)
     {
-        std::cout << i << ":\t" << operations[i]->GetName() << "\n";
+        std::cout << i << ":\t";
+        IO::Console::WriteLine(operations[i]->GetName());
     }
 
     USize operation;

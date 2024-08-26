@@ -5,9 +5,7 @@
 namespace Actias
 {
     using UTF8::TChar;
-    using UTF8::TCharTraits;
     using UTF8::TCodepoint;
-    using UTF8::TCodepointTraits;
 
     class Str;
     class String;
@@ -31,7 +29,7 @@ namespace Actias
 
         public:
             using iterator_category = std::bidirectional_iterator_tag;
-            using difference_type   = std::ptrdiff_t;
+            using difference_type   = SSize;
             using value_type        = TCodepoint;
             using pointer           = const TCodepoint*;
             using reference         = const TCodepoint&;
@@ -110,9 +108,9 @@ namespace Actias
         using Iter = Internal::StrIterator;
 
     public:
-        [[nodiscard]] inline static USize ByteLength(const TChar* str) noexcept
+        [[nodiscard]] inline constexpr static USize ByteLength(const TChar* str) noexcept
         {
-            return strlen(str);
+            return __builtin_strlen(str);
         }
 
         [[nodiscard]] inline static USize Length(const TChar* str, USize byteSize) noexcept
@@ -127,7 +125,15 @@ namespace Actias
 
         [[nodiscard]] inline static Int32 ByteCompare(const TChar* lhs, const TChar* rhs) noexcept
         {
-            return strcmp(lhs, rhs);
+            while (*lhs == *rhs++)
+            {
+                if (*lhs++ == 0)
+                {
+                    return 0;
+                }
+            }
+
+            return (*reinterpret_cast<const UInt8*>(lhs) - *reinterpret_cast<const UInt8*>(--rhs));
         }
 
         [[nodiscard]] inline static Int32 Compare(const TChar* lhs, const TChar* rhs, size_t length1, size_t length2) noexcept
@@ -138,6 +144,18 @@ namespace Actias
         [[nodiscard]] inline static Int32 Compare(const TChar* lhs, const TChar* rhs) noexcept
         {
             return Compare(lhs, rhs, ByteLength(lhs), ByteLength(rhs));
+        }
+
+        [[nodiscard]] inline static TChar* Copy(TChar* dst, USize dstSize, const TChar* src, USize srcSize)
+        {
+            const USize actualSize = dstSize < srcSize ? dstSize : srcSize;
+            ActiasCopyMemory(dst, src, actualSize);
+            return dst + actualSize;
+        }
+
+        [[nodiscard]] inline static UInt64 Hash(const TChar* str, USize size) noexcept
+        {
+            return wyhash(str, size, 0, _wyp);
         }
 
         [[nodiscard]] inline static TCodepoint CodepointAt(const TChar* str, USize size, USize index)
@@ -226,6 +244,38 @@ namespace Actias
             }
 
             return result.m_Iter;
+        }
+    };
+
+    struct StrConvert final
+    {
+        [[nodiscard]] inline static TChar* Decimal(TChar* str, USize size, UInt64 value, Int32 minLength = -1)
+        {
+            TChar* begin = str;
+            do
+            {
+                if (size-- == 0)
+                    break;
+
+                UInt64 digit = value % 10;
+                value /= 10;
+
+                *str++ = '0' + static_cast<TChar>(digit);
+                --minLength;
+            }
+            while (value || minLength > 0);
+
+            TChar* end = str;
+            *str--     = 0;
+
+            while (begin < str)
+            {
+                char temp = *str;
+                *str--    = *begin;
+                *begin++  = temp;
+            }
+
+            return end;
         }
     };
 

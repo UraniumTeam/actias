@@ -6,7 +6,8 @@ namespace Actias
 {
     class PoolAllocator final : public IAllocator
     {
-        ActiasMemoryPool m_Pool = { 0 };
+        ActiasMemoryPool m_Pool  = { 0 };
+        UInt32 m_AllocationCount = 0;
 
         PoolAllocator(const PoolAllocator&)            = delete;
         PoolAllocator& operator=(const PoolAllocator&) = delete;
@@ -29,10 +30,12 @@ namespace Actias
 
         [[nodiscard]] UInt64 GetElementByteSize() const;
         [[nodiscard]] UInt64 GetPageByteSize() const;
+        [[nodiscard]] UInt32 GetAllocationCount() const;
     };
 
     inline PoolAllocator::~PoolAllocator()
     {
+        ACTIAS_Assert(m_AllocationCount == 0);
         Reset();
     }
 
@@ -83,11 +86,13 @@ namespace Actias
         ACTIAS_AssertDebug(size <= m_Pool.ElementByteSize);
         ACTIAS_AssertDebug(alignment <= ACTIAS_DEFAULT_ALIGNMENT);
 
+        ++m_AllocationCount;
         return ActiasMemoryPoolAllocate(&m_Pool);
     }
 
     inline void PoolAllocator::Deallocate(void* pointer)
     {
+        --m_AllocationCount;
         ActiasMemoryPoolFree(&m_Pool, pointer);
     }
 
@@ -106,6 +111,11 @@ namespace Actias
         return m_Pool.PageByteSize;
     }
 
+    inline UInt32 PoolAllocator::GetAllocationCount() const
+    {
+        return m_AllocationCount;
+    }
+
     template<class T>
     class Pool final
     {
@@ -115,6 +125,11 @@ namespace Actias
         inline Pool(UInt32 elementsInPage)
         {
             m_Allocator.Init<T>(elementsInPage);
+        }
+
+        inline UInt32 GetAllocationCount() const
+        {
+            return m_Allocator.GetAllocationCount();
         }
 
         template<class... Args>

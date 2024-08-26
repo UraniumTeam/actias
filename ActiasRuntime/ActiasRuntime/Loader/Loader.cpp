@@ -30,9 +30,7 @@ extern "C" ACTIAS_RUNTIME_API ActiasResult ACTIAS_ABI ActiasRtLoadModule(const A
         return ACTIAS_SUCCESS;
     }
 
-    Ptr pFile   = AllocateObject<IO::FileHandle>();
-    Ptr pStream = AllocateObject<IO::FileStream>(pFile.Get());
-
+    Ptr pStream           = AllocateObject<IO::FileStream>();
     const auto fileResult = pStream->Open(moduleName, IO::OpenMode::ReadOnly).UnwrapErrOrDefault();
     if (fileResult != IO::ResultCode::Success)
     {

@@ -13,6 +13,7 @@ namespace Actias::Runtime
         HeapArray<Byte> m_RawData;
         ACBXFileInformationHeader* m_pFileInfoHeader = nullptr;
         List<ACBXSectionHeader*> m_Sections;
+        List<UInt64> m_Relocations;
         ACBXExportTableHeader* m_pExportHeader = nullptr;
         ACBXImportTableHeader* m_pImportHeader = nullptr;
         Byte* m_pMapped                        = nullptr;

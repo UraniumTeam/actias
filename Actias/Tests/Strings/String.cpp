@@ -3,6 +3,15 @@
 
 using namespace Actias;
 
+TEST(Strings, Strlen)
+{
+    ASSERT_EQ(ActiasInlineStringLength(""), 0);
+    ASSERT_EQ(ActiasInlineStringLength("1"), 1);
+    ASSERT_EQ(ActiasInlineStringLength("12"), 2);
+    ASSERT_EQ(ActiasInlineStringLength("123456"), 6);
+    ASSERT_EQ(ActiasInlineStringLength("123451234512345123451234512345"), 30);
+}
+
 TEST(Strings, EmptySizeCapacity)
 {
     String str;
