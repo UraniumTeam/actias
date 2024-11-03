@@ -6,7 +6,7 @@
 namespace Actias::IO
 {
     template<USize TCapacity>
-    class FixedBlob final : public Object<IBlob>
+    class FixedBlob final : public IBlob
     {
         Byte m_Buffer[TCapacity];
 

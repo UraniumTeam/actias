@@ -6,7 +6,7 @@ namespace Actias::IO
     //! \brief Base implementation of IStream interface.
     //!
     //! This class adds default implementation for the WriteFromStream function.
-    class StreamBase : public Object<IStream>
+    class StreamBase : public IStream
     {
     public:
         ACTIAS_RTTI_Class(StreamBase, "2F74FF8D-4D81-44BE-962A-9D30669E03C8");

@@ -1,5 +1,8 @@
+#include <Actias/System/Platform/Unix/Syscall.h>
 #include <Actias/System/Platform/Unix/linux_syscall_support.h>
 #include <Actias/System/Streams.h>
+
+inline static ACTIAS_SYSCALL_3(int, open, const char*, p, int, f, int, m);
 
 inline static USize ACTIAS_ABI ActiasConvertFileOpenFlags(ActiasFlags flags)
 {
@@ -39,16 +42,16 @@ ActiasResult ACTIAS_ABI ActiasGetStdFileHandle(Int32 descriptor, ActiasHandle* p
 
 ActiasResult ACTIAS_ABI ActiasOpenFile(const char* filePath, ActiasFileOpenMode openMode, ActiasHandle* pHandle)
 {
-    USize result = sys_open(filePath, ActiasConvertFileOpenFlags(openMode), 0);
-    if (result == -1)
+    int retValue;
+    ActiasResult result = ActiasSyscall_open(&retValue, filePath, ActiasConvertFileOpenFlags(openMode), 0);
+    if (result != ACTIAS_SUCCESS)
     {
         *pHandle = NULL;
-        return ACTIAS_FAIL_UNKNOWN;
+        return result;
     }
 
-    *pHandle = (ActiasHandle)result;
-
-    return ACTIAS_SUCCESS;
+    *pHandle = (ActiasHandle)retValue;
+    return result;
 }
 
 ActiasResult ACTIAS_ABI ActiasCloseFile(ActiasHandle fileHandle)

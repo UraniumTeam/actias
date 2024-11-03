@@ -89,7 +89,7 @@ namespace Actias::IO
     //! \brief A low-level file, without buffering.
     //!
     //! \note Prefer using streams in most cases.
-    class PlatformFile final : public Object<IObject>
+    class PlatformFile final : public IObject
     {
         Path m_FileName;
         ActiasHandle m_Handle      = nullptr;

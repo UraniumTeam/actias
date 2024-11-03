@@ -9,7 +9,7 @@ namespace Actias::SDK::PE
     struct ExportDirectory;
     struct ImportDescriptor;
 
-    class PortableExecutable final : public Object<INativeExecutable>
+    class PortableExecutable final : public INativeExecutable
     {
         List<Byte> m_RawBuffer;
         Ptr<PEModuleBuffer> m_pVirtualBuffer;

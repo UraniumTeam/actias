@@ -301,7 +301,7 @@ namespace Actias
         }
     };
 
-    class HeapArrayBlob : public Object<IBlob>
+    class HeapArrayBlob : public IBlob
     {
         HeapArray<Byte> m_Data;
 
